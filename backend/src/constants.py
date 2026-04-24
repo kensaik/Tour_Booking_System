@@ -1,0 +1,16 @@
+class TourStatus:
+    PENDING = "PENDING"
+    ACTIVE = "ACTIVE"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+
+class PaymentStatus:
+    UNPAID = "UNPAID"
+    DEPOSIT_PAID = "DEPOSIT_PAID"
+    FULLY_PAID = "FULLY_PAID"
+    REFUNDED = "REFUNDED"
+
+class UserRole:
+    ADMIN = "ADMIN"
+    COMPANY = "COMPANY"
+    GUEST = "GUEST"

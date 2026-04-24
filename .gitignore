@@ -1,0 +1,62 @@
+# OS Files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# IDEs / Editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Backend (Python/Flask)
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Environment variables
+backend/.env
+.env
+.env.*
+
+# Logs
+*.log
+backend/logs/
+
+# SQLite databases (if using local fallback)
+*.sqlite3
+*.db
+
+# Frontend (Node.js/React)
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+frontend/build/
+frontend/dist/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.eslintcache
+.stylelintcache
+
+# Docker (Optional)
+.docker/
+docker-compose.override.yml
