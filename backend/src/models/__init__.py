@@ -1,5 +1,5 @@
 from src.extensions import db
 
-# Import models here later, for example:
-# from src.models.user import User
-# from src.models.tour import Tour
+from src.models.user import User, CompanyProfile, GuestProfile
+from src.models.tour import Destination, Tour, TourItinerary, Departure
+from src.models.booking import Booking
