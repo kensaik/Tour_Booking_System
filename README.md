@@ -63,3 +63,4 @@ Xem [`frontend/README.md`](frontend/README.md) để biết cách bootstrap Vite
 - [Database Design](docs/database-design.md)
 - [Test Plan](docs/test-plan.md)
 - [API Documentation](docs/api-docs.md)
+- [Contributing Guide](docs/contributing.md)
