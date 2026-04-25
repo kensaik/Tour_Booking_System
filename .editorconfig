@@ -1,0 +1,33 @@
+# EditorConfig — https://editorconfig.org
+# Top-most EditorConfig file
+root = true
+
+# Defaults for every file in the repo
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Python (PEP 8: 4-space indent, soft 88 col limit to match ruff/black)
+[*.py]
+indent_size = 4
+max_line_length = 88
+
+# Markdown — preserve trailing whitespace (used for hard line breaks)
+[*.md]
+trim_trailing_whitespace = false
+
+# Makefile requires real tabs
+[Makefile]
+indent_style = tab
+
+# Windows batch / cmd files use CRLF
+[*.{bat,cmd}]
+end_of_line = crlf
+
+# YAML / JSON / TOML / config — 2 spaces is fine (default)
+[*.{yml,yaml,json,toml}]
+indent_size = 2
