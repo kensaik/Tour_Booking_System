@@ -28,6 +28,8 @@ pip-delete-this-directory.txt
 backend/.env
 .env
 .env.*
+!.env.example
+!backend/.env.example
 
 # Logs
 *.log
