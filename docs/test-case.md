@@ -1,4 +1,4 @@
-# Test Case — Hệ thống Đặt Tour
+# Test Cases — Hệ thống Đặt Tour
 
 **Phiên bản:** 1.0 | **Tác giả:** Trương Hưng Phát | **Ngày:** 29/04/2025  
 **Tài liệu tham chiếu:** `docs/test-plan.md` · `docs/api-docs.md`
