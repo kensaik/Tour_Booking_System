@@ -1,18 +1,18 @@
-# Test Plan — Tour Booking System
+# Kế hoạch kiểm thử — Hệ thống Đặt Tour
 
 ---
 
-## 1. Document Revision History
+## 1. Lịch sử chỉnh sửa tài liệu
 
-| Date | Version | Description | Author |
+| Ngày | Phiên bản | Mô tả | Tác giả |
 |---|---:|---|---|
-| Apr 29, 2025 | 1.0 | Initial draft | Trương Hưng Phát, QA/Tester |
+| 29/04/2025 | 1.0 | Bản nháp ban đầu | Trương Hưng Phát, QA/Tester |
 
 ---
 
-## 2. Acronyms
+## 2. Từ viết tắt
 
-| Acronym | Meaning |
+| Từ viết tắt | Meaning |
 |---|---|
 | QA | Quality Assurance |
 | UC | Use Case |
@@ -23,265 +23,276 @@
 | JWT | JSON Web Token |
 | CRUD | Create, Read, Update, Delete |
 | PM | Project Manager |
-| SRS | Software Requirement Specification |
+| SRS | Software Requirements Specification |
 
 ---
 
-## 3. Project Overview and Objectives
+## 3. Tổng quan dự án và mục tiêu
 
-### Project Overview
+### Tổng quan dự án
 
-The **Tour Booking System** is a capstone web application that connects tourists with registered tourism companies through a centralized platform. The system supports three actor types: **Tourist** (Du khách), **Tourism Company** (Công ty du lịch), and **Admin**.
+**Hệ thống Đặt Tour** là một ứng dụng web đồ án tốt nghiệp, kết nối du khách với các công ty du lịch đã đăng ký thông qua một nền tảng tập trung. Hệ thống hỗ trợ ba nhóm tác nhân: **Du khách** (Tourist), **Công ty du lịch** (Tourism Company), và **Quản trị viên** (Admin).
 
 - **Backend:** Python (Flask) — REST API
-- **Frontend:** React — Single Page Application
-- **Database:** MySQL
+- **Frontend:** React — Ứng dụng một trang
+- **Cơ sở dữ liệu:** MySQL
 
-The system allows tourism companies to register (pending admin approval), manage tours and departure schedules, and view business statistics. Tourists can search, view, and book tours by paying a deposit. Admins oversee company approvals, tour content, and destination categories.
+Hệ thống cho phép công ty du lịch đăng ký tài khoản ở trạng thái chờ quản trị viên phê duyệt, quản lý tour và lịch khởi hành, cũng như xem thống kê kinh doanh. Du khách có thể tìm kiếm, xem chi tiết và đặt tour bằng cách thanh toán tiền cọc. Quản trị viên giám sát việc phê duyệt công ty, nội dung tour và danh mục điểm đến.
 
-If there are major changes to scope, requirements, or testing schedule, this plan must be reviewed and re-approved.
+Nếu có thay đổi lớn về phạm vi, yêu cầu hoặc lịch kiểm thử, kế hoạch này phải được xem xét và phê duyệt lại.
 
-### Objectives
+### Mục tiêu
 
-This test plan defines:
+Kế hoạch kiểm thử này xác định:
 
-- Testing scope across all three actor flows
-- Testing approach, tools, and test types
-- Required resources and environment
-- Entry and exit criteria
-- Roles, responsibilities, and timeline
-- Risks and contingency plans
-- Approval process
-
----
-
-## 4. Testing Scope
-
-### 4.1 Features to Be Tested
-
-#### Tourism Company Actor
-
-| ID | Use Case | Testing Types |
-|---|---|---|
-| TC-UC-01 | Register with pending approval status | Functional, Validation, DB |
-| TC-UC-02 | Login and receive JWT token | Functional, Security |
-| TC-UC-03 | Create / edit / delete tour and daily itinerary | Functional, DB, UI |
-| TC-UC-04 | Schedule departures (date + seat capacity) | Functional, DB, Validation |
-| TC-UC-05 | View business statistics dashboard | Functional, UI |
-
-#### Tourist Actor
-
-| ID | Use Case | Testing Types |
-|---|---|---|
-| T-UC-01 | Register tourist account | Functional, Validation, DB |
-| T-UC-02 | Login and receive JWT token | Functional, Security |
-| T-UC-03 | Search tours by destination and departure date | Functional, UI |
-| T-UC-04 | View tour detail (itinerary, price, policy) | Functional, UI |
-| T-UC-05 | Book tour and pay deposit — booking created, seats updated, notifications sent | Functional, DB, Integration |
-
-#### Admin Actor
-
-| ID | Use Case | Testing Types |
-|---|---|---|
-| A-UC-01 | Approve or reject tourism company registrations | Functional, DB |
-| A-UC-02 | Manage approved tourism companies (edit, deactivate) | Functional, DB |
-| A-UC-03 | Manage destination category list (CRUD) | Functional, DB |
-| A-UC-04 | Manage tours listed on the platform | Functional, DB, UI |
+- Phạm vi kiểm thử cho cả ba luồng tác nhân
+- Phương pháp kiểm thử, công cụ và loại kiểm thử
+- Tài nguyên và môi trường cần thiết
+- Tiêu chí bắt đầu và kết thúc kiểm thử
+- Vai trò, trách nhiệm và tiến độ
+- Rủi ro và phương án dự phòng
+- Quy trình phê duyệt
 
 ---
 
-### 4.2 Features Not to Be Tested
+## 4. Phạm vi kiểm thử
 
-| Excluded Area | Reason |
+### 4.1 Chức năng được kiểm thử
+
+#### Tác nhân Công ty du lịch
+
+| ID | Use Case | Loại kiểm thử |
+|---|---|---|
+| TC-UC-01 | Đăng ký với trạng thái chờ phê duyệt | Chức năng, Kiểm tra hợp lệ, Cơ sở dữ liệu |
+| TC-UC-02 | Đăng nhập và nhận JWT token | Chức năng, Bảo mật |
+| TC-UC-03 | Tạo / chỉnh sửa / xóa tour và lịch trình hằng ngày | Chức năng, Cơ sở dữ liệu, Giao diện |
+| TC-UC-04 | Lên lịch khởi hành (ngày + số chỗ) | Chức năng, Cơ sở dữ liệu, Kiểm tra hợp lệ |
+| TC-UC-05 | Xem bảng thống kê kinh doanh | Chức năng, Giao diện |
+
+#### Tác nhân Du khách
+
+| ID | Use Case | Loại kiểm thử |
+|---|---|---|
+| T-UC-01 | Đăng ký tài khoản du khách | Chức năng, Kiểm tra hợp lệ, Cơ sở dữ liệu |
+| T-UC-02 | Đăng nhập và nhận JWT token | Chức năng, Bảo mật |
+| T-UC-03 | Tìm kiếm tour theo điểm đến và ngày khởi hành | Chức năng, Giao diện |
+| T-UC-04 | Xem chi tiết tour (lịch trình, giá, chính sách) | Chức năng, Giao diện |
+| T-UC-05 | Đặt tour và thanh toán tiền cọc — tạo booking, cập nhật số chỗ, gửi thông báo | Chức năng, Cơ sở dữ liệu, Tích hợp |
+
+#### Tác nhân Quản trị viên
+
+| ID | Use Case | Loại kiểm thử |
+|---|---|---|
+| A-UC-01 | Phê duyệt hoặc từ chối đăng ký công ty du lịch | Chức năng, Cơ sở dữ liệu |
+| A-UC-02 | Quản lý các công ty du lịch đã được phê duyệt (chỉnh sửa, vô hiệu hóa) | Chức năng, Cơ sở dữ liệu |
+| A-UC-03 | Quản lý danh sách danh mục điểm đến (CRUD) | Chức năng, Cơ sở dữ liệu |
+| A-UC-04 | Quản lý các tour được đăng trên nền tảng | Chức năng, Cơ sở dữ liệu, Giao diện |
+
+---
+
+### 4.2 Chức năng không được kiểm thử
+
+| Phạm vi loại trừ | Lý do |
 |---|---|
-| Full online payment gateway (VNPay, Stripe, etc.) | Not in project scope — deposit flow is simulated |
-| Email / SMS notification delivery | Notification trigger is in scope; delivery infrastructure is out of scope |
-| Mobile native app (iOS / Android) | Project targets web only |
-| Performance / load testing | Out of scope for capstone sprint |
-| Security penetration testing | Not in scope — basic auth security checks only |
+| Cổng thanh toán trực tuyến đầy đủ (VNPay, Stripe, v.v.) | Không nằm trong phạm vi dự án — luồng đặt cọc được mô phỏng |
+| Hạ tầng gửi Email / SMS | Việc kích hoạt thông báo nằm trong phạm vi; hạ tầng gửi thông báo không nằm trong phạm vi |
+| Ứng dụng di động native (iOS / Android) | Dự án chỉ hướng đến nền tảng web |
+| Kiểm thử hiệu năng / tải | Ngoài phạm vi sprint đồ án |
+| Kiểm thử xâm nhập bảo mật | Không nằm trong phạm vi — chỉ kiểm tra bảo mật xác thực cơ bản |
 
 ---
 
-## 5. Test Approach
+## 5. Phương pháp kiểm thử
 
-### 5.1 Test Case Management
+### 5.1 Quản lý ca kiểm thử
 
-| Item | Description |
+| Hạng mục | Mô tả |
 |---|---|
-| Test case storage | Markdown file `docs/test-case.md` + Google Sheets (shared with team) |
-| Test case preparation | QA writes cases based on use case specs |
-| Test case review | PM or Backend Developer reviews before execution |
-| Defect tracking | GitHub Issues — label `bug`, `severity: critical / high / medium / low` |
-| Test execution tracking | Checkboxes in `docs/test-case.md`, status updated per sprint |
+| Nơi lưu trữ test case | File Markdown `docs/test-case.md` + Google Sheets dùng chung với nhóm |
+| Chuẩn bị test case | QA viết test case dựa trên đặc tả use case |
+| Review test case | PM hoặc Backend Developer review trước khi thực thi |
+| Theo dõi lỗi | GitHub Issues — nhãn `bug`, `severity: critical / high / medium / low` |
+| Theo dõi thực thi kiểm thử | Checkbox trong `docs/test-case.md`, cập nhật trạng thái theo từng sprint |
 
 ---
 
-### 5.2 Types of Testing
+### 5.2 Các loại kiểm thử
 
-#### Unit Testing
-Backend unit tests written in **pytest**. Each Flask route and service function is tested in isolation. CI runs `pytest` on every push via GitHub Actions.
+#### Kiểm thử đơn vị
 
-#### Smoke Testing
-Performed after each new build is deployed to the QA/local environment. Validates that login, tour listing, and booking entry points are reachable before running deeper tests.
+Kiểm thử đơn vị backend được viết bằng **pytest**. Mỗi route Flask và hàm service được kiểm thử độc lập. CI chạy `pytest` mỗi khi có push thông qua GitHub Actions.
 
-#### Functional Testing
-Manual test execution for each use case in section 4.1. QA verifies expected behavior, error messages, and edge cases against the use case specification.
+#### Kiểm thử khói
 
-#### Regression Testing
-Run full functional test suite after each bug fix or new feature merge. Priority on all UC flows that share authentication and booking pipelines.
+Được thực hiện sau mỗi lần build mới được triển khai lên môi trường QA/local. Mục tiêu là xác nhận rằng đăng nhập, danh sách tour và các điểm vào luồng đặt tour có thể truy cập trước khi chạy kiểm thử sâu hơn.
 
-#### Database Testing
-Verify data is correctly inserted, updated, and deleted for:
-- User registration (tourists and companies)
-- Tour and itinerary records
-- Departure schedule records
-- Booking records (status, seat count updates)
+#### Kiểm thử chức năng
 
-#### UI Testing
-Manual visual inspection of React frontend:
-- Layout, alignment, labels, and button states
-- Form validation feedback (inline errors)
-- Responsive layout on desktop and mobile viewport
+Thực thi kiểm thử thủ công cho từng use case trong mục 4.1. QA xác minh hành vi mong đợi, thông báo lỗi và các trường hợp biên theo đặc tả use case.
 
-#### Compatibility Testing
-Cross-browser functional and visual testing on the latest versions of supported browsers.
+#### Kiểm thử hồi quy
+
+Chạy toàn bộ bộ kiểm thử chức năng sau mỗi lần sửa lỗi hoặc merge tính năng mới. Ưu tiên các luồng UC dùng chung pipeline xác thực và đặt tour.
+
+#### Kiểm thử cơ sở dữ liệu
+
+Xác minh dữ liệu được thêm, cập nhật và xóa chính xác cho:
+
+- Đăng ký người dùng (du khách và công ty)
+- Bản ghi tour và lịch trình
+- Bản ghi lịch khởi hành
+- Bản ghi đặt tour (trạng thái, cập nhật số chỗ)
+
+#### Kiểm thử giao diện
+
+Kiểm tra thủ công giao diện React:
+
+- Bố cục, căn chỉnh, nhãn và trạng thái nút
+- Phản hồi kiểm tra hợp lệ của form (lỗi hiển thị trực tiếp)
+- Bố cục responsive trên desktop và mobile viewport
+
+#### Kiểm thử tương thích
+
+Kiểm thử chức năng và hiển thị trên các trình duyệt được hỗ trợ ở phiên bản mới nhất.
 
 ---
 
-### 5.3 Browser, OS, and Device Compatibility
+### 5.3 Tương thích trình duyệt, hệ điều hành và thiết bị
 
-| Platform Type | Supported Targets |
+| Loại nền tảng | Mục tiêu hỗ trợ |
 |---|---|
-| Browsers | Latest Google Chrome, Mozilla Firefox, Microsoft Edge |
-| Operating Systems | Windows 10/11, macOS |
-| Devices | Desktop (1280px+), Tablet (768px), Mobile (375px) |
+| Trình duyệt | Phiên bản mới nhất của Google Chrome, Mozilla Firefox, Microsoft Edge |
+| Hệ điều hành | Windows 10/11, macOS |
+| Thiết bị | Desktop (1280px+), Tablet (768px), Mobile (375px) |
 
 ---
 
-### 5.4 Automation Approach
+### 5.4 Phương pháp tự động hóa
 
-After manual testing confirms stability, the following happy paths will be automated using **pytest + Selenium**:
+Sau khi kiểm thử thủ công xác nhận hệ thống ổn định, các luồng happy path sau sẽ được tự động hóa bằng **pytest + Selenium**:
 
-**Tourist Happy Path:**
-1. Register tourist account
-2. Log in
-3. Search for a tour by destination
-4. Open tour detail page
-5. Submit booking with deposit
-6. Verify booking confirmation
+#### Happy path — Du khách
 
-**Tourism Company Happy Path:**
-1. Register company (pending state)
-2. Admin approves company
-3. Company logs in
-4. Creates a tour with itinerary
-5. Schedules a departure
+1. Đăng ký tài khoản du khách
+2. Đăng nhập
+3. Tìm kiếm tour theo điểm đến
+4. Mở trang chi tiết tour
+5. Gửi yêu cầu đặt tour kèm tiền cọc
+6. Xác minh xác nhận đặt tour
 
-Automated tests are added to the GitHub Actions CI pipeline after the manual test pass rate reaches 100% on critical paths.
+#### Happy path — Công ty du lịch
 
----
+1. Đăng ký công ty ở trạng thái chờ duyệt
+2. Admin phê duyệt công ty
+3. Công ty đăng nhập
+4. Tạo tour kèm lịch trình
+5. Lên lịch khởi hành
 
-## 6. Entry and Exit Criteria
-
-### 6.1 Entry Criteria
-
-Testing can begin when all of the following conditions are met:
-
-- Backend API is deployed and reachable on the local / QA environment
-- Frontend React app is running and connected to the backend
-- MySQL database is seeded with required test data
-- All use case specs in this test plan have been reviewed
-- GitHub Issues is set up for defect tracking
-- QA environment is confirmed stable by Backend Developer
-
-### 6.2 Exit Criteria
-
-Testing is considered complete when:
-
-- 100% of scoped test cases have been executed
-- No open Critical or High severity bugs remain
-- All discovered bugs are logged in GitHub Issues with reproduction steps
-- Screenshots are attached to UI-related bug reports
-- Regression suite is completed after last bug fix
-- Final test summary is shared with the team and PM approves release readiness
+Các test tự động sẽ được thêm vào pipeline CI của GitHub Actions sau khi tỉ lệ pass của kiểm thử thủ công đạt 100% trên các luồng quan trọng.
 
 ---
 
-## 7. Suspension and Resumption Criteria
+## 6. Tiêu chí bắt đầu và kết thúc
 
-### 7.1 Suspension Criteria
+### 6.1 Tiêu chí bắt đầu
 
-Testing will stop if any of the following occur:
+Kiểm thử có thể bắt đầu khi tất cả điều kiện sau được đáp ứng:
 
-- Local / QA environment crashes or becomes inaccessible
-- Login API does not return a valid token — blocking all authenticated flows
-- Database connection fails
-- A Critical bug blocks more than one major UC flow
-- Required test data is unavailable or corrupted
+- Backend API đã được triển khai và có thể truy cập trên môi trường local / QA
+- Ứng dụng React frontend đang chạy và đã kết nối với backend
+- Cơ sở dữ liệu MySQL đã được seed dữ liệu kiểm thử cần thiết
+- Tất cả đặc tả use case trong kế hoạch kiểm thử này đã được review
+- GitHub Issues đã được thiết lập để theo dõi lỗi
+- Môi trường QA được Backend Developer xác nhận ổn định
 
-### 7.2 Resumption Criteria
+### 6.2 Tiêu chí kết thúc
 
-Testing resumes when:
+Kiểm thử được xem là hoàn tất khi:
 
-- Backend Developer confirms the environment is restored
-- A hotfix for the blocking bug is deployed and smoke test passes
-- Database is restored with valid test data
-- PM confirms the team can continue
+- 100% test case trong phạm vi đã được thực thi
+- Không còn lỗi Critical hoặc High severity đang mở
+- Tất cả lỗi phát hiện đã được ghi nhận trên GitHub Issues kèm bước tái hiện
+- Ảnh chụp màn hình được đính kèm cho các báo cáo lỗi liên quan đến UI
+- Bộ kiểm thử hồi quy được hoàn thành sau lần sửa lỗi cuối cùng
+- Báo cáo tổng kết kiểm thử được chia sẻ với nhóm và PM phê duyệt mức độ sẵn sàng phát hành
 
 ---
 
-## 8. Roles, Responsibilities, and Timeline
+## 7. Tiêu chí tạm dừng và tiếp tục
 
-### 8.1 Roles and Responsibilities
+### 7.1 Tiêu chí tạm dừng
 
-| Role | Name | Testing Responsibilities |
+Kiểm thử sẽ dừng nếu xảy ra một trong các trường hợp sau:
+
+- Môi trường local / QA bị crash hoặc không thể truy cập
+- API đăng nhập không trả về token hợp lệ — chặn tất cả luồng cần xác thực
+- Kết nối cơ sở dữ liệu thất bại
+- Một lỗi Critical chặn nhiều hơn một luồng UC chính
+- Dữ liệu kiểm thử cần thiết không có sẵn hoặc bị hỏng
+
+### 7.2 Tiêu chí tiếp tục
+
+Kiểm thử tiếp tục khi:
+
+- Backend Developer xác nhận môi trường đã được khôi phục
+- Hotfix cho lỗi chặn đã được triển khai và smoke test pass
+- Cơ sở dữ liệu đã được khôi phục với dữ liệu kiểm thử hợp lệ
+- PM xác nhận nhóm có thể tiếp tục
+
+---
+
+## 8. Vai trò, trách nhiệm và tiến độ
+
+### 8.1 Vai trò và trách nhiệm
+
+| Vai trò | Tên | Trách nhiệm kiểm thử |
 |---|---|---|
-| QA / Tester | Trương Hưng Phát | Write test cases, execute manual tests, log bugs, retest fixes, produce test summary |
-| Project Manager | Lê Duy Mạnh | Review and approve test plan, coordinate timeline, accept or reject release readiness |
-| Frontend Developer | Nguyễn Trần Minh Quân | Fix UI bugs, support QA with frontend environment setup |
-| Backend Developer | Tô Nguyễn Sơn Nam | Fix API and DB bugs, maintain QA environment, provide test data |
+| QA / Tester | Trương Hưng Phát | Viết test case, thực thi kiểm thử thủ công, ghi nhận lỗi, kiểm thử lại bản sửa, tạo báo cáo tổng kết kiểm thử |
+| Project Manager | Lê Duy Mạnh | Review và phê duyệt test plan, điều phối tiến độ, chấp nhận hoặc từ chối mức độ sẵn sàng phát hành |
+| Frontend Developer | Nguyễn Trần Minh Quân | Sửa lỗi UI, hỗ trợ QA thiết lập môi trường frontend |
+| Backend Developer | Tô Nguyễn Sơn Nam | Sửa lỗi API và DB, duy trì môi trường QA, cung cấp dữ liệu kiểm thử |
 
-### 8.2 Timeline
+### 8.2 Tiến độ
 
-| Activity | Start | End | Owner | Notes |
+| Hoạt động | Bắt đầu | Kết thúc | Người phụ trách | Ghi chú |
 |---|---|---|---|---|
-| Test planning | Week 6 | Week 6 | QA | Draft, review, and approve this test plan |
-| Test case preparation | Week 7 | Week 7 | QA | Write test cases per use case |
-| Environment setup | Week 7 | Week 7 | Backend Dev | Deploy API + DB + seed data |
-| Smoke testing | Week 8 | Week 8 | QA | Validate build stability |
-| Functional test execution | Week 8 | Week 9 | QA | Execute all manual test cases |
-| Defect retesting | Week 9 | Week 10 | QA | Verify all fixed bugs |
-| Regression testing | Week 10 | Week 10 | QA | Final regression run |
-| Test summary + sign-off | Week 10 | Week 10 | QA + PM | Final approval |
+| Lập kế hoạch kiểm thử | Tuần 6 | Tuần 6 | QA | Soạn thảo, review và phê duyệt kế hoạch kiểm thử này |
+| Chuẩn bị test case | Tuần 7 | Tuần 7 | QA | Viết test case theo từng use case |
+| Thiết lập môi trường | Tuần 7 | Tuần 7 | Backend Dev | Triển khai API + DB + seed data |
+| Smoke testing | Tuần 8 | Tuần 8 | QA | Xác minh độ ổn định của build |
+| Thực thi kiểm thử chức năng | Tuần 8 | Tuần 9 | QA | Thực thi toàn bộ test case thủ công |
+| Kiểm thử lại lỗi đã sửa | Tuần 9 | Tuần 10 | QA | Xác minh tất cả lỗi đã được sửa |
+| Kiểm thử hồi quy | Tuần 10 | Tuần 10 | QA | Chạy hồi quy cuối cùng |
+| Tổng kết kiểm thử + ký duyệt | Tuần 10 | Tuần 10 | QA + PM | Phê duyệt cuối cùng |
 
 ---
 
-## 9. Dependencies, Risks, and Contingencies
+## 9. Phụ thuộc, rủi ro và phương án dự phòng
 
-### 9.1 Dependencies
+### 9.1 Phụ thuộc
 
-- Backend API must be deployed before QA can begin functional testing
-- Database seed scripts must be provided by Backend Developer
-- Frontend must be integrated with backend before UI testing begins
-- Admin approval flow must work before Tourism Company flows can be fully tested
-- GitHub Issues must be set up before execution begins
+- Backend API phải được triển khai trước khi QA có thể bắt đầu kiểm thử chức năng
+- Backend Developer phải cung cấp script seed dữ liệu
+- Frontend phải được tích hợp với backend trước khi kiểm thử UI bắt đầu
+- Luồng phê duyệt của Admin phải hoạt động trước khi có thể kiểm thử đầy đủ các luồng Công ty du lịch
+- GitHub Issues phải được thiết lập trước khi bắt đầu thực thi kiểm thử
 
-### 9.2 Risks and Contingency Plans
+### 9.2 Rủi ro và phương án dự phòng
 
-| Risk | Impact | Contingency Plan |
+| Rủi ro | Ảnh hưởng | Phương án dự phòng |
 |---|---|---|
-| Backend API delivered late | High — blocks functional test start | QA will prepare all test cases and test data during the delay; execution starts as soon as API is available |
-| Local / QA environment unstable | High — testing blocked | QA and Backend Dev coordinate to restore; QA documents affected test cases as blocked |
-| Admin approval flow not ready | High — company and admin UCs cannot be tested | QA tests tourist flows first; company/admin flows deferred until approval UC is stable |
-| Scope changes during testing | Medium — test cases may need revision | QA updates affected test cases; PM approves revised scope before continuing |
-| Key team member unavailable | Medium — execution pace drops | PM reassigns critical test cases to another available member or adjusts timeline |
+| Backend API bàn giao trễ | Cao — chặn việc bắt đầu kiểm thử chức năng | QA sẽ chuẩn bị toàn bộ test case và dữ liệu kiểm thử trong thời gian chờ; việc thực thi bắt đầu ngay khi API sẵn sàng |
+| Môi trường local / QA không ổn định | Cao — kiểm thử bị chặn | QA và Backend Dev phối hợp khôi phục; QA ghi nhận các test case bị ảnh hưởng là blocked |
+| Luồng phê duyệt Admin chưa sẵn sàng | Cao — không thể kiểm thử UC của công ty và admin | QA kiểm thử luồng du khách trước; các luồng công ty/admin được hoãn đến khi UC phê duyệt ổn định |
+| Thay đổi phạm vi trong quá trình kiểm thử | Trung bình — test case có thể cần chỉnh sửa | QA cập nhật các test case bị ảnh hưởng; PM phê duyệt phạm vi đã chỉnh sửa trước khi tiếp tục |
+| Thành viên chủ chốt không có mặt | Trung bình — tốc độ thực thi giảm | PM phân công lại các test case quan trọng cho thành viên khả dụng khác hoặc điều chỉnh tiến độ |
 
 ---
 
-## 10. Approvals
+## 10. Phê duyệt
 
-| Role | Name | Status | Date |
+| Vai trò | Tên | Trạng thái | Ngày |
 |---|---|---|---|
-| QA / Tester | Trương Hưng Phát | Pending | — |
-| Project Manager | Lê Duy Mạnh | Pending | — |
-| Backend Developer | Tô Nguyễn Sơn Nam | Pending | — |
+| QA / Tester | Trương Hưng Phát | Chờ phê duyệt | — |
+| Project Manager | Lê Duy Mạnh | Chờ phê duyệt | — |
+| Backend Developer | Tô Nguyễn Sơn Nam | Chờ phê duyệt | — |
