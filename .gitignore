@@ -62,3 +62,7 @@ yarn-error.log*
 # Docker (Optional)
 .docker/
 docker-compose.override.yml
+
+# Project folders
+plans/
+assets/showoff/

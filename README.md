@@ -39,8 +39,22 @@ npm install
 npm start
 
 ### Truy cập
-- Frontend: 
-- Backend API: 
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+
+## Lint & Format
+
+Cấu hình editor được khoá qua [`.editorconfig`](.editorconfig) (LF, UTF-8, 2 spaces mặc định, 4 spaces cho Python).
+
+### Backend (ruff)
+Cấu hình nằm trong `backend/pyproject.toml`. Chỉ cần cài dev deps một lần:
+```bash
+cd backend
+pip install -r requirements-dev.txt
+```
+
+### Frontend (ESLint + Prettier)
+Xem [`frontend/README.md`](frontend/README.md) để biết cách bootstrap Vite + cài dev deps một lần.
 
 ## Demo
 
@@ -49,3 +63,4 @@ npm start
 - [Database Design](docs/database-design.md)
 - [Test Plan](docs/test-plan.md)
 - [API Documentation](docs/api-docs.md)
+- [Contributing Guide](docs/contributing.md)
