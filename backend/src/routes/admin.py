@@ -1,9 +1,9 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
 from src.extensions import db
-from src.models.user import User, CompanyProfile
-from src.models.tour import Destination, Tour
+from src.models.tour import Destination
+from src.models.user import CompanyProfile
 from src.utils.auth import admin_required
-from src.constants import UserRole
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
 
@@ -48,7 +48,7 @@ def update_destination(id):
 
     data = request.get_json()
     name = data.get('name')
-    
+
     if name:
         existing = Destination.query.filter_by(name=name).first()
         if existing and existing.id != id:
@@ -79,11 +79,11 @@ def delete_destination(id):
 @admin_required()
 def get_companies():
     status_filter = request.args.get('status')
-    
+
     query = CompanyProfile.query
     if status_filter == 'pending':
         query = query.filter_by(is_approved=False)
-    
+
     companies = query.all()
     result = []
     for c in companies:
@@ -94,9 +94,9 @@ def get_companies():
             "description": c.description,
             "commission_rate": c.commission_rate,
             "is_approved": c.is_approved,
-            "email": c.user.email 
+            "email": c.user.email
         })
-        
+
     return jsonify(companies=result), 200
 
 @admin_bp.route('/companies/<int:id>/approve', methods=['PUT'])
@@ -123,7 +123,7 @@ def update_commission(id):
     data = request.get_json()
     new_rate = data.get('commission_rate')
 
-    if new_rate is None or not isinstance(new_rate, (int, float)):
+    if new_rate is None or not isinstance(new_rate, int | float):
         return jsonify(error="Bad Request", message="Valid commission_rate is required"), 400
 
     if new_rate < 0 or new_rate > 100:
