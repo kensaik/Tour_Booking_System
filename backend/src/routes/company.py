@@ -16,6 +16,7 @@ def get_current_company():
     user = db.session.get(User, user_id)
     return user.company_profile
 
+
 # TOUR MANAGEMENT
 @company_bp.route("/tours", methods=["GET"])
 @company_required()
@@ -228,6 +229,7 @@ def modify_itinerary(id):
 
     db.session.commit()
     return jsonify(message="Itinerary updated successfully"), 200
+
 
 # DEPARTURE MANAGEMENT
 @company_bp.route("/tours/<int:tour_id>/departures", methods=["POST"])
