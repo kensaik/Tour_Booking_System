@@ -22,5 +22,23 @@ class Booking(db.Model):
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
 
+    payments = db.relationship(
+        "Payment", backref="booking", lazy="dynamic", cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<Booking {self.id} for Departure {self.departure_id}>"
+
+
+class Payment(db.Model):
+    __tablename__ = "payments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey("bookings.id"), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    payment_method = db.Column(db.String(50), nullable=False)
+    status = db.Column(db.String(20), default="SUCCESS")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Payment {self.id} for Booking {self.booking_id}>"
