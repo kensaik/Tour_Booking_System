@@ -57,3 +57,21 @@ def company_required():
         return decorator
 
     return wrapper
+
+
+def guest_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            user_id = get_jwt_identity()
+            user = db.session.get(User, user_id)
+            if not user or user.role != UserRole.GUEST:
+                return jsonify(
+                    error="Forbidden", message="Guest privilege required"
+                ), 403
+            return fn(*args, **kwargs)
+
+        return decorator
+
+    return wrapper

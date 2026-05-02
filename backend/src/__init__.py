@@ -33,10 +33,14 @@ def create_app(config_class=Config):
     from src.routes.admin import admin_bp
     from src.routes.auth import auth_bp
     from src.routes.company import company_bp
+    from src.routes.guest import guest_bp
+    from src.routes.public import public_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(company_bp)
+    app.register_blueprint(public_bp)
+    app.register_blueprint(guest_bp)
 
     return app
