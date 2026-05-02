@@ -3,8 +3,9 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt_identity
 
+from src.constants import PaymentStatus
 from src.extensions import db
-from src.models.booking import Booking
+from src.models.booking import Booking, Payment
 from src.models.tour import Departure
 from src.models.user import User
 from src.utils.auth import guest_required
@@ -137,3 +138,86 @@ def get_booking_detail(id):
     }
 
     return jsonify(booking=result), 200
+
+
+@guest_bp.route("/payments", methods=["POST"])
+@guest_required()
+def create_payment():
+    guest = get_current_guest()
+    data = request.get_json()
+
+    booking_id = data.get("booking_id")
+    amount = data.get("amount")
+    payment_method = data.get("payment_method")
+
+    if not booking_id or amount is None or not payment_method:
+        return jsonify(
+            error="Bad Request",
+            message="booking_id, amount, and payment_method are required",
+        ), 400
+
+    try:
+        amount = float(amount)
+        if amount <= 0:
+            raise ValueError
+    except ValueError:
+        return jsonify(
+            error="Bad Request", message="amount must be a positive number"
+        ), 400
+
+    booking = db.session.get(Booking, booking_id)
+    if not booking or booking.guest_id != guest.id:
+        return jsonify(
+            error="Not Found", message="Booking not found or access denied"
+        ), 404
+
+    # Create mock payment
+    payment = Payment(
+        booking_id=booking.id,
+        amount=amount,
+        payment_method=payment_method,
+        status="SUCCESS",
+    )
+    db.session.add(payment)
+
+    # Update booking payment status
+    if amount >= booking.total_price:
+        booking.payment_status = PaymentStatus.FULLY_PAID
+    else:
+        booking.payment_status = PaymentStatus.DEPOSIT_PAID
+
+    db.session.commit()
+
+    return jsonify(
+        message="Payment successful",
+        payment_id=payment.id,
+        booking_status=booking.payment_status,
+    ), 201
+
+
+@guest_bp.route("/payments", methods=["GET"])
+@guest_required()
+def get_my_payments():
+    guest = get_current_guest()
+    booking_id = request.args.get("booking_id")
+
+    query = Payment.query.join(Booking).filter(Booking.guest_id == guest.id)
+
+    if booking_id:
+        query = query.filter(Payment.booking_id == int(booking_id))
+
+    payments = query.all()
+    result = []
+    for p in payments:
+        result.append(
+            {
+                "id": p.id,
+                "booking_id": p.booking_id,
+                "amount": p.amount,
+                "payment_method": p.payment_method,
+                "status": p.status,
+                "created_at": p.created_at.isoformat() if p.created_at else None,
+            }
+        )
+
+    return jsonify(payments=result), 200
