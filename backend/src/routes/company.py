@@ -1,10 +1,11 @@
 from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt_identity
 
 from src.extensions import db
 from src.models.tour import Departure, Destination, Tour, TourItinerary
-from src.models.user import CompanyProfile, User
+from src.models.user import User
 from src.utils.auth import company_required
 
 company_bp = Blueprint("company", __name__, url_prefix="/api/company")
@@ -15,12 +16,7 @@ def get_current_company():
     user = db.session.get(User, user_id)
     return user.company_profile
 
-
-# ==========================================
 # TOUR MANAGEMENT
-# ==========================================
-
-
 @company_bp.route("/tours", methods=["GET"])
 @company_required()
 def get_my_tours():
@@ -175,11 +171,7 @@ def delete_tour(id):
     return jsonify(message="Tour deleted successfully"), 200
 
 
-# ==========================================
 # ITINERARY MANAGEMENT
-# ==========================================
-
-
 @company_bp.route("/tours/<int:tour_id>/itineraries", methods=["POST"])
 @company_required()
 def add_itinerary(tour_id):
@@ -237,12 +229,7 @@ def modify_itinerary(id):
     db.session.commit()
     return jsonify(message="Itinerary updated successfully"), 200
 
-
-# ==========================================
 # DEPARTURE MANAGEMENT
-# ==========================================
-
-
 @company_bp.route("/tours/<int:tour_id>/departures", methods=["POST"])
 @company_required()
 def add_departure(tour_id):
