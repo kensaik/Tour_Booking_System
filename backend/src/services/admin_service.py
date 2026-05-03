@@ -89,7 +89,7 @@ class AdminService:
         if not company:
             return {"error": "Company not found", "status": 404}
 
-        if new_rate is None or not isinstance(new_rate, (int, float)):
+        if new_rate is None or not isinstance(new_rate, int | float):
             return {"error": "Valid commission_rate is required", "status": 400}
 
         if new_rate < 0 or new_rate > 100:
