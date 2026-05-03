@@ -14,7 +14,13 @@ public_bp = Blueprint("public", __name__, url_prefix="/api/public")
 def get_destinations():
     destinations = Destination.query.all()
     result = [
-        {"id": d.id, "name": d.name, "description": d.description} for d in destinations
+        {
+            "id": d.id,
+            "name": d.name,
+            "description": d.description,
+            "image_url": d.image_url,
+        }
+        for d in destinations
     ]
     return jsonify(destinations=result), 200
 
@@ -47,6 +53,7 @@ def get_tours():
                 "description": t.description,
                 "price": t.price,
                 "total_days": t.total_days,
+                "image_url": t.image_url,
             }
         )
 
@@ -94,6 +101,7 @@ def get_tour_detail(id):
         "description": tour.description,
         "price": tour.price,
         "total_days": tour.total_days,
+        "image_url": tour.image_url,
         "itineraries": itineraries,
         "departures": valid_departures,
     }

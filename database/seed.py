@@ -42,7 +42,8 @@ def seed_database():
         guest_profile = GuestProfile(
             user_id=guest_user.id,
             full_name="Nguyễn Văn Khách",
-            phone_number="0901234567"
+            phone_number="0901234567",
+            avatar_url="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200"
         )
         db.session.add(guest_profile)
 
@@ -60,13 +61,14 @@ def seed_database():
             company_name="Saigontourist",
             description="Công ty du lịch uy tín hàng đầu.",
             commission_rate=10.0,
-            is_approved=True
+            is_approved=True,
+            logo_url="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=200"
         )
         db.session.add(company_profile)
 
         print("Seeding Destinations...")
-        dalat = Destination(name="Đà Lạt", description="Thành phố ngàn hoa")
-        sapa = Destination(name="Sapa", description="Thành phố trong sương")
+        dalat = Destination(name="Đà Lạt", description="Thành phố ngàn hoa", image_url="https://images.unsplash.com/photo-1582559938555-46b55fc622b7?auto=format&fit=crop&q=80&w=800")
+        sapa = Destination(name="Sapa", description="Thành phố trong sương", image_url="https://images.unsplash.com/photo-1550931298-500b46be1c02?auto=format&fit=crop&q=80&w=800")
         db.session.add(dalat)
         db.session.add(sapa)
         db.session.flush()
@@ -79,7 +81,8 @@ def seed_database():
             description="Chuyến đi đáng nhớ đến với cao nguyên Lâm Viên",
             price=2500000.0,
             total_days=3,
-            status=TourStatus.ACTIVE
+            status=TourStatus.ACTIVE,
+            image_url="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=800"
         )
         db.session.add(tour1)
         db.session.flush()

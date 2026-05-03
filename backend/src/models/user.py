@@ -37,6 +37,7 @@ class CompanyProfile(db.Model):
     )
     company_name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=True)
+    logo_url = db.Column(db.String(500), nullable=True)
     commission_rate = db.Column(db.Float, default=10.0)  # Admin configures this
     is_approved = db.Column(db.Boolean, default=False)  # Admin needs to approve
 
@@ -55,6 +56,7 @@ class GuestProfile(db.Model):
     )
     full_name = db.Column(db.String(150), nullable=False)
     phone_number = db.Column(db.String(20), nullable=True)
+    avatar_url = db.Column(db.String(500), nullable=True)
 
     bookings = db.relationship("Booking", backref="guest", lazy="dynamic")
 
