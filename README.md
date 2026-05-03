@@ -23,24 +23,47 @@ và cung cấp công cụ cho Admin quản trị các công ty đối tác cùng
 ### Yêu cầu
 - Python 3.x
 - Node.js 18+
-- MySQL Server
+- MySQL Server (đang chạy ở cổng 3306)
 
 ### Chạy Backend (Flask)
 ```bash
 cd backend
-python -m venv venv
-# Active venv (Windows: venv\Scripts\activate | Mac/Linux: source venv/bin/activate)
-pip install -r requirements.txt
-flask run
 
-### Chạy Frontend (nếu dùng React)
+# 1. Tạo môi trường ảo và kích hoạt
+python -m venv venv
+# Windows: venv\Scripts\activate
+# Mac/Linux: source venv/bin/activate
+
+# 2. Cài đặt thư viện
+pip install -r requirements.txt
+
+# 3. Cấu hình biến môi trường
+# Copy nội dung từ file .env.example sang file .env và điền thông tin Database MySQL
+cp .env.example .env
+
+# 4. Khởi tạo dữ liệu mẫu (Cực kỳ quan trọng để Test)
+# Lệnh này sẽ xóa DB cũ, tạo lại các bảng và bơm dữ liệu giả lập (Tours, Users, Bookings...)
+python database/seed.py
+
+# 5. Khởi động Server
+flask run
+```
+
+> **Tài khoản Test mặc định (Mật khẩu chung: `123`)**
+> - Admin: `admin@test.com`
+> - Công ty: `company@test.com`
+> - Khách hàng: `guest1@test.com`
+
+### Chạy Frontend (nếu dùng React)
+```bash
 cd frontend
 npm install
-npm start
+npm run dev
+```
 
 ### Truy cập
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
+- Frontend: `http://localhost:5173` (nếu dùng Vite) hoặc `http://localhost:3000`
+- Backend API: `http://localhost:5000`
 
 ## Lint & Format
 

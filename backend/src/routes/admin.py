@@ -13,7 +13,13 @@ admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
 def get_destinations():
     destinations = Destination.query.all()
     result = [
-        {"id": d.id, "name": d.name, "description": d.description} for d in destinations
+        {
+            "id": d.id,
+            "name": d.name,
+            "description": d.description,
+            "image_url": d.image_url,
+        }
+        for d in destinations
     ]
     return jsonify(destinations=result), 200
 
@@ -24,6 +30,7 @@ def create_destination():
     data = request.get_json()
     name = data.get("name")
     description = data.get("description", "")
+    image_url = data.get("image_url")
 
     if not name:
         return jsonify(error="Bad Request", message="Destination name is required"), 400
@@ -33,13 +40,17 @@ def create_destination():
             error="Bad Request", message="Destination name already exists"
         ), 400
 
-    new_dest = Destination(name=name, description=description)
+    new_dest = Destination(name=name, description=description, image_url=image_url)
     db.session.add(new_dest)
     db.session.commit()
 
     return jsonify(
         message="Destination created successfully",
-        destination={"id": new_dest.id, "name": new_dest.name},
+        destination={
+            "id": new_dest.id,
+            "name": new_dest.name,
+            "image_url": new_dest.image_url,
+        },
     ), 201
 
 
@@ -64,10 +75,17 @@ def update_destination(id):
     if "description" in data:
         destination.description = data.get("description")
 
+    if "image_url" in data:
+        destination.image_url = data.get("image_url")
+
     db.session.commit()
     return jsonify(
         message="Destination updated successfully",
-        destination={"id": destination.id, "name": destination.name},
+        destination={
+            "id": destination.id,
+            "name": destination.name,
+            "image_url": destination.image_url,
+        },
     ), 200
 
 
@@ -107,6 +125,7 @@ def get_companies():
                 "user_id": c.user_id,
                 "company_name": c.company_name,
                 "description": c.description,
+                "logo_url": c.logo_url,
                 "commission_rate": c.commission_rate,
                 "is_approved": c.is_approved,
                 "email": c.user.email,

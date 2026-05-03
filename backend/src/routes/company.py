@@ -36,6 +36,7 @@ def get_my_tours():
                 "price": t.price,
                 "total_days": t.total_days,
                 "status": t.status,
+                "image_url": t.image_url,
                 "created_at": t.created_at.isoformat() if t.created_at else None,
             }
         )
@@ -66,6 +67,7 @@ def create_tour():
         description=data["description"],
         price=float(data["price"]),
         total_days=int(data["total_days"]),
+        image_url=data.get("image_url"),
     )
     db.session.add(new_tour)
     db.session.commit()
@@ -115,6 +117,7 @@ def get_tour_detail(id):
         "total_days": tour.total_days,
         "destination": tour.destination.name if tour.destination else None,
         "status": tour.status,
+        "image_url": tour.image_url,
         "itineraries": itineraries,
         "departures": departures,
     }
@@ -145,6 +148,8 @@ def update_tour(id):
         tour.total_days = int(data["total_days"])
     if "status" in data:
         tour.status = data["status"]
+    if "image_url" in data:
+        tour.image_url = data["image_url"]
 
     db.session.commit()
     return jsonify(message="Tour updated successfully"), 200
