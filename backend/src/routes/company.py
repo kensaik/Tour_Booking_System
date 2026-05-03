@@ -3,7 +3,9 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt_identity
 
+from src.constants import BookingStatus
 from src.extensions import db
+from src.models.booking import Booking
 from src.models.tour import Departure, Destination, Tour, TourItinerary
 from src.models.user import User
 from src.utils.auth import company_required
@@ -281,3 +283,128 @@ def add_departure(tour_id):
     db.session.commit()
 
     return jsonify(message="Departure added successfully", departure_id=dep.id), 201
+
+
+# BOOKING MANAGEMENT
+@company_bp.route("/bookings", methods=["GET"])
+@company_required()
+def get_company_bookings():
+    company = get_current_company()
+
+    status_filter = request.args.get("status")
+    departure_id = request.args.get("departure_id")
+
+    query = (
+        Booking.query.join(Departure).join(Tour).filter(Tour.company_id == company.id)
+    )
+
+    if status_filter:
+        query = query.filter(Booking.booking_status == status_filter)
+    if departure_id:
+        query = query.filter(Booking.departure_id == int(departure_id))
+
+    bookings = query.all()
+    result = []
+    for b in bookings:
+        result.append(
+            {
+                "id": b.id,
+                "tour_name": b.departure.tour.name
+                if b.departure and b.departure.tour
+                else None,
+                "start_date": b.departure.start_date.isoformat()
+                if b.departure
+                else None,
+                "guest_name": b.guest.full_name if b.guest else None,
+                "guest_phone": b.guest.phone_number if b.guest else None,
+                "num_people": b.num_people,
+                "total_price": b.total_price,
+                "payment_status": b.payment_status,
+                "booking_status": b.booking_status,
+                "created_at": b.created_at.isoformat() if b.created_at else None,
+            }
+        )
+    return jsonify(bookings=result), 200
+
+
+@company_bp.route("/bookings/<int:id>", methods=["GET"])
+@company_required()
+def get_booking_detail(id):
+    company = get_current_company()
+    booking = db.session.get(Booking, id)
+
+    if (
+        not booking
+        or not booking.departure
+        or not booking.departure.tour
+        or booking.departure.tour.company_id != company.id
+    ):
+        return jsonify(
+            error="Not Found", message="Booking not found or access denied"
+        ), 404
+
+    result = {
+        "id": booking.id,
+        "guest_name": booking.guest.full_name if booking.guest else None,
+        "guest_phone": booking.guest.phone_number if booking.guest else None,
+        "tour_name": booking.departure.tour.name,
+        "start_date": booking.departure.start_date.isoformat(),
+        "num_people": booking.num_people,
+        "total_price": booking.total_price,
+        "payment_status": booking.payment_status,
+        "booking_status": booking.booking_status,
+        "created_at": booking.created_at.isoformat() if booking.created_at else None,
+    }
+    return jsonify(booking=result), 200
+
+
+@company_bp.route("/bookings/<int:id>/status", methods=["PUT"])
+@company_required()
+def update_booking_status(id):
+    company = get_current_company()
+    booking = db.session.get(Booking, id)
+
+    if (
+        not booking
+        or not booking.departure
+        or not booking.departure.tour
+        or booking.departure.tour.company_id != company.id
+    ):
+        return jsonify(
+            error="Not Found", message="Booking not found or access denied"
+        ), 404
+
+    data = request.get_json()
+    new_status = data.get("booking_status")
+
+    if new_status not in [
+        BookingStatus.PENDING,
+        BookingStatus.CONFIRMED,
+        BookingStatus.COMPLETED,
+        BookingStatus.CANCELLED,
+    ]:
+        return jsonify(error="Bad Request", message="Invalid booking status"), 400
+
+    old_status = booking.booking_status
+
+    # Refund seats if cancelled
+    if old_status != BookingStatus.CANCELLED and new_status == BookingStatus.CANCELLED:
+        booking.departure.available_seats += booking.num_people
+
+    # Deduct seats if un-cancelling (Optional safety check)
+    elif (
+        old_status == BookingStatus.CANCELLED and new_status != BookingStatus.CANCELLED
+    ):
+        if booking.departure.available_seats < booking.num_people:
+            return jsonify(
+                error="Bad Request",
+                message="Not enough available seats to restore this booking",
+            ), 400
+        booking.departure.available_seats -= booking.num_people
+
+    booking.booking_status = new_status
+    db.session.commit()
+
+    return jsonify(
+        message="Booking status updated successfully", new_status=booking.booking_status
+    ), 200
