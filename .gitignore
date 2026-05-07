@@ -66,3 +66,7 @@ docker-compose.override.yml
 # Project folders
 plans/
 assets/showoff/
+
+# AI / Claude Code
+.claude/
+.omx/

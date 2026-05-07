@@ -1,8 +1,14 @@
-# Backend developer / lint tooling.
+# Backend developer / lint / test tooling.
 # Install with: `pip install -r requirements.txt -r requirements-dev.txt`
-#
-# Phase 0.1 — lint:
+
+# Lint
 ruff==0.6.9
-#
-# Phase 0.7 — test infra (Phát) will append:
-#   pytest-cov, factory-boy, pytest-flask, freezegun
+
+# Test infra (Phase 1 — 260507-1254-testing-implementation)
+pytest-cov==5.0.0
+pytest-mock==3.14.0
+freezegun==1.5.1
+
+# Automation suite (Phase 6)
+pytest-html==4.1.1
+requests==2.32.3
