@@ -79,6 +79,19 @@ pip install -r requirements-dev.txt
 ### Frontend (ESLint + Prettier)
 Xem [`frontend/README.md`](frontend/README.md) để biết cách bootstrap Vite + cài dev deps một lần.
 
+## Running automation tests
+
+API automation suite (Phase 6) runs against an ephemeral MySQL service in GitHub Actions and is **manual-dispatch only** — it does not block PRs.
+
+**Trigger from the Actions tab:**
+1. Open `Actions` → workflow **Automation Tests** → `Run workflow`.
+2. Select the branch (defaults to current default branch) and click `Run workflow`.
+3. After the run completes, download the `automation-report` artifact for the HTML test report.
+
+**Requirements:** repository secret `JWT_SECRET_KEY_TEST` must be set (any non-empty value works for the ephemeral container; do not reuse production secrets).
+
+The PR coverage gate (`ci.yml` → backend job) enforces `--cov-fail-under=70` independently and blocks merges if backend coverage drops below 70%.
+
 ## Demo
 
 ## Tài liệu

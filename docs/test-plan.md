@@ -169,7 +169,7 @@ Kiểm thử chức năng và hiển thị trên các trình duyệt được h�
 
 ### 5.4 Phương pháp tự động hóa
 
-Sau khi kiểm thử thủ công xác nhận hệ thống ổn định, các luồng happy path sau sẽ được tự động hóa bằng **pytest + Selenium**:
+Sau khi kiểm thử thủ công xác nhận hệ thống ổn định, các luồng happy path sau sẽ được tự động hóa bằng **pytest + requests (HTTP client)**:
 
 #### Happy path — Du khách
 

@@ -1,0 +1,111 @@
+name: Automation Tests
+
+# Manual-dispatch suite that runs the API automation tests (Phase 6) against
+# an ephemeral MySQL service container — production parity for the rubric +20%
+# bonus. Kept separate from PR coverage gate (`ci.yml`) so this never blocks
+# merges and only runs when QA explicitly triggers it from the Actions tab.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: automation-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: API automation (MySQL service)
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: tour_booking_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: mysql+pymysql://root:root@127.0.0.1:3306/tour_booking_test
+      FLASK_APP: src
+      SECRET_KEY: ${{ secrets.SECRET_KEY_TEST || 'ci-flask-secret-not-for-prod' }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST || 'ci-jwt-secret-not-for-prod' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; then
+              echo "MySQL up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "MySQL did not become healthy in time" >&2
+          exit 1
+
+      - name: Create schema
+        run: |
+          python -c "from src import create_app; from src.extensions import db; \
+            app=create_app(); ctx=app.app_context(); ctx.push(); db.create_all()"
+
+      - name: Seed data
+        run: python -m database.seed
+
+      - name: Start Flask in background
+        run: |
+          nohup flask run --host=127.0.0.1 --port=5000 > flask.log 2>&1 &
+          echo $! > flask.pid
+
+      - name: Wait for /api/health
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://127.0.0.1:5000/api/health >/dev/null; then
+              echo "Flask up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "Flask did not respond in time" >&2
+          cat flask.log || true
+          exit 1
+
+      - name: Run automation suite
+        run: pytest tests_e2e/ --no-cov --html=report.html --self-contained-html
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-report
+          path: backend/report.html
+
+      - name: Stop Flask
+        if: always()
+        run: |
+          if [ -f flask.pid ]; then
+            kill "$(cat flask.pid)" 2>/dev/null || true
+          fi

@@ -3,6 +3,29 @@
 # This file is intentionally NOT a packaging manifest — Flask app is run via
 # `flask --app src run`, not via `pip install .`.
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --cov=src --cov-report=term-missing --cov-fail-under=70"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "src/__init__.py",
+    "src/config.py",
+    "src/extensions.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
 [tool.ruff]
 # Match Black's default line length and EditorConfig.
 line-length = 88
