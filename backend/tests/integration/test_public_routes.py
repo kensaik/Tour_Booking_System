@@ -1,5 +1,6 @@
-from src.constants import TourStatus
 from tests.conftest import make_company, make_departure, make_destination, make_tour
+
+from src.constants import TourStatus
 
 
 def test_get_destinations_returns_list(client):

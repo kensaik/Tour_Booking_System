@@ -41,9 +41,7 @@ def _get_or_create_user(email, password, role, **extras):
 
 
 def _seed_admin():
-    user, created = _get_or_create_user(
-        ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN
-    )
+    user, created = _get_or_create_user(ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
     return user, created
 
 

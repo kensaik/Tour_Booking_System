@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-from src.constants import PaymentStatus
 from tests.conftest import (
     make_booking,
     make_company,
@@ -8,6 +7,8 @@ from tests.conftest import (
     make_guest,
     make_tour,
 )
+
+from src.constants import PaymentStatus
 
 
 def test_book_departure_success_returns_201(client, auth_client):

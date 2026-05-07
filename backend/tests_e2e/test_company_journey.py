@@ -16,9 +16,7 @@ def _register_company(api_client, email, name, password="Co1!Test"):
 
 
 def _login(api_client, email, password):
-    r = api_client.post(
-        "/api/auth/login", json={"email": email, "password": password}
-    )
+    r = api_client.post("/api/auth/login", json={"email": email, "password": password})
     assert r.status_code == 200, r.text
     return r.json()
 
@@ -100,9 +98,9 @@ def test_company_full_journey(api_client, unique_email, admin_token):
     r = public_client.get("/api/public/tours", params={"keyword": tour_payload["name"]})
     assert r.status_code == 200, r.text
     visible = r.json()["tours"]
-    assert any(t["id"] == tour_id for t in visible), (
-        f"tour not visible publicly: {visible}"
-    )
+    assert any(
+        t["id"] == tour_id for t in visible
+    ), f"tour not visible publicly: {visible}"
 
 
 def test_register_company_missing_company_name_returns_400(api_client, unique_email):

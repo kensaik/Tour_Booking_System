@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-from src.constants import BookingStatus
 from tests.conftest import (
     make_booking,
     make_company,
@@ -10,6 +9,8 @@ from tests.conftest import (
     make_itinerary,
     make_tour,
 )
+
+from src.constants import BookingStatus
 
 
 def test_get_my_tours_returns_only_own(client, auth_client):

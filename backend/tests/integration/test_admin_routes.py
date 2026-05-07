@@ -1,4 +1,10 @@
-from tests.conftest import make_admin, make_company, make_destination, make_guest, make_tour
+from tests.conftest import (
+    make_admin,
+    make_company,
+    make_destination,
+    make_guest,
+    make_tour,
+)
 
 
 def test_admin_get_destinations(client, auth_client):
@@ -44,9 +50,7 @@ def test_admin_update_destination(client, auth_client):
 
 def test_admin_update_destination_not_found_returns_404(client, auth_client):
     admin = make_admin()
-    res = auth_client(admin).put(
-        "/api/admin/destinations/9999", json={"name": "X"}
-    )
+    res = auth_client(admin).put("/api/admin/destinations/9999", json={"name": "X"})
     assert res.status_code == 404
 
 
@@ -80,14 +84,18 @@ def test_admin_get_companies_pending_filter(client, auth_client):
 def test_admin_approve_company(client, auth_client):
     admin = make_admin()
     co = make_company(approved=False)
-    res = auth_client(admin).put(f"/api/admin/companies/{co.company_profile.id}/approve")
+    res = auth_client(admin).put(
+        f"/api/admin/companies/{co.company_profile.id}/approve"
+    )
     assert res.status_code == 200
 
 
 def test_admin_approve_company_idempotent(client, auth_client):
     admin = make_admin()
     co = make_company(approved=True)
-    res = auth_client(admin).put(f"/api/admin/companies/{co.company_profile.id}/approve")
+    res = auth_client(admin).put(
+        f"/api/admin/companies/{co.company_profile.id}/approve"
+    )
     assert res.status_code == 200
     assert "already" in res.get_json()["message"].lower()
 

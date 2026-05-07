@@ -65,9 +65,9 @@ def admin_token(api_base_url):
         "/api/auth/login",
         json={"email": ADMIN_EMAIL, "password": ADMIN_PASSWORD},
     )
-    assert r.status_code == 200, (
-        f"Admin login failed (seed missing?): {r.status_code} {r.text}"
-    )
+    assert (
+        r.status_code == 200
+    ), f"Admin login failed (seed missing?): {r.status_code} {r.text}"
     return r.json()["access_token"]
 
 

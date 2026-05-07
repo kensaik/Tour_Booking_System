@@ -13,9 +13,7 @@ def _register_guest(api_client, email, password="Pw1!Test"):
 
 
 def _login(api_client, email, password):
-    r = api_client.post(
-        "/api/auth/login", json={"email": email, "password": password}
-    )
+    r = api_client.post("/api/auth/login", json={"email": email, "password": password})
     assert r.status_code == 200, r.text
     return r.json()["access_token"]
 
