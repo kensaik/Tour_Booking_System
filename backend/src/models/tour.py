@@ -1,4 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timezone
+
+
+def _utcnow():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 from src.constants import DepartureStatus, TourStatus
 from src.extensions import db
@@ -34,9 +38,9 @@ class Tour(db.Model):
     total_days = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(20), default=TourStatus.DRAFT)
     image_url = db.Column(db.String(500), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+        db.DateTime, default=_utcnow, onupdate=_utcnow
     )
 
     itineraries = db.relationship(

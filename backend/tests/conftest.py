@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from flask_jwt_extended import create_access_token
@@ -24,8 +24,8 @@ from src.utils.auth import hash_password
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-    SECRET_KEY = "test-secret-key"
-    JWT_SECRET_KEY = "test-jwt-secret-key"
+    SECRET_KEY = "test-secret-key-for-pytest-32bytes"
+    JWT_SECRET_KEY = "test-jwt-secret-key-for-pytest-32b"
 
 
 @pytest.fixture
@@ -174,7 +174,7 @@ def make_departure(
     status: str = DepartureStatus.PLANNED,
     **kwargs,
 ) -> Departure:
-    start = start_date or (datetime.utcnow() + timedelta(days=30))
+    start = start_date or (datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(days=30))
     end = end_date or (start + timedelta(days=tour.total_days or 3))
     dep = Departure(
         tour_id=tour.id,
