@@ -43,7 +43,7 @@ export default function CompanyAddTourPage() {
   const destinations = destResponse?.destinations || [];
 
   const mutation = useMutation({
-    mutationFn: (data: any) => CompanyService.createTour(data),
+    mutationFn: (data: Record<string, unknown>) => CompanyService.createTour(data),
     onSuccess: () => {
       navigate("/company/tours");
     },
@@ -138,7 +138,7 @@ export default function CompanyAddTourPage() {
                   onChange={(e) => setFormData({ ...formData, destination_id: e.target.value })}
                 >
                   <option value="">Chọn điểm đến</option>
-                  {destinations.map((d: any) => (
+                  {destinations.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.name}
                     </option>

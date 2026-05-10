@@ -87,11 +87,12 @@ export default function CheckoutPage() {
       });
       setBookingId(res.booking_id);
       setStep(2);
-    } catch (err: any) {
+    } catch (err) {
+      const apiErr = err as { response?: { data?: { message?: string } } };
       setModalConfig({
         isOpen: true,
         title: "Lỗi đặt tour",
-        message: err.response?.data?.message || "Có lỗi xảy ra khi đặt tour. Vui lòng thử lại sau.",
+        message: apiErr.response?.data?.message || "Có lỗi xảy ra khi đặt tour. Vui lòng thử lại sau.",
       });
     }
   };
@@ -106,11 +107,12 @@ export default function CheckoutPage() {
       await GuestService.createPayment(bookingId!, totalAmount, paymentMethod);
       setShowInstructions(false);
       setStep(3);
-    } catch (err: any) {
+    } catch (err) {
+      const apiErr = err as { response?: { data?: { message?: string } } };
       setModalConfig({
         isOpen: true,
         title: "Lỗi thanh toán",
-        message: err.response?.data?.message || "Có lỗi xảy ra khi xác nhận thanh toán.",
+        message: apiErr.response?.data?.message || "Có lỗi xảy ra khi xác nhận thanh toán.",
       });
     }
   };

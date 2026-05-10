@@ -21,7 +21,7 @@ export default function AdminDashboardPage() {
   const topCompanies = [...companies]
     .sort((a, b) => (b.total_revenue || 0) - (a.total_revenue || 0))
     .slice(0, 5)
-    .map((company: any) => ({
+    .map((company) => ({
       name: company.company_name,
       tours: company.tours_count || 0,
       bookings: company.bookings_count || 0,

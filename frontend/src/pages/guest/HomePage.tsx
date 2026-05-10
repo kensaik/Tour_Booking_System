@@ -105,7 +105,7 @@ export default function HomePage() {
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-outline-variant bg-white focus:ring-2 focus:ring-primary focus:border-primary appearance-none text-base"
                 >
                   <option value="">Tìm nơi bạn muốn đến...</option>
-                  {destinations.map((d: any) => (
+                  {destinations.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.name}
                     </option>
@@ -194,7 +194,7 @@ export default function HomePage() {
           <div className="text-center py-10 text-on-surface-variant">Chưa có tour nổi bật nào.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {featuredTours.map((tour: any) => (
+            {featuredTours.map((tour) => (
               <article
                 key={tour.id}
                 className="bg-surface-container-lowest rounded-xl overflow-hidden tour-card-shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-[0px_8px_30px_rgba(0,78,137,0.12)]"

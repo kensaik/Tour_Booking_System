@@ -58,9 +58,10 @@ export default function CompanyAddDeparturePage() {
       );
       setToast({ message: "Thêm lịch trình thành công", type: "success" });
       setTimeout(() => navigate("/company/departures"), 1500);
-    } catch (error: any) {
+    } catch (error) {
+      const apiError = error as { response?: { data?: { message?: string } } };
       setToast({
-        message: error.response?.data?.message || "Có lỗi xảy ra khi lưu lịch trình",
+        message: apiError.response?.data?.message || "Có lỗi xảy ra khi lưu lịch trình",
         type: "error",
       });
     } finally {
@@ -98,7 +99,7 @@ export default function CompanyAddDeparturePage() {
                 setTourSearch(e.target.value);
                 setShowTourDropdown(true);
                 const match = tours.find(
-                  (t: any) => t.name.toLowerCase() === e.target.value.toLowerCase(),
+                  (t) => t.name.toLowerCase() === e.target.value.toLowerCase(),
                 );
                 if (match) setSelectedTour(match.id);
               }}
@@ -106,8 +107,8 @@ export default function CompanyAddDeparturePage() {
             {showTourDropdown && (
               <div className="absolute z-20 w-full mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-2xl max-h-60 overflow-auto py-2">
                 {tours
-                  .filter((t: any) => t.name.toLowerCase().includes(tourSearch.toLowerCase()))
-                  .map((t: any) => (
+                  .filter((t) => t.name.toLowerCase().includes(tourSearch.toLowerCase()))
+                  .map((t) => (
                     <div
                       key={t.id}
                       className="px-4 py-3 hover:bg-primary/10 cursor-pointer transition-colors flex items-center justify-between group"
@@ -125,7 +126,7 @@ export default function CompanyAddDeparturePage() {
                       )}
                     </div>
                   ))}
-                {tours.filter((t: any) => t.name.toLowerCase().includes(tourSearch.toLowerCase()))
+                {tours.filter((t) => t.name.toLowerCase().includes(tourSearch.toLowerCase()))
                   .length === 0 && (
                   <div className="px-4 py-4 text-sm text-on-surface-variant italic text-center">
                     Không tìm thấy tour nào...

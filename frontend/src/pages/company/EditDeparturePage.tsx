@@ -65,8 +65,9 @@ export default function CompanyEditDeparturePage() {
       });
       setToast({ message: "Cập nhật lịch trình thành công", type: "success" });
       setTimeout(() => navigate("/company/departures"), 1500);
-    } catch (error: any) {
-      setToast({ message: error.response?.data?.message || "Có lỗi xảy ra", type: "error" });
+    } catch (error) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      setToast({ message: apiError.response?.data?.message || "Có lỗi xảy ra", type: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -113,7 +114,7 @@ export default function CompanyEditDeparturePage() {
                 setTourSearch(e.target.value);
                 setShowTourDropdown(true);
                 const match = tours.find(
-                  (t: any) => t.name.toLowerCase() === e.target.value.toLowerCase(),
+                  (t) => t.name.toLowerCase() === e.target.value.toLowerCase(),
                 );
                 if (match) setSelectedTour(match.id);
               }}
@@ -121,8 +122,8 @@ export default function CompanyEditDeparturePage() {
             {showTourDropdown && (
               <div className="absolute z-20 w-full mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-2xl max-h-60 overflow-auto py-2">
                 {tours
-                  .filter((t: any) => t.name.toLowerCase().includes(tourSearch.toLowerCase()))
-                  .map((t: any) => (
+                  .filter((t) => t.name.toLowerCase().includes(tourSearch.toLowerCase()))
+                  .map((t) => (
                     <div
                       key={t.id}
                       className="px-4 py-3 hover:bg-primary/10 cursor-pointer transition-colors flex items-center justify-between group"

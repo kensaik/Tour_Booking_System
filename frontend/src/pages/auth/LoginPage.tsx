@@ -49,9 +49,10 @@ export default function LoginPage() {
       else if (userRole === "company") targetPath = "/company";
 
       navigate(targetPath);
-    } catch (error: any) {
+    } catch (error) {
+      const apiError = error as { response?: { data?: { message?: string } } };
       let msg =
-        error.response?.data?.message ||
+        apiError.response?.data?.message ||
         "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.";
       if (msg === "Account is deactivated") {
         msg = "Tài khoản của bạn đã bị khóa";

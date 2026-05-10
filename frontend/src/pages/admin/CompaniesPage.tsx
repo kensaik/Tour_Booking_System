@@ -7,11 +7,21 @@ import { formatDate } from "@/lib/format";
 import StatusBadge from "@/components/ui/StatusBadge";
 import Modal from "@/components/ui/Modal";
 
+interface CompanyItem {
+  id: number | string;
+  company_name: string;
+  email: string;
+  commission_rate: number;
+  is_approved: boolean;
+  is_active: boolean;
+  created_at: string;
+}
+
 export default function AdminCompaniesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [modalType, setModalType] = useState<"view" | "edit" | "add" | null>(null);
-  const [selectedCompany, setSelectedCompany] = useState<any>(null);
+  const [selectedCompany, setSelectedCompany] = useState<CompanyItem | null>(null);
   const [formData, setFormData] = useState({
     company_name: "",
     email: "",
@@ -46,7 +56,7 @@ export default function AdminCompaniesPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => AdminService.createCompany(data),
+    mutationFn: (data: Record<string, unknown>) => AdminService.createCompany(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-companies"] });
       setModalType(null);
@@ -55,7 +65,7 @@ export default function AdminCompaniesPage() {
   });
 
   const updateCommissionMutation = useMutation({
-    mutationFn: ({ id, rate }: { id: any; rate: number }) =>
+    mutationFn: ({ id, rate }: { id: number | string; rate: number }) =>
       AdminService.updateCommission(id, rate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-companies"] });
@@ -65,7 +75,7 @@ export default function AdminCompaniesPage() {
 
   const companies = response?.companies || [];
 
-  const filteredCompanies = companies.filter((company: any) => {
+  const filteredCompanies = companies.filter((company) => {
     const matchesSearch =
       (company.company_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (company.email || "").toLowerCase().includes(searchTerm.toLowerCase());
@@ -83,13 +93,13 @@ export default function AdminCompaniesPage() {
     setModalType("add");
   };
 
-  const handleOpenEdit = (company: any) => {
+  const handleOpenEdit = (company: CompanyItem) => {
     setSelectedCompany(company);
     setFormData({ ...formData, commission_rate: company.commission_rate || 10 });
     setModalType("edit");
   };
 
-  const handleOpenView = (company: any) => {
+  const handleOpenView = (company: CompanyItem) => {
     setSelectedCompany(company);
     setModalType("view");
   };
@@ -181,7 +191,7 @@ export default function AdminCompaniesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant">
-              {filteredCompanies.map((company: any) => (
+              {filteredCompanies.map((company) => (
                 <tr
                   key={company.id}
                   className={`hover:bg-surface-container-low transition-colors ${!company.is_active ? "opacity-60 bg-surface-container-lowest" : ""}`}

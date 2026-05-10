@@ -34,23 +34,23 @@ export default function CompanyDashboardPage() {
   const departures = departuresData?.departures || [];
 
   const totalRevenue = bookings
-    .filter((booking: any) => {
+    .filter((booking) => {
       const pStatus = booking.payment_status?.toLowerCase();
       const bStatus = booking.booking_status?.toLowerCase();
       return (pStatus === "fully_paid" || pStatus === "deposit_paid") && bStatus === "confirmed";
     })
-    .reduce((sum: number, booking: any) => sum + booking.total_price, 0);
+    .reduce((sum: number, booking) => sum + booking.total_price, 0);
   const totalBookings = bookings.length;
-  const totalCustomers = new Set(bookings.map((booking: any) => booking.user_id)).size;
+  const totalCustomers = new Set(bookings.map((booking) => booking.user_id)).size;
   const activeTours = tours.filter(
-    (tour: any) => tour.status === "active" || tour.status === "approved",
+    (tour) => tour.status === "active" || tour.status === "approved",
   ).length;
 
   const recentBookings = [...bookings]
     .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
     .slice(0, 5);
   const upcomingDepartures = [...departures]
-    .filter((departure: any) => new Date(departure.start_date) > new Date())
+    .filter((departure) => new Date(departure.start_date) > new Date())
     .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
     .slice(0, 5);
 
@@ -104,7 +104,7 @@ export default function CompanyDashboardPage() {
               {recentBookings.length === 0 ? (
                 <p className="text-on-surface-variant">Chưa có đơn đặt tour nào.</p>
               ) : (
-                recentBookings.map((booking: any) => (
+                recentBookings.map((booking) => (
                   <div
                     key={booking.id}
                     className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0"
@@ -140,7 +140,7 @@ export default function CompanyDashboardPage() {
               {upcomingDepartures.length === 0 ? (
                 <p className="text-on-surface-variant">Chưa có lịch khởi hành sắp tới.</p>
               ) : (
-                upcomingDepartures.map((departure: any) => {
+                upcomingDepartures.map((departure) => {
                   const booked = departure.total_seats - departure.available_seats;
                   return (
                     <div

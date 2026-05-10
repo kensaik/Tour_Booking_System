@@ -33,7 +33,7 @@ export default function CompanyToursPage() {
 
   const tours = response?.tours || [];
 
-  const filteredTours = tours.filter((tour: any) => {
+  const filteredTours = tours.filter((tour) => {
     const matchesSearch =
       tour.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tour.destination.toLowerCase().includes(searchQuery.toLowerCase());
@@ -140,7 +140,7 @@ export default function CompanyToursPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant">
-                {filteredTours.map((tour: any) => (
+                {filteredTours.map((tour) => (
                   <tr key={tour.id} className="hover:bg-surface-container-low transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">

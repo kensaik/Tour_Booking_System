@@ -8,11 +8,18 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 import Toast, { ToastType } from "@/components/ui/Toast";
 import EmptyState from "@/components/ui/EmptyState";
 
+interface DestinationItem {
+  id: number | string;
+  name: string;
+  description?: string;
+  image_url?: string;
+}
+
 export default function DestinationsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [modalType, setModalType] = useState<"view" | "edit" | "add" | null>(null);
   const [deleteId, setDeleteId] = useState<number | string | null>(null);
-  const [selectedDestination, setSelectedDestination] = useState<any>(null);
+  const [selectedDestination, setSelectedDestination] = useState<DestinationItem | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -34,26 +41,27 @@ export default function DestinationsPage() {
   const destinations = response?.destinations || [];
 
   const filteredDestinations = destinations.filter(
-    (dest: any) =>
+    (dest) =>
       dest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (dest.description && dest.description.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => AdminService.createDestination(data),
+    mutationFn: (data: Record<string, unknown>) => AdminService.createDestination(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-destinations"] });
       setModalType(null);
       resetForm();
       setToast({ message: "Thêm điểm đến thành công!", type: "success" });
     },
-    onError: (err: any) => {
-      setToast({ message: err.response?.data?.message || "Lỗi khi thêm điểm đến", type: "error" });
+    onError: (err) => {
+      const apiErr = err as { response?: { data?: { message?: string } } };
+      setToast({ message: apiErr.response?.data?.message || "Lỗi khi thêm điểm đến", type: "error" });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number | string; data: any }) =>
+    mutationFn: ({ id, data }: { id: number | string; data: Record<string, unknown> }) =>
       AdminService.updateDestination(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-destinations"] });
@@ -61,8 +69,9 @@ export default function DestinationsPage() {
       resetForm();
       setToast({ message: "Cập nhật điểm đến thành công!", type: "success" });
     },
-    onError: (err: any) => {
-      setToast({ message: err.response?.data?.message || "Lỗi khi cập nhật", type: "error" });
+    onError: (err) => {
+      const apiErr = err as { response?: { data?: { message?: string } } };
+      setToast({ message: apiErr.response?.data?.message || "Lỗi khi cập nhật", type: "error" });
     },
   });
 
@@ -73,9 +82,10 @@ export default function DestinationsPage() {
       setDeleteId(null);
       setToast({ message: "Xóa điểm đến thành công!", type: "success" });
     },
-    onError: (err: any) => {
+    onError: (err) => {
+      const apiErr = err as { response?: { data?: { message?: string } } };
       setToast({
-        message: err.response?.data?.message || "Không thể xóa điểm đến này",
+        message: apiErr.response?.data?.message || "Không thể xóa điểm đến này",
         type: "error",
       });
       setDeleteId(null);
@@ -92,7 +102,7 @@ export default function DestinationsPage() {
     setModalType("add");
   };
 
-  const handleOpenEdit = (dest: any) => {
+  const handleOpenEdit = (dest: DestinationItem) => {
     setSelectedDestination(dest);
     setFormData({
       name: dest.name,
@@ -102,7 +112,7 @@ export default function DestinationsPage() {
     setModalType("edit");
   };
 
-  const handleOpenView = (dest: any) => {
+  const handleOpenView = (dest: DestinationItem) => {
     setSelectedDestination(dest);
     setModalType("view");
   };
@@ -163,7 +173,7 @@ export default function DestinationsPage() {
       {/* Destinations Grid */}
       {filteredDestinations.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDestinations.map((dest: any) => (
+          {filteredDestinations.map((dest) => (
             <div
               key={dest.id}
               className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant hover:shadow-md transition-shadow"

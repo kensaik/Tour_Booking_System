@@ -50,8 +50,9 @@ export default function RegisterPage() {
       });
       alert("Đăng ký thành công! Vui lòng đăng nhập.");
       navigate("/login");
-    } catch (error: any) {
-      setErrorMsg(error.response?.data?.message || "Đăng ký thất bại. Vui lòng thử lại sau.");
+    } catch (error) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      setErrorMsg(apiError.response?.data?.message || "Đăng ký thất bại. Vui lòng thử lại sau.");
     } finally {
       setIsLoading(false);
     }

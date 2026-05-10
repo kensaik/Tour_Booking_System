@@ -28,7 +28,7 @@ export default function CompanyDeparturesPage() {
 
   const departures = response?.departures || [];
 
-  const filteredDepartures = departures.filter((dep: any) => {
+  const filteredDepartures = departures.filter((dep) => {
     const matchesSearch =
       dep.tour?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       `tour #${dep.tour_id}`.includes(searchTerm.toLowerCase());
@@ -47,9 +47,10 @@ export default function CompanyDeparturesPage() {
       setToast({ message: "Xóa lịch khởi hành thành công", type: "success" });
       // refetch or manual update
       window.location.reload(); // Simple way to refresh for now
-    } catch (error: any) {
+    } catch (error) {
+      const apiError = error as { response?: { data?: { message?: string } } };
       setToast({
-        message: error.response?.data?.message || "Lỗi khi xóa lịch khởi hành",
+        message: apiError.response?.data?.message || "Lỗi khi xóa lịch khởi hành",
         type: "error",
       });
     } finally {
@@ -156,7 +157,7 @@ export default function CompanyDeparturesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant">
-              {filteredDepartures.map((departure: any) => {
+              {filteredDepartures.map((departure) => {
                 const booked = departure.total_seats - departure.available_seats;
                 const departureStatus = departure.available_seats === 0 ? "full" : "active";
                 const price = departure.tour?.price || 0;

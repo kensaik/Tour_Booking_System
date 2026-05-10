@@ -1,5 +1,5 @@
 import CompanyLayout from "@/components/company/CompanyLayout";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save, Image as ImageIcon, Plus, X, CheckCircle } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,11 +11,20 @@ import ErrorState from "@/components/ui/ErrorState";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import Toast, { ToastType } from "@/components/ui/Toast";
 
+interface TourFormData {
+  name: string;
+  description: string;
+  price: string | number;
+  destination_id: number | string;
+  image_url: string;
+  itineraries: Array<{ day_number: number; title: string; description: string; id?: number }>;
+}
+
 export default function CompanyTourDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<TourFormData | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [destSearch, setDestSearch] = useState("");
   const [showDestDropdown, setShowDestDropdown] = useState(false);
@@ -52,7 +61,7 @@ export default function CompanyTourDetailPage() {
     queryKey: ["destinations"],
     queryFn: () => PublicService.getDestinations(),
   });
-  const destinations = destResponse?.destinations || [];
+  const destinations = useMemo(() => destResponse?.destinations || [], [destResponse]);
 
   useEffect(() => {
     if (tour?.tour) {
@@ -65,13 +74,13 @@ export default function CompanyTourDetailPage() {
         image_url: t.image_url,
         itineraries: t.itineraries || [],
       });
-      const dest = destinations.find((d: any) => d.id === t.destination_id);
+      const dest = destinations.find((d) => d.id === t.destination_id);
       if (dest) setDestSearch(dest.name);
     }
   }, [tour, destinations]);
 
   const updateMutation = useMutation({
-    mutationFn: (data: any) => CompanyService.updateTour(id as string, data),
+    mutationFn: (data: Record<string, unknown>) => CompanyService.updateTour(id as string, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["company-tour", id] });
       queryClient.invalidateQueries({ queryKey: ["company-tours"] });
@@ -119,8 +128,8 @@ export default function CompanyTourDetailPage() {
   };
 
   const removeDay = (index: number) => {
-    const newItineraries = formData.itineraries.filter((_: any, i: number) => i !== index);
-    const reindexed = newItineraries.map((day: any, i: number) => ({ ...day, day_number: i + 1 }));
+    const newItineraries = formData.itineraries.filter((_, i: number) => i !== index);
+    const reindexed = newItineraries.map((day, i: number) => ({ ...day, day_number: i + 1 }));
     setFormData({ ...formData, itineraries: reindexed });
   };
 
@@ -217,7 +226,7 @@ export default function CompanyTourDetailPage() {
                       setDestSearch(e.target.value);
                       setShowDestDropdown(true);
                       const match = destinations.find(
-                        (d: any) => d.name.toLowerCase() === e.target.value.toLowerCase(),
+                        (d) => d.name.toLowerCase() === e.target.value.toLowerCase(),
                       );
                       if (match) {
                         setFormData({ ...formData, destination_id: match.id });
@@ -227,8 +236,8 @@ export default function CompanyTourDetailPage() {
                   {showDestDropdown && (
                     <div className="absolute z-10 w-full mt-1 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xl max-h-60 overflow-auto py-2">
                       {destinations
-                        .filter((d: any) => d.name.toLowerCase().includes(destSearch.toLowerCase()))
-                        .map((d: any) => (
+                        .filter((d) => d.name.toLowerCase().includes(destSearch.toLowerCase()))
+                        .map((d) => (
                           <div
                             key={d.id}
                             className="px-4 py-2.5 hover:bg-primary/10 cursor-pointer transition-colors flex items-center justify-between group"
@@ -246,7 +255,7 @@ export default function CompanyTourDetailPage() {
                             )}
                           </div>
                         ))}
-                      {destinations.filter((d: any) =>
+                      {destinations.filter((d) =>
                         d.name.toLowerCase().includes(destSearch.toLowerCase()),
                       ).length === 0 && (
                         <div className="px-4 py-3 text-sm text-on-surface-variant italic">
@@ -344,7 +353,7 @@ export default function CompanyTourDetailPage() {
             </div>
 
             <div className="space-y-6">
-              {formData.itineraries.map((day: any, index: number) => (
+              {formData.itineraries.map((day, index: number) => (
                 <div
                   key={index}
                   className="relative p-4 rounded-xl border border-outline-variant bg-surface-container-low group"
