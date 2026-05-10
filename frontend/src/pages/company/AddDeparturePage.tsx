@@ -13,7 +13,7 @@ export default function CompanyAddDeparturePage() {
     queryKey: ['company-tours'],
     queryFn: () => CompanyService.getMyTours(),
   })
-  
+
   const tours = response?.tours || []
 
   const [selectedTour, setSelectedTour] = useState('')
@@ -41,8 +41,8 @@ export default function CompanyAddDeparturePage() {
       alert('Vui lòng chọn tour')
       return
     }
+
     
-    // validate
     const isInvalid = departures.some(departure => !departure.start_date || !departure.end_date)
     if (isInvalid) {
       alert('Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc.')
@@ -51,7 +51,7 @@ export default function CompanyAddDeparturePage() {
 
     setIsSubmitting(true)
     try {
-      // Save all departures
+
       await Promise.all(
         departures.map(departure => CompanyService.addDeparture(selectedTour, departure))
       )
@@ -82,7 +82,7 @@ export default function CompanyAddDeparturePage() {
       />
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6">
-        {/* Tour Selection */}
+
         <div className="mb-6">
           <label htmlFor="tour-select" className="block text-sm font-medium text-on-surface mb-2">Chọn Tour</label>
           <select 
@@ -98,7 +98,6 @@ export default function CompanyAddDeparturePage() {
           </select>
         </div>
 
-        {/* Departures List */}
         <div className="space-y-4 mb-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-on-surface">Danh sách ngày khởi hành</h3>

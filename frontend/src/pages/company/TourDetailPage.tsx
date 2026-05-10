@@ -83,7 +83,6 @@ export default function CompanyTourDetailPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Auto calculate total days from itineraries length
     const total_days = formData.itineraries.length
 
     updateMutation.mutate({
@@ -176,7 +175,7 @@ export default function CompanyTourDetailPage() {
         )}
 
         <form id="edit-tour-form" onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Info Card */}
+
           <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
             <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
               <span className="w-1.5 h-6 bg-primary rounded-full"></span>
@@ -204,7 +203,7 @@ export default function CompanyTourDetailPage() {
                     value={destSearch}
                     onFocus={() => setShowDestDropdown(true)}
                     onBlur={() => {
-                      // Small delay to allow clicking the dropdown items
+
                       setTimeout(() => setShowDestDropdown(false), 200)
                     }}
                     onChange={e => {
@@ -305,7 +304,6 @@ export default function CompanyTourDetailPage() {
             </div>
           </div>
 
-          {/* Itinerary Section */}
           <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold flex items-center gap-2">
