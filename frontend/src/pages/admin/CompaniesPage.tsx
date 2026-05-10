@@ -18,14 +18,15 @@ export default function AdminCompaniesPage() {
     password: '',
     commission_rate: 10
   })
-
+  
   const queryClient = useQueryClient()
-
+  
   const { data: response, isLoading, error } = useQuery({
     queryKey: ['admin-companies'],
     queryFn: () => AdminService.getCompanies(),
   })
 
+  // Mutations
   const approveMutation = useMutation({
     mutationFn: (id: string | number) => AdminService.approveCompany(id),
     onSuccess: () => {
@@ -62,11 +63,11 @@ export default function AdminCompaniesPage() {
   const filteredCompanies = companies.filter((company: any) => {
     const matchesSearch = (company.company_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (company.email || '').toLowerCase().includes(searchTerm.toLowerCase())
-
+    
     const matchesStatus = statusFilter === 'all' || 
                          (statusFilter === 'active' && company.is_approved) ||
                          (statusFilter === 'pending' && !company.is_approved)
-
+    
     return matchesSearch && matchesStatus
   })
 
@@ -105,6 +106,7 @@ export default function AdminCompaniesPage() {
         </button>
       </div>
 
+      {/* Search & Filter */}
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -133,6 +135,7 @@ export default function AdminCompaniesPage() {
         </div>
       </div>
 
+      {/* Companies Table */}
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -188,7 +191,7 @@ export default function AdminCompaniesPage() {
                       >
                         <Edit className="w-4 h-4" />
                       </button>
-
+                      
                       <div className="w-px h-4 bg-outline-variant mx-1" />
 
                       {company.is_approved ? (

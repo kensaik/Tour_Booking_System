@@ -17,8 +17,8 @@ class BookingSchema(Schema):
     payment_status = fields.Str(dump_only=True)
     booking_status = fields.Str()
     created_at = fields.DateTime(dump_only=True)
-
-    # Contact info captured at checkout
+    
+    # Contact info
     contact_name = fields.Str()
     contact_email = fields.Str()
     contact_phone = fields.Str()
@@ -27,8 +27,8 @@ class BookingSchema(Schema):
     # Nested/Method fields for context
     guest_name = fields.Method("get_guest_name")
     guest_phone = fields.Method("get_guest_phone")
-    tour_name = fields.Method("get_tour_name")
-    start_date = fields.Method("get_start_date")
+    tour = fields.Method("get_tour_info")
+    departure = fields.Method("get_departure_info")
 
     def get_guest_name(self, obj):
         return obj.guest.full_name if obj.guest else None
@@ -36,12 +36,13 @@ class BookingSchema(Schema):
     def get_guest_phone(self, obj):
         return obj.guest.phone_number if obj.guest else None
 
-    def get_tour_name(self, obj):
+    def get_tour_info(self, obj):
         if obj.departure and obj.departure.tour:
-            return obj.departure.tour.name
+            t = obj.departure.tour
+            return {"id": t.id, "name": t.name, "image_url": t.image_url}
         return None
 
-    def get_start_date(self, obj):
+    def get_departure_info(self, obj):
         if obj.departure:
-            return obj.departure.start_date.isoformat()
+            return {"id": obj.departure.id, "start_date": obj.departure.start_date.isoformat()}
         return None

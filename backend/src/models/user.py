@@ -1,11 +1,7 @@
-from datetime import UTC, datetime
+from datetime import datetime
 
 from src.constants import UserRole
 from src.extensions import db
-
-
-def _utcnow():
-    return datetime.now(UTC).replace(tzinfo=None)
 
 
 class User(db.Model):
@@ -16,8 +12,10 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(20), nullable=False, default=UserRole.GUEST)
     is_active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=_utcnow)
-    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     company_profile = db.relationship(
         "CompanyProfile", backref="user", uselist=False, cascade="all, delete-orphan"
@@ -44,6 +42,34 @@ class CompanyProfile(db.Model):
     is_approved = db.Column(db.Boolean, default=False)  # Admin needs to approve
 
     tours = db.relationship("Tour", backref="company", lazy="dynamic")
+
+    @property
+    def total_revenue(self):
+        from src.models.booking import Booking, Payment
+        from src.models.tour import Tour, Departure
+        revenue = db.session.query(db.func.sum(Payment.amount))\
+            .join(Booking, Payment.booking_id == Booking.id)\
+            .join(Departure, Booking.departure_id == Departure.id)\
+            .join(Tour, Departure.tour_id == Tour.id)\
+            .filter(
+                Tour.company_id == self.id,
+                Booking.booking_status == 'confirmed',
+                Payment.status == 'SUCCESS'
+            ).scalar() or 0
+        return float(revenue)
+
+    @property
+    def tours_count(self):
+        return self.tours.filter_by(status='active').count()
+
+    @property
+    def bookings_count(self):
+        from src.models.booking import Booking
+        from src.models.tour import Tour, Departure
+        return Booking.query\
+            .join(Departure, Booking.departure_id == Departure.id)\
+            .join(Tour, Departure.tour_id == Tour.id)\
+            .filter(Tour.company_id == self.id).count()
 
     def __repr__(self):
         return f"<CompanyProfile {self.company_name}>"

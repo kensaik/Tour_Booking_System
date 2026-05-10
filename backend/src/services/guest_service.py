@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import datetime
 
 from src.constants import PaymentStatus
 from src.extensions import db
@@ -9,18 +9,18 @@ from src.models.tour import Departure
 class GuestService:
     @staticmethod
     def book_departure(guest_id, departure_id, num_people, contact_info=None):
-        if not num_people or not isinstance(num_people, int) or num_people <= 0:
-            return {"error": "num_people must be a positive integer", "status": 400}
-
         departure = db.session.get(Departure, departure_id)
         if not departure:
             return {"error": "Departure not found", "status": 404}
 
-        if departure.start_date <= datetime.now(UTC).replace(tzinfo=None):
+        if departure.start_date <= datetime.utcnow():
             return {
                 "error": "Cannot book a departure that has already started or is in the past",
                 "status": 400,
             }
+
+        if not num_people or not isinstance(num_people, int) or num_people <= 0:
+            return {"error": "num_people must be a positive integer", "status": 400}
 
         if departure.available_seats < num_people:
             return {
@@ -30,46 +30,39 @@ class GuestService:
 
         total_price = departure.tour.price * num_people
 
-        rows = (
-            db.session.query(Departure)
-            .filter(
-                Departure.id == departure.id,
-                Departure.available_seats >= num_people,
-            )
-            .update(
-                {Departure.available_seats: Departure.available_seats - num_people},
-                synchronize_session=False,
-            )
-        )
-        if rows == 0:
-            db.session.rollback()
-            return {
-                "error": "Not enough seats available.",
-                "status": 400,
-            }
-
-        contact_info = contact_info or {}
         booking = Booking(
             guest_id=guest_id,
             departure_id=departure.id,
             num_people=num_people,
             total_price=total_price,
-            contact_name=contact_info.get("contact_name"),
-            contact_email=contact_info.get("contact_email"),
-            contact_phone=contact_info.get("contact_phone"),
-            notes=contact_info.get("notes"),
+            contact_name=contact_info.get("contact_name") if contact_info else None,
+            contact_email=contact_info.get("contact_email") if contact_info else None,
+            contact_phone=contact_info.get("contact_phone") if contact_info else None,
+            notes=contact_info.get("notes") if contact_info else None,
         )
+
+        departure.available_seats -= num_people
         db.session.add(booking)
         db.session.commit()
+
+        # Gửi email xác nhận cho khách và thông báo cho công ty
+        try:
+            from src.services.notification_service import NotificationService
+            if booking.contact_email:
+                NotificationService.send_booking_confirmation(booking, booking.contact_email)
+            if departure.tour.company and departure.tour.company.user:
+                NotificationService.send_booking_to_company(
+                    booking, 
+                    departure.tour.company.user.email
+                )
+        except Exception as e:
+            print(f"Notification error: {e}")
 
         return {"booking": booking, "status": 201}
 
     @staticmethod
-    def get_my_bookings_query(guest_id, status_filter=None):
-        query = Booking.query.filter_by(guest_id=guest_id)
-        if status_filter:
-            query = query.filter(Booking.booking_status == status_filter)
-        return query
+    def get_my_bookings(guest_id):
+        return Booking.query.filter_by(guest_id=guest_id).all()
 
     @staticmethod
     def get_booking_detail(guest_id, booking_id):
@@ -111,11 +104,20 @@ class GuestService:
             booking.payment_status = PaymentStatus.DEPOSIT_PAID
 
         db.session.commit()
+
+        # Gửi email xác nhận thanh toán
+        try:
+            from src.services.notification_service import NotificationService
+            if booking.contact_email:
+                NotificationService.send_payment_confirmation(booking, booking.contact_email)
+        except Exception as e:
+            print(f"Payment notification error: {e}")
+
         return {"payment": payment, "booking": booking, "status": 201}
 
     @staticmethod
-    def get_my_payments_query(guest_id, booking_id=None):
+    def get_my_payments(guest_id, booking_id=None):
         query = Payment.query.join(Booking).filter(Booking.guest_id == guest_id)
         if booking_id:
             query = query.filter(Payment.booking_id == int(booking_id))
-        return query
+        return query.all()

@@ -18,7 +18,8 @@ const STATUS_MAP: Record<StatusType, Record<string, { label: string; colorClass:
 
 export default function StatusBadge({ status, type, showIcon = true }: StatusBadgeProps) {
   const map = STATUS_MAP[type]
-  const config = map[status] || { label: status, colorClass: 'bg-surface-container text-on-surface-variant' }
+  const normalizedStatus = status?.toLowerCase()
+  const config = map[normalizedStatus] || { label: status, colorClass: 'bg-surface-container text-on-surface-variant' }
   const Icon = 'icon' in config ? config.icon : null
 
   return (

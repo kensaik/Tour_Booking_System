@@ -8,15 +8,17 @@ export const BOOKING_STATUS: Record<string, { label: string; colorClass: string;
 }
 
 export const PAYMENT_STATUS: Record<string, { label: string; colorClass: string }> = {
-  paid: { label: 'Đã thanh toán', colorClass: 'bg-secondary/10 text-secondary' },
-  pending: { label: 'Chưa thanh toán', colorClass: 'bg-tertiary/10 text-tertiary' },
+  fully_paid: { label: 'Đã thanh toán', colorClass: 'bg-green-100 text-green-700' },
+  deposit_paid: { label: 'Đã đặt cọc', colorClass: 'bg-blue-100 text-blue-700' },
+  pending: { label: 'Chờ thanh toán', colorClass: 'bg-amber-100 text-amber-700' },
+  unpaid: { label: 'Chưa thanh toán', colorClass: 'bg-amber-100 text-amber-700' },
   refunded: { label: 'Đã hoàn tiền', colorClass: 'bg-surface-container text-on-surface-variant' },
 }
 
 export const TOUR_STATUS: Record<string, { label: string; colorClass: string }> = {
   active: { label: 'Đang hoạt động', colorClass: 'bg-primary/10 text-primary' },
   approved: { label: 'Đang hoạt động', colorClass: 'bg-primary/10 text-primary' },
-  draft: { label: 'Nháp', colorClass: 'bg-surface-container text-on-surface-variant' },
+  draft: { label: 'Chờ duyệt', colorClass: 'bg-surface-container text-on-surface-variant' },
   inactive: { label: 'Không hoạt động', colorClass: 'bg-error-container text-error' },
 }
 
@@ -29,5 +31,5 @@ export const COMPANY_STATUS: Record<string, { label: string; colorClass: string 
 export const DEPARTURE_STATUS: Record<string, { label: string; colorClass: string }> = {
   active: { label: 'Đang hoạt động', colorClass: 'bg-primary/10 text-primary' },
   full: { label: 'Đã đầy', colorClass: 'bg-error-container text-error' },
-  draft: { label: 'Nháp', colorClass: 'bg-surface-container text-on-surface-variant' },
+  draft: { label: 'Chờ duyệt', colorClass: 'bg-surface-container text-on-surface-variant' },
 }

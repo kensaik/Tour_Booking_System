@@ -27,7 +27,7 @@ interface Booking {
 export default function MyTripsPage() {
   const navigate = useNavigate()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-
+  
   const { data: response, isLoading, error } = useQuery({
     queryKey: ['my-bookings'],
     queryFn: () => GuestService.getMyBookings(),
@@ -66,6 +66,7 @@ export default function MyTripsPage() {
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         <h1 className="text-3xl font-bold text-on-surface mb-8">Chuyến đi của tôi</h1>
 
+        {/* Active Trips */}
         <section className="mb-12">
           <h2 className="text-xl font-semibold text-on-surface mb-4">Chuyến đi sắp tới</h2>
           {activeTrips.length > 0 ? (
@@ -113,7 +114,10 @@ export default function MyTripsPage() {
                       </div>
                       <h3 className="text-lg font-semibold text-on-surface mb-2">{booking.tour?.name}</h3>
                       <div className="flex gap-3">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-container transition-colors text-sm font-medium">
+                        <button 
+                          onClick={() => navigate(`/bookings/${booking.id}`)}
+                          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-container transition-colors text-sm font-medium"
+                        >
                           <Eye className="w-4 h-4" />
                           Chi tiết
                         </button>
@@ -141,6 +145,7 @@ export default function MyTripsPage() {
           )}
         </section>
 
+        {/* Past Trips */}
         <section>
           <h2 className="text-xl font-semibold text-on-surface mb-4">Chuyến đi đã hoàn thành</h2>
           {pastTrips.length > 0 ? (

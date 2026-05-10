@@ -66,17 +66,32 @@ docker-compose.override.yml
 # Project folders
 plans/
 assets/showoff/
+mobile/
 
-# AI / Claude Code
+# Cursor / Claude Code / AI Tools
+.agents/
+.cursor/
 .claude/
+.commandcode/
 .omx/
+.workflow/
+workflow/
 
-# Code coverage
-.coverage
-backend/.coverage
-frontend/coverage/
+# Temp folders
+temp-frontend/
+temp-*/
 
-# Playwright
-frontend/playwright-report/
-frontend/test-results/
-frontend/playwright/.cache/
+# Docs & AI generated
+docs/test-run-log.md
+docs/test-report.md
+docs/automation/
+docs/evidence/
+docs/screenshots/
+weekly-reports/
+implementation_plan.md
+prompt_refactor.md
+workflow_index.mdc
+frontend_dep.html
+
+# Docs (keep api-docs, database-design, requirements, contributing, Tour_Booking, test-plan, test-case)
+# Already kept in git - only temp files above are ignored

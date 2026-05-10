@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from sqlalchemy.orm import joinedload
-
 from src.constants import BookingStatus
 from src.extensions import db
 from src.models.booking import Booking
@@ -10,8 +8,8 @@ from src.models.tour import Departure, Destination, Tour, TourItinerary
 
 class CompanyService:
     @staticmethod
-    def get_my_tours_query(company_id):
-        return Tour.query.filter_by(company_id=company_id)
+    def get_my_tours(company_id):
+        return Tour.query.filter_by(company_id=company_id).all()
 
     @staticmethod
     def create_tour(company_id, data):
@@ -40,18 +38,18 @@ class CompanyService:
             image_url=data.get("image_url"),
         )
         db.session.add(new_tour)
-        db.session.flush()  # assign tour.id without committing
+        db.session.flush() # Get ID without committing
 
-        for iti_data in data.get("itineraries", []) or []:
-            db.session.add(
-                TourItinerary(
-                    tour_id=new_tour.id,
-                    day_number=iti_data.get("day_number"),
-                    title=iti_data.get("title"),
-                    description=iti_data.get("content")
-                    or iti_data.get("description", ""),
-                )
+        # Save itineraries
+        itineraries = data.get("itineraries", [])
+        for iti_data in itineraries:
+            iti = TourItinerary(
+                tour_id=new_tour.id,
+                day_number=iti_data.get("day_number"),
+                title=iti_data.get("title"),
+                description=iti_data.get("content") or iti_data.get("description", "")
             )
+            db.session.add(iti)
 
         db.session.commit()
         return {"tour": new_tour, "status": 201}
@@ -84,19 +82,18 @@ class CompanyService:
         if "destination_id" in data:
             tour.destination_id = int(data["destination_id"])
 
+        # Update itineraries if provided
         if "itineraries" in data:
-            # Replace itineraries wholesale when client sends a new list
+            # Simple approach: clear and re-add
             TourItinerary.query.filter_by(tour_id=tour.id).delete()
-            for iti_data in data["itineraries"] or []:
-                db.session.add(
-                    TourItinerary(
-                        tour_id=tour.id,
-                        day_number=iti_data.get("day_number"),
-                        title=iti_data.get("title"),
-                        description=iti_data.get("content")
-                        or iti_data.get("description", ""),
-                    )
+            for iti_data in data["itineraries"]:
+                iti = TourItinerary(
+                    tour_id=tour.id,
+                    day_number=iti_data.get("day_number"),
+                    title=iti_data.get("title"),
+                    description=iti_data.get("description", "")
                 )
+                db.session.add(iti)
 
         db.session.commit()
         return {"tour": tour, "status": 200}
@@ -202,35 +199,85 @@ class CompanyService:
 
     @staticmethod
     def get_company_departures(company_id):
-        return (
-            Departure.query.join(Tour)
-            .filter(Tour.company_id == company_id)
-            .order_by(Departure.start_date.asc())
-            .all()
-        )
+        return Departure.query.join(Tour).filter(Tour.company_id == company_id).all()
 
     @staticmethod
-    def get_company_bookings_query(
-        company_id, status_filter=None, payment_status=None, departure_id=None
-    ):
+    def get_departure(company_id, departure_id):
+        dep = db.session.get(Departure, departure_id)
+        if not dep or dep.tour.company_id != company_id:
+            return None
+        return dep
+
+    @staticmethod
+    def update_departure(company_id, departure_id, data):
+        dep = db.session.get(Departure, departure_id)
+        if not dep or dep.tour.company_id != company_id:
+            return {"error": "Departure not found or access denied", "status": 404}
+
+        if "start_date" in data:
+            try:
+                dep.start_date = datetime.fromisoformat(data["start_date"])
+            except ValueError:
+                return {"error": "Invalid start_date format", "status": 400}
+
+        if "end_date" in data:
+            try:
+                dep.end_date = datetime.fromisoformat(data["end_date"])
+            except ValueError:
+                return {"error": "Invalid end_date format", "status": 400}
+
+        if "total_seats" in data:
+            new_total = int(data["total_seats"])
+            if new_total <= 0:
+                return {"error": "total_seats must be positive", "status": 400}
+            booked = dep.total_seats - dep.available_seats
+            if new_total < booked:
+                return {
+                    "error": f"Cannot reduce seats below {booked} (already booked)",
+                    "status": 400,
+                }
+            dep.total_seats = new_total
+            dep.available_seats = new_total - booked
+
+        if "tour_id" in data:
+            new_tour = db.session.get(Tour, data["tour_id"])
+            if not new_tour or new_tour.company_id != company_id:
+                return {"error": "Invalid tour_id or access denied", "status": 400}
+            dep.tour_id = new_tour.id
+
+        db.session.commit()
+        return {"departure": dep, "status": 200}
+
+    @staticmethod
+    def delete_departure(company_id, departure_id):
+        dep = db.session.get(Departure, departure_id)
+        if not dep or dep.tour.company_id != company_id:
+            return {"error": "Departure not found or access denied", "status": 404}
+
+        if dep.bookings.count() > 0:
+            return {
+                "error": "Cannot delete departure because there are bookings for it.",
+                "status": 400,
+            }
+
+        db.session.delete(dep)
+        db.session.commit()
+        return {"status": 200}
+
+    @staticmethod
+    def get_company_bookings(company_id, status_filter=None, departure_id=None):
         query = (
-            Booking.query.options(
-                joinedload(Booking.guest),
-                joinedload(Booking.departure).joinedload(Departure.tour),
-            )
-            .join(Departure)
+            Booking.query.join(Departure)
             .join(Tour)
             .filter(Tour.company_id == company_id)
         )
 
         if status_filter:
             query = query.filter(Booking.booking_status == status_filter)
-        if payment_status:
-            query = query.filter(Booking.payment_status == payment_status)
         if departure_id:
             query = query.filter(Booking.departure_id == int(departure_id))
 
-        return query
+        return query.all()
 
     @staticmethod
     def get_booking_detail(company_id, booking_id):
@@ -283,4 +330,17 @@ class CompanyService:
 
         booking.booking_status = new_status
         db.session.commit()
+
+        # Gửi email thông báo cho khách khi trạng thái thay đổi
+        try:
+            from src.services.notification_service import NotificationService
+            if booking.contact_email:
+                NotificationService.send_booking_status_update(
+                    booking, 
+                    booking.contact_email, 
+                    new_status
+                )
+        except Exception as e:
+            print(f"Status update notification error: {e}")
+
         return {"booking": booking, "status": 200}

@@ -7,9 +7,10 @@ interface ModalProps {
   title: string
   children: React.ReactNode
   maxWidth?: string
+  disableBackdropClose?: boolean
 }
 
-export default function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-lg' }: ModalProps) {
+export default function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-lg', disableBackdropClose = false }: ModalProps) {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -28,13 +29,16 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
-
+      {/* Backdrop */}
+      {!disableBackdropClose && (
+        <div 
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+          onClick={onClose}
+        />
+      )}
+      {disableBackdropClose && <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />}
       
+      {/* Content */}
       <div className={`relative w-full ${maxWidth} min-w-[320px] mx-auto bg-surface rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-outline-variant`}>
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-outline-variant">
@@ -46,7 +50,7 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
             <X className="w-5 h-5" />
           </button>
         </div>
-
+        
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-6">
           {children}

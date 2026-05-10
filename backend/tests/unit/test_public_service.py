@@ -4,36 +4,47 @@ from src.constants import TourStatus
 from src.services.public_service import PublicService
 
 
-class TestSearchActiveToursQuery:
-    def test_no_filters_returns_active_query(self, mocker):
+class TestSearchActiveTours:
+    def test_no_filters_returns_all_active(self, mocker):
         mock_tour = mocker.patch("src.services.public_service.Tour")
-        base = mock_tour.query.filter_by.return_value
+        chain = mock_tour.query.filter_by.return_value
+        chain.all.return_value = ["t1", "t2"]
 
-        result = PublicService.search_active_tours_query()
+        result = PublicService.search_active_tours()
 
-        assert result is base
+        assert result == ["t1", "t2"]
         mock_tour.query.filter_by.assert_called_once_with(status=TourStatus.ACTIVE)
 
     def test_destination_filter_narrows_query(self, mocker):
         mock_tour = mocker.patch("src.services.public_service.Tour")
         first = mock_tour.query.filter_by.return_value
-        narrowed = first.filter_by.return_value
+        second = first.filter_by.return_value
+        second.all.return_value = ["filtered"]
 
-        result = PublicService.search_active_tours_query(destination_id="3")
+        result = PublicService.search_active_tours(destination_id="3")
 
-        assert result is narrowed
+        assert result == ["filtered"]
         first.filter_by.assert_called_once_with(destination_id=3)
 
     def test_keyword_filter_uses_or_clause(self, mocker):
         mock_tour = mocker.patch("src.services.public_service.Tour")
         mocker.patch("src.services.public_service.or_", return_value="OR_CLAUSE")
         first = mock_tour.query.filter_by.return_value
-        narrowed = first.filter.return_value
+        first.filter.return_value.all.return_value = ["match"]
 
-        result = PublicService.search_active_tours_query(keyword="Đà Lạt")
+        result = PublicService.search_active_tours(keyword="Đà Lạt")
 
-        assert result is narrowed
+        assert result == ["match"]
         first.filter.assert_called_once_with("OR_CLAUSE")
+
+    def test_empty_result_returns_empty_list(self, mocker):
+        mock_tour = mocker.patch("src.services.public_service.Tour")
+        mocker.patch("src.services.public_service.or_", return_value="OR_CLAUSE")
+        first = mock_tour.query.filter_by.return_value
+        first.filter.return_value.all.return_value = []
+
+        result = PublicService.search_active_tours(keyword="Atlantis")
+        assert result == []
 
 
 class TestGetTourDetail:

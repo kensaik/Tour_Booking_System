@@ -39,6 +39,10 @@ jobs:
       FLASK_APP: src
       SECRET_KEY: ${{ secrets.SECRET_KEY_TEST || 'ci-flask-secret-not-for-prod' }}
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST || 'ci-jwt-secret-not-for-prod' }}
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME || '' }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY || '' }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET || '' }}
+      CLOUDINARY_ENABLED: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4

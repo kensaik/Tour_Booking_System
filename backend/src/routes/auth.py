@@ -9,7 +9,6 @@ from src.serializers.user_schema import (
     UserSchema,
 )
 from src.services.auth_service import AuthService
-from src.utils.rate_limit import limiter
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
@@ -28,7 +27,6 @@ def register():
 
 
 @auth_bp.route("/login", methods=["POST"])
-@limiter.limit("5/minute")
 def login():
     data = request.get_json()
     email = data.get("email")
@@ -50,7 +48,9 @@ def login():
     elif user.guest_profile:
         user_data["full_name"] = user.guest_profile.full_name
 
-    return jsonify(access_token=access_token, user=user_data), result["status"]
+    return jsonify(access_token=access_token, user=user_data), result[
+        "status"
+    ]
 
 
 @auth_bp.route("/me", methods=["GET"])

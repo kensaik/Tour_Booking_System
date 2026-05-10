@@ -29,18 +29,22 @@ const WHY_CHOOSE_US = [
   },
 ]
 
+
+
 export default function HomePage() {
   const [destination, setDestination] = useState('')
   const [departureDate, setDepartureDate] = useState('')
   const [guests, setGuests] = useState(1)
   const navigate = useNavigate()
 
+  // Fetch destinations
   const { data: destinationsData } = useQuery({
     queryKey: ['destinations'],
     queryFn: PublicService.getDestinations
   })
   const destinations = destinationsData?.destinations || []
 
+  // Fetch featured tours (we just get all tours for now and take first 3)
   const { data: toursData, isLoading: isLoadingTours } = useQuery({
     queryKey: ['tours', 'featured'],
     queryFn: () => PublicService.getTours()

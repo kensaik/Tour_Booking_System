@@ -14,6 +14,16 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const { login, user, isAuthenticated } = useAuthStore()
 
+  // Check for not_approved reason from redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('reason') === 'not_approved') {
+      setErrorMsg('Tài khoản của bạn chưa được phê duyệt. Vui lòng liên hệ quản trị viên.')
+      // Clean URL
+      window.history.replaceState({}, '', '/login')
+    }
+  }, [])
+
   useEffect(() => {
     if (isAuthenticated && user) {
       let targetPath = '/'
@@ -28,19 +38,23 @@ export default function LoginPage() {
     e.preventDefault()
     setIsLoading(true)
     setErrorMsg('')
-
+    
     try {
       const data = await AuthService.login(email, password)
       login(data.access_token, data.user)
-
+      
       let targetPath = '/'
       const userRole = data.user.role.toLowerCase()
       if (userRole === 'admin') targetPath = '/admin'
       else if (userRole === 'company') targetPath = '/company'
-
+      
       navigate(targetPath)
     } catch (error: any) {
-      setErrorMsg(error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.')
+      let msg = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.'
+      if (msg === 'Account is deactivated') {
+        msg = 'Tài khoản của bạn đã bị khóa'
+      }
+      setErrorMsg(msg)
     } finally {
       setIsLoading(false)
     }
@@ -48,7 +62,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-
+      {/* Background */}
       <div className="fixed inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop"
@@ -57,8 +71,9 @@ export default function LoginPage() {
         />
       </div>
 
+      {/* Login Card */}
       <div className="relative z-10 w-full max-w-md min-w-[320px] sm:min-w-[400px]">
-
+        {/* Back Button */}
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
@@ -68,7 +83,7 @@ export default function LoginPage() {
         </Link>
 
         <div className="bg-surface/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-outline-variant">
-
+          {/* Logo */}
           <div className="text-center mb-8">
             <span className="text-3xl font-bold text-primary">TourGo</span>
             <h1 className="text-2xl font-bold text-on-surface mt-4">Đăng nhập</h1>
@@ -77,14 +92,15 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             {errorMsg && (
               <div className="bg-error-container text-on-error-container p-3 rounded-lg text-sm">
                 {errorMsg}
               </div>
             )}
-
             
+            {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
                 Email
@@ -103,6 +119,7 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-on-surface mb-2">
                 Mật khẩu
@@ -128,6 +145,7 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Remember & Forgot */}
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -146,6 +164,7 @@ export default function LoginPage() {
               </Link>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -165,12 +184,14 @@ export default function LoginPage() {
             </button>
           </form>
 
+          {/* Divider */}
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-outline-variant" />
             <span className="text-sm text-on-surface-variant">hoặc</span>
             <div className="flex-1 h-px bg-outline-variant" />
           </div>
 
+          {/* Social Login */}
           <div className="space-y-3">
             <button className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-lg border border-outline-variant bg-white hover:bg-surface-container transition-colors">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -183,6 +204,7 @@ export default function LoginPage() {
             </button>
           </div>
 
+          {/* Register Link */}
           <p className="text-center mt-6 text-on-surface-variant">
             Chưa có tài khoản?{' '}
             <Link to="/register" className="text-primary font-medium hover:text-primary/80 transition-colors">

@@ -165,8 +165,6 @@ Kiểm thử chức năng và hiển thị trên các trình duyệt được h�
 | Hệ điều hành | Windows 10/11, macOS |
 | Thiết bị | Desktop (1280px+), Tablet (768px), Mobile (375px) |
 
-> CI tự động hóa chạy Chromium; Firefox / Edge xác minh thủ công trước release.
-
 ---
 
 ### 5.4 Phương pháp tự động hóa
@@ -191,28 +189,6 @@ Sau khi kiểm thử thủ công xác nhận hệ thống ổn định, các lu�
 5. Lên lịch khởi hành
 
 Các test tự động sẽ được thêm vào pipeline CI của GitHub Actions sau khi tỉ lệ pass của kiểm thử thủ công đạt 100% trên các luồng quan trọng.
-
----
-
-### 5.4.3 Tự động hóa giao diện (Frontend automation)
-
-Bổ sung lớp tự động hóa frontend vận hành song song với pytest + requests, theo mô hình kim tự tháp hai tầng:
-
-**Tầng 1 — Vitest + React Testing Library (đơn vị / component)**
-
-- Chạy trên môi trường jsdom; không cần backend.
-- Phạm vi: store Zustand (`authStore`), util thuần (`format`, `status`), validation form rủi ro cao (`RegisterPage`, `CheckoutPage`).
-- Vitest yêu cầu coverage ≥ 70% trên `frontend/src/`; CI chặn PR nếu thấp hơn (lines + statements).
-- Chạy bằng `npm run test:unit:coverage`. Job CI: `frontend-unit`.
-
-**Tầng 2 — Playwright (E2E)**
-
-- Chạy trên Chromium headless; backend Flask + MySQL khởi động qua GitHub Actions service container và seed bằng `backend/database/seed.py`.
-- Mock cạnh dùng `page.route()` per-spec — không dùng MSW.
-- 5 spec: `auth.spec.ts`, `guest-booking.spec.ts`, `company-crud.spec.ts`, `admin.spec.ts`, `visual.spec.ts`.
-- Chạy bằng `npm run test:e2e`. Job CI: `frontend-e2e`.
-
-Cả hai job đều **bắt buộc** trên branch `main` (branch protection). Tổng thời gian CI mục tiêu < 3 phút.
 
 ---
 

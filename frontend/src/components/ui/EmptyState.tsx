@@ -1,51 +1,40 @@
-import { Link } from 'react-router-dom'
+import { LucideIcon } from 'lucide-react'
 
 interface EmptyStateProps {
-  title?: string
-  message?: string
+  title: string
   description?: string
+  icon?: LucideIcon
   actionLabel?: string
-  actionText?: string
-  actionLink?: string
-  onAction?: () => void | Promise<void>
+  onAction?: () => void
 }
 
-export default function EmptyState({
-  title,
-  message,
-  description,
-  actionLabel,
-  actionText,
-  actionLink,
-  onAction,
+export default function EmptyState({ 
+  title, 
+  description, 
+  icon: Icon, 
+  actionLabel, 
+  onAction 
 }: EmptyStateProps) {
-  const body = description ?? message
-  const cta = actionLabel ?? actionText
-
   return (
-    <div className="bg-surface-container-low rounded-xl p-8 text-center">
-      {title && (
-        <h3 className="text-on-surface text-lg font-semibold mb-2">{title}</h3>
+    <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-12 text-center shadow-sm">
+      {Icon && (
+        <div className="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 text-primary">
+          <Icon className="w-8 h-8" />
+        </div>
       )}
-      {body && <p className="text-on-surface-variant mb-4">{body}</p>}
-      {cta && onAction && (
+      <h3 className="text-xl font-bold text-on-surface mb-2">{title}</h3>
+      {description && (
+        <p className="text-on-surface-variant mb-8 max-w-[480px] mx-auto leading-relaxed">
+          {description}
+        </p>
+      )}
+      {actionLabel && onAction && (
         <button
-          type="button"
-          onClick={() => {
-            void onAction()
-          }}
-          className="inline-block bg-primary hover:bg-primary-container text-white font-medium px-6 py-2 rounded-lg transition-colors"
+          onClick={onAction}
+          className="bg-primary hover:bg-primary-container text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95"
         >
-          {cta}
+          {actionLabel}
         </button>
-      )}
-      {cta && !onAction && actionLink && (
-        <Link
-          to={actionLink}
-          className="inline-block bg-primary hover:bg-primary-container text-white font-medium px-6 py-2 rounded-lg transition-colors"
-        >
-          {cta}
-        </Link>
       )}
     </div>
   )

@@ -1,11 +1,7 @@
-from datetime import UTC, datetime
+from datetime import datetime
 
 from src.constants import BookingStatus, PaymentStatus
 from src.extensions import db
-
-
-def _utcnow():
-    return datetime.now(UTC).replace(tzinfo=None)
 
 
 class Booking(db.Model):
@@ -21,14 +17,16 @@ class Booking(db.Model):
     payment_status = db.Column(db.String(20), default=PaymentStatus.UNPAID)
     booking_status = db.Column(db.String(20), default=BookingStatus.PENDING)
 
-    # Contact info captured at checkout
+    # Contact info
     contact_name = db.Column(db.String(150), nullable=True)
     contact_email = db.Column(db.String(120), nullable=True)
     contact_phone = db.Column(db.String(20), nullable=True)
     notes = db.Column(db.Text, nullable=True)
 
-    created_at = db.Column(db.DateTime, default=_utcnow)
-    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     payments = db.relationship(
         "Payment", backref="booking", lazy="dynamic", cascade="all, delete-orphan"
@@ -46,7 +44,7 @@ class Payment(db.Model):
     amount = db.Column(db.Float, nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)
     status = db.Column(db.String(20), default="SUCCESS")
-    created_at = db.Column(db.DateTime, default=_utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"<Payment {self.id} for Booking {self.booking_id}>"

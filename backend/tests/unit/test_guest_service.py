@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 from unittest.mock import MagicMock
 
 from src.constants import PaymentStatus
@@ -8,9 +8,7 @@ from src.services.guest_service import GuestService
 def _make_departure(available_seats=10, days_in_future=10, tour_price=1_000_000.0):
     dep = MagicMock()
     dep.id = 42
-    dep.start_date = datetime.now(UTC).replace(tzinfo=None) + timedelta(
-        days=days_in_future
-    )
+    dep.start_date = datetime.utcnow() + timedelta(days=days_in_future)
     dep.available_seats = available_seats
     dep.tour.price = tour_price
     return dep

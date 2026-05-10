@@ -1,7 +1,5 @@
-# pyrefly: ignore [missing-import]
 from tests.conftest import make_company, make_departure, make_destination, make_tour
 
-# pyrefly: ignore [missing-import]
 from src.constants import TourStatus
 
 

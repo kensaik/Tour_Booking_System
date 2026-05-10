@@ -1,13 +1,13 @@
 import api from './api';
 
 export const CompanyService = {
-
+  // Tour Management
   getMyTours: async () => {
     const response = await api.get('/company/tours');
     return response.data;
   },
 
-  createTour: async (data: Record<string, unknown>) => {
+  createTour: async (data: any) => {
     const response = await api.post('/company/tours', data);
     return response.data;
   },
@@ -17,7 +17,7 @@ export const CompanyService = {
     return response.data;
   },
 
-  updateTour: async (id: number | string, data: Record<string, unknown>) => {
+  updateTour: async (id: number | string, data: any) => {
     const response = await api.put(`/company/tours/${id}`, data);
     return response.data;
   },
@@ -27,27 +27,45 @@ export const CompanyService = {
     return response.data;
   },
 
-  addItinerary: async (tourId: number | string, data: Record<string, unknown>) => {
+  // Itinerary Management
+  addItinerary: async (tourId: number | string, data: any) => {
     const response = await api.post(`/company/tours/${tourId}/itineraries`, data);
     return response.data;
   },
 
-  modifyItinerary: async (id: number | string, data: Record<string, unknown>, method: 'PUT' | 'DELETE') => {
+  modifyItinerary: async (id: number | string, data: any, method: 'PUT' | 'DELETE') => {
     const config = method === 'DELETE' ? { method: 'DELETE' } : { method: 'PUT', data };
     const response = await api(`/company/itineraries/${id}`, config);
     return response.data;
   },
 
+  // Departure Management
   getCompanyDepartures: async () => {
     const response = await api.get('/company/departures');
     return response.data;
   },
 
-  addDeparture: async (tourId: number | string, data: Record<string, unknown>) => {
+  getDeparture: async (id: number | string) => {
+    const response = await api.get(`/company/departures/${id}`);
+    return response.data;
+  },
+
+  updateDeparture: async (id: number | string, data: any) => {
+    const response = await api.put(`/company/departures/${id}`, data);
+    return response.data;
+  },
+
+  addDeparture: async (tourId: number | string, data: any) => {
     const response = await api.post(`/company/tours/${tourId}/departures`, data);
     return response.data;
   },
 
+  deleteDeparture: async (id: number | string) => {
+    const response = await api.delete(`/company/departures/${id}`);
+    return response.data;
+  },
+
+  // Booking Management
   getCompanyBookings: async (params?: { status?: string; departure_id?: string | number }) => {
     const response = await api.get('/company/bookings', { params });
     return response.data;
@@ -59,7 +77,7 @@ export const CompanyService = {
   },
 
   updateBookingStatus: async (id: number | string, status: string) => {
-    const response = await api.put(`/company/bookings/${id}/status`, { booking_status: status });
+    const response = await api.put(`/company/bookings/${id}/status`, { booking_status: status.toUpperCase() });
     return response.data;
   }
 };

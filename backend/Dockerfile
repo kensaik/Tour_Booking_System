@@ -1,33 +1,21 @@
-# Development image for the Flask backend.
-# Source is bind-mounted by docker-compose so edits hot-reload via `flask run --debug`.
-FROM python:3.12-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    FLASK_APP=run.py \
-    FLASK_DEBUG=1
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# System deps: default-mysql-client gives us `mysqladmin ping` for the wait loop.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        build-essential \
-        default-mysql-client \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    default-libmysqlclient-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# requirements.txt is UTF-16 in this repo; normalize to UTF-8 before pip reads it.
-COPY requirements.txt /tmp/requirements.txt
-RUN python -c "import io; data=open('/tmp/requirements.txt','rb').read(); \
-text=data.decode('utf-16') if data[:2] in (b'\xff\xfe', b'\xfe\xff') else data.decode('utf-8'); \
-open('/tmp/requirements.utf8.txt','w',encoding='utf-8').write(text)" \
-    && pip install -r /tmp/requirements.utf8.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY . .
+
+ENV FLASK_APP=src
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 5000
 
-ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]

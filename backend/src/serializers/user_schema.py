@@ -6,14 +6,8 @@ class UserSchema(Schema):
     email = fields.Email(required=True)
     role = fields.Str(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
-
-
-class AdminUserSchema(Schema):
-    id = fields.Int(dump_only=True)
-    email = fields.Email()
-    role = fields.Str()
-    is_active = fields.Bool()
-    created_at = fields.DateTime()
+    company_profile = fields.Nested("CompanyProfileSchema", exclude=("email", "is_active", "created_at"))
+    guest_profile = fields.Nested("GuestProfileSchema", exclude=("email",))
 
 
 class CompanyProfileSchema(Schema):
@@ -27,6 +21,9 @@ class CompanyProfileSchema(Schema):
     email = fields.Method("get_email")
     is_active = fields.Method("get_is_active")
     created_at = fields.Method("get_created_at")
+    total_revenue = fields.Float(dump_only=True)
+    tours_count = fields.Int(dump_only=True)
+    bookings_count = fields.Int(dump_only=True)
 
     def get_email(self, obj):
         return obj.user.email if obj and obj.user else None

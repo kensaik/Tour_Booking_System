@@ -15,14 +15,21 @@ class TourItinerarySchema(Schema):
     description = fields.Str()
 
 
+class MinimalTourSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+    price = fields.Float()
+
 class DepartureSchema(Schema):
     id = fields.Int(dump_only=True)
+    tour_id = fields.Int(dump_only=True)
     start_date = fields.DateTime(required=True)
     end_date = fields.DateTime(required=True)
     total_seats = fields.Int(required=True)
     available_seats = fields.Int(dump_only=True)
     guide_name = fields.Str()
     status = fields.Str()
+    tour = fields.Nested(MinimalTourSchema, dump_only=True)
 
 
 class TourSchema(Schema):
@@ -50,13 +57,7 @@ class TourSchema(Schema):
         return obj.destination.name if obj.destination else None
 
     def get_itineraries(self, obj):
-        if not hasattr(obj, "itineraries") or obj.itineraries is None:
-            return []
-        iti = (
-            obj.itineraries.all()
-            if hasattr(obj.itineraries, "all")
-            else obj.itineraries
-        )
+        iti = obj.itineraries.all() if hasattr(obj.itineraries, "all") else obj.itineraries
         return TourItinerarySchema(many=True).dump(iti)
 
     def get_valid_departures(self, obj):

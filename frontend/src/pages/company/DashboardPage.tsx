@@ -4,21 +4,29 @@ import { useQuery } from '@tanstack/react-query'
 import { CompanyService } from '@/services/company.service'
 import { formatPrice, formatDate } from '@/lib/format'
 import StatsCard from '@/components/ui/StatsCard'
+import StatusBadge from '@/components/ui/StatusBadge'
+import { useAuthStore } from '@/stores/authStore'
 
 export default function CompanyDashboardPage() {
+  const { user } = useAuthStore()
+  const isApproved = user?.company_profile?.is_approved
+
   const { data: bookingsData } = useQuery({
     queryKey: ['company-bookings'],
     queryFn: () => CompanyService.getCompanyBookings(),
+    enabled: !!user && !!isApproved,
   })
 
   const { data: toursData } = useQuery({
     queryKey: ['company-tours'],
     queryFn: () => CompanyService.getMyTours(),
+    enabled: !!user && !!isApproved,
   })
 
   const { data: departuresData } = useQuery({
     queryKey: ['company-departures'],
     queryFn: () => CompanyService.getCompanyDepartures(),
+    enabled: !!user && !!isApproved,
   })
 
   const bookings = bookingsData?.bookings || []
@@ -26,7 +34,11 @@ export default function CompanyDashboardPage() {
   const departures = departuresData?.departures || []
 
   const totalRevenue = bookings
-    .filter((booking: any) => booking.payment_status === 'paid')
+    .filter((booking: any) => {
+      const pStatus = booking.payment_status?.toLowerCase()
+      const bStatus = booking.booking_status?.toLowerCase()
+      return (pStatus === 'fully_paid' || pStatus === 'deposit_paid') && bStatus === 'confirmed'
+    })
     .reduce((sum: number, booking: any) => sum + booking.total_price, 0)
   const totalBookings = bookings.length
   const totalCustomers = new Set(bookings.map((booking: any) => booking.user_id)).size
@@ -47,12 +59,11 @@ export default function CompanyDashboardPage() {
         <p className="text-on-surface-variant">Xem tổng quan hoạt động kinh doanh của bạn</p>
       </div>
 
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatsCard
           label="Tổng doanh thu"
           value={formatPrice(totalRevenue)}
-          change="+0.0%"
-          trend="up"
           icon={DollarSign}
           color="bg-primary/10"
           iconColor="text-primary"
@@ -60,8 +71,6 @@ export default function CompanyDashboardPage() {
         <StatsCard
           label="Đơn đặt tour"
           value={totalBookings.toString()}
-          change="+0.0%"
-          trend="up"
           icon={BookOpen}
           color="bg-secondary/10"
           iconColor="text-secondary"
@@ -69,8 +78,6 @@ export default function CompanyDashboardPage() {
         <StatsCard
           label="Khách hàng"
           value={totalCustomers.toString()}
-          change="+0.0%"
-          trend="up"
           icon={Users}
           color="bg-tertiary/10"
           iconColor="text-tertiary"
@@ -78,8 +85,6 @@ export default function CompanyDashboardPage() {
         <StatsCard
           label="Tour hoạt động"
           value={activeTours.toString()}
-          change="+0.0%"
-          trend="up"
           icon={Globe}
           color="bg-secondary/10"
           iconColor="text-secondary"
@@ -87,7 +92,7 @@ export default function CompanyDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
+        {/* Recent Bookings */}
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant">
           <div className="p-6 border-b border-outline-variant">
             <h2 className="text-lg font-semibold text-on-surface">Đơn đặt tour gần đây</h2>
@@ -101,17 +106,13 @@ export default function CompanyDashboardPage() {
                   <div key={booking.id} className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0">
                     <div>
                       <p className="font-medium text-on-surface">{booking.tour?.name || `Tour #${booking.tour_id}`}</p>
-                      <p className="text-sm text-on-surface-variant">{booking.user?.full_name}</p>
+                      <p className="text-sm text-on-surface-variant">{booking.guest_name}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-on-surface">{formatPrice(booking.total_price)}</p>
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
-                        booking.booking_status === 'confirmed'
-                          ? 'bg-primary/10 text-primary'
-                          : 'bg-secondary/10 text-secondary'
-                      }`}>
-                        {booking.booking_status === 'confirmed' ? 'Đã xác nhận' : booking.booking_status === 'pending' ? 'Chờ xác nhận' : 'Khác'}
-                      </span>
+                      <div className="mt-1">
+                        <StatusBadge status={booking.booking_status} type="booking" />
+                      </div>
                     </div>
                   </div>
                 ))

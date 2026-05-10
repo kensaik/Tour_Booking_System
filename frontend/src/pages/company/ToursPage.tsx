@@ -1,17 +1,26 @@
 import { useState } from 'react'
 import CompanyLayout from '@/components/company/CompanyLayout'
 import { Link, useNavigate } from 'react-router-dom'
-import { Plus, Search, MapPin, Edit, Trash2, Eye } from 'lucide-react'
+import { Plus, Search, MapPin, Edit, Trash2, Eye, CheckCircle } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { CompanyService } from '@/services/company.service'
 import { formatPrice } from '@/lib/format'
 import StatusBadge from '@/components/ui/StatusBadge'
 import EmptyState from '@/components/ui/EmptyState'
+import ConfirmModal from '@/components/ui/ConfirmModal'
+import Toast, { ToastType } from '@/components/ui/Toast'
 
 export default function CompanyToursPage() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  
+  // Modal states
+  const [deleteId, setDeleteId] = useState<string | number | null>(null)
+  const [publishId, setPublishId] = useState<string | number | null>(null)
+
+  // Toast state
+  const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null)
 
   const { data: response, isLoading, error } = useQuery({
     queryKey: ['company-tours'],
@@ -34,14 +43,24 @@ export default function CompanyToursPage() {
     mutationFn: (id: string | number) => CompanyService.deleteTour(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['company-tours'] })
-      alert('Xóa tour thành công!')
+      setToast({ message: 'Xóa tour thành công!', type: 'success' })
+    }
+  })
+
+  const publishMutation = useMutation({
+    mutationFn: (id: string | number) => CompanyService.updateTour(id, { status: 'active' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['company-tours'] })
+      setToast({ message: 'Tour đã được duyệt và chính thức hoạt động!', type: 'success' })
     }
   })
 
   const handleDelete = (id: string | number) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa tour này không?')) {
-      deleteMutation.mutate(id)
-    }
+    setDeleteId(id)
+  }
+
+  const handlePublish = (id: string | number) => {
+    setPublishId(id)
   }
 
   if (isLoading) return <CompanyLayout><div className="text-center py-20">Đang tải danh sách tour...</div></CompanyLayout>
@@ -63,6 +82,7 @@ export default function CompanyToursPage() {
         </Link>
       </div>
 
+      {/* Search & Filter */}
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -89,6 +109,7 @@ export default function CompanyToursPage() {
         </div>
       </div>
 
+      {/* Tours Table or Empty State */}
       {filteredTours.length > 0 ? (
         <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden">
           <div className="overflow-x-auto">
@@ -129,6 +150,16 @@ export default function CompanyToursPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-1">
+                        {tour.status?.toLowerCase() === 'draft' && (
+                          <button 
+                            onClick={() => handlePublish(tour.id)}
+                            disabled={publishMutation.isPending}
+                            className="p-2 hover:bg-primary/10 rounded-lg text-primary hover:text-primary-container disabled:opacity-50 transition-colors" 
+                            title="Duyệt tour"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                          </button>
+                        )}
                         <Link to={`/company/tours/${tour.id}`} className="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant hover:text-on-surface" title="Xem chi tiết">
                           <Eye className="w-4 h-4" />
                         </Link>
@@ -154,7 +185,7 @@ export default function CompanyToursPage() {
       ) : (
         <EmptyState 
           title="Không tìm thấy tour nào" 
-          message={searchQuery ? `Không có tour nào khớp với từ khóa "${searchQuery}"` : "Bạn chưa có tour nào. Hãy bắt đầu tạo tour đầu tiên!"}
+          description={searchQuery ? `Không có tour nào khớp với từ khóa "${searchQuery}"` : "Bạn chưa có tour nào. Hãy bắt đầu tạo tour đầu tiên!"}
           actionLabel={searchQuery ? "Xóa bộ lọc" : "Thêm Tour mới"}
           onAction={() => {
             if (searchQuery) {
@@ -164,6 +195,48 @@ export default function CompanyToursPage() {
               navigate('/company/tours/new')
             }
           }}
+        />
+      )}
+      {/* Modals */}
+      <ConfirmModal
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={() => {
+          if (deleteId) {
+            deleteMutation.mutate(deleteId, {
+              onSuccess: () => setDeleteId(null)
+            })
+          }
+        }}
+        type="danger"
+        title="Xóa Tour"
+        message="Bạn có chắc chắn muốn xóa tour này không? Hành động này không thể hoàn tác."
+        confirmLabel="Xóa ngay"
+        isLoading={deleteMutation.isPending}
+      />
+
+      <ConfirmModal
+        isOpen={!!publishId}
+        onClose={() => setPublishId(null)}
+        onConfirm={() => {
+          if (publishId) {
+            publishMutation.mutate(publishId, {
+              onSuccess: () => setPublishId(null)
+            })
+          }
+        }}
+        type="success"
+        title="Duyệt Tour"
+        message="Duyệt tour này sẽ giúp khách hàng có thể nhìn thấy và bắt đầu đặt chỗ. Bạn đã kiểm tra kỹ thông tin chưa?"
+        confirmLabel="Duyệt ngay"
+        isLoading={publishMutation.isPending}
+      />
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
         />
       )}
     </CompanyLayout>

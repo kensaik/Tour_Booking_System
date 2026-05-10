@@ -1,62 +1,57 @@
 services:
-  db:
-    image: mysql:8.0
-    container_name: tour-booking-db
+  mysql:
+    image: mysql:8
+    container_name: tour_booking_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: tour_booking
+      MYSQL_USER: tour_user
+      MYSQL_PASSWORD: tour_pass
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppassword"]
-      interval: 5s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
       timeout: 5s
-      retries: 20
+      retries: 5
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: tour-booking-backend
+    container_name: tour_booking_backend
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      FLASK_APP: run.py
-      FLASK_DEBUG: "1"
-      SECRET_KEY: dev-secret-key
-      JWT_SECRET_KEY: dev-jwt-secret
-      DATABASE_URL: mysql+pymysql://root:password@db:3306/tour_booking
-      DB_HOST: db
-      DB_PORT: "3306"
-      DB_USER: root
-      DB_PASSWORD: password
+      DATABASE_URL: mysql+pymysql://tour_user:tour_pass@mysql:3306/tour_booking
+      SECRET_KEY: dev-secret-key-change-in-production
+      JWT_SECRET_KEY: jwt-dev-secret-key-change-in-production
+      FLASK_ENV: development
     ports:
       - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
     volumes:
       - ./backend:/app
-      - backend-state:/var/lib/tour-booking
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: tour-booking-frontend
+    container_name: tour_booking_frontend
     restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:5000
+    ports:
+      - "5173:5173"
     depends_on:
       - backend
-    environment:
-      API_URL: http://backend:5000
-    ports:
-      - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
 
 volumes:
-  mysql-data:
-  backend-state:
+  mysql_data:

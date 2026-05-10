@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { CompanyService } from '@/services/company.service'
 import PageHeader from '@/components/ui/PageHeader'
 import LoadingState from '@/components/ui/LoadingState'
+import Toast, { ToastType } from '@/components/ui/Toast'
 
 export default function CompanyAddDeparturePage() {
   const navigate = useNavigate()
@@ -13,14 +14,17 @@ export default function CompanyAddDeparturePage() {
     queryKey: ['company-tours'],
     queryFn: () => CompanyService.getMyTours(),
   })
-
+  
   const tours = response?.tours || []
 
   const [selectedTour, setSelectedTour] = useState('')
+  const [tourSearch, setTourSearch] = useState('')
+  const [showTourDropdown, setShowTourDropdown] = useState(false)
   const [departures, setDepartures] = useState([
     { start_date: '', end_date: '', total_seats: 20 }
   ])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null)
 
   const addDepartureRow = () => {
     setDepartures([...departures, { start_date: '', end_date: '', total_seats: 20 }])
@@ -38,27 +42,27 @@ export default function CompanyAddDeparturePage() {
 
   const handleSave = async () => {
     if (!selectedTour) {
-      alert('Vui lòng chọn tour')
+      setToast({ message: 'Vui lòng chọn tour', type: 'error' })
       return
     }
-
     
+    // validate
     const isInvalid = departures.some(departure => !departure.start_date || !departure.end_date)
     if (isInvalid) {
-      alert('Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc.')
+      setToast({ message: 'Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc.', type: 'error' })
       return
     }
 
     setIsSubmitting(true)
     try {
-
+      // Save all departures
       await Promise.all(
         departures.map(departure => CompanyService.addDeparture(selectedTour, departure))
       )
-      alert('Thêm lịch trình thành công')
-      navigate('/company/departures')
+      setToast({ message: 'Thêm lịch trình thành công', type: 'success' })
+      setTimeout(() => navigate('/company/departures'), 1500)
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Có lỗi xảy ra khi lưu lịch trình')
+      setToast({ message: error.response?.data?.message || 'Có lỗi xảy ra khi lưu lịch trình', type: 'error' })
     } finally {
       setIsSubmitting(false)
     }
@@ -82,22 +86,55 @@ export default function CompanyAddDeparturePage() {
       />
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6">
-
+        {/* Tour Selection */}
         <div className="mb-6">
-          <label htmlFor="tour-select" className="block text-sm font-medium text-on-surface mb-2">Chọn Tour</label>
-          <select 
-            id="tour-select" 
-            value={selectedTour}
-            onChange={(e) => setSelectedTour(e.target.value)}
-            className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-primary"
-          >
-            <option value="">Chọn tour...</option>
-            {isLoading ? <option value="" disabled>Đang tải...</option> : tours.map((tour: any) => (
-              <option key={tour.id} value={tour.id}>{tour.name}</option>
-            ))}
-          </select>
+          <label className="block text-sm font-medium text-on-surface mb-2">Chọn Tour</label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder={isLoading ? "Đang tải danh sách tour..." : "Gõ để tìm tour..."}
+              className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+              value={tourSearch}
+              onFocus={() => setShowTourDropdown(true)}
+              onBlur={() => setTimeout(() => setShowTourDropdown(false), 200)}
+              onChange={(e) => {
+                setTourSearch(e.target.value)
+                setShowTourDropdown(true)
+                const match = tours.find((t: any) => t.name.toLowerCase() === e.target.value.toLowerCase())
+                if (match) setSelectedTour(match.id)
+              }}
+            />
+            {showTourDropdown && (
+              <div className="absolute z-20 w-full mt-2 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-2xl max-h-60 overflow-auto py-2">
+                {tours
+                  .filter((t: any) => t.name.toLowerCase().includes(tourSearch.toLowerCase()))
+                  .map((t: any) => (
+                    <div
+                      key={t.id}
+                      className="px-4 py-3 hover:bg-primary/10 cursor-pointer transition-colors flex items-center justify-between group"
+                      onClick={() => {
+                        setSelectedTour(t.id)
+                        setTourSearch(t.name)
+                        setShowTourDropdown(false)
+                      }}
+                    >
+                      <span className="text-on-surface group-hover:text-primary font-medium">{t.name}</span>
+                      {selectedTour === t.id && (
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      )}
+                    </div>
+                  ))}
+                {tours.filter((t: any) => t.name.toLowerCase().includes(tourSearch.toLowerCase())).length === 0 && (
+                  <div className="px-4 py-4 text-sm text-on-surface-variant italic text-center">
+                    Không tìm thấy tour nào...
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
+        {/* Departures List */}
         <div className="space-y-4 mb-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-on-surface">Danh sách ngày khởi hành</h3>
@@ -173,6 +210,14 @@ export default function CompanyAddDeparturePage() {
           </Link>
         </div>
       </div>
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </CompanyLayout>
   )
 }

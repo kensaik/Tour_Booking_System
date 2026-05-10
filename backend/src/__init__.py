@@ -1,9 +1,8 @@
-from flask import Flask, jsonify
+from flask import Flask
 
 from .config import Config
 from .errors import register_error_handlers
 from .extensions import cors, db, jwt, migrate
-from .utils.rate_limit import limiter
 
 
 def create_app(config_class=Config):
@@ -22,16 +21,10 @@ def create_app(config_class=Config):
     migrate.init_app(app, db, directory=migrate_dir)
     cors.init_app(app)
     jwt.init_app(app)
-    limiter.init_app(app)
 
-    @app.errorhandler(429)
-    def too_many_requests(error):
-        message = getattr(error, "description", None) or "Rate limit exceeded"
-        response = jsonify(error="Too Many Requests", message=str(message))
-        response.status_code = 429
-        if "Retry-After" not in response.headers:
-            response.headers["Retry-After"] = "60"
-        return response
+    # Initialize Cloudinary
+    from src.services.cloudinary_service import configure_cloudinary
+    configure_cloudinary()
 
     # Import models to ensure SQLAlchemy knows about them before migrations
     import src.models

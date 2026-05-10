@@ -20,31 +20,65 @@ export default function GuestToursPage() {
   const [searchParams] = useSearchParams()
   const destinationId = searchParams.get('destination_id') || undefined
   const keyword = searchParams.get('keyword') || undefined
+  const date = searchParams.get('date') || undefined
+  const guests = searchParams.get('guests') || undefined
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sortBy, setSortBy] = useState('popular')
   const [filterOpen, setFilterOpen] = useState(false)
+  
+  // Filter states
+  const [priceRange, setPriceRange] = useState('all')
+  const [duration, setDuration] = useState('all')
 
   const { data: toursData, isLoading } = useQuery({
-    queryKey: ['tours', { destinationId, keyword }],
-    queryFn: () => PublicService.getTours({ destination_id: destinationId, keyword })
+    queryKey: ['tours', { destinationId, keyword, date, guests }],
+    queryFn: () => PublicService.getTours({ 
+      destination_id: destinationId, 
+      keyword,
+      date,
+      guests
+    })
   })
 
-  const tours: Tour[] = toursData?.tours || []
+  const rawTours: Tour[] = toursData?.tours || []
+
+  // Filter and Sort tours locally
+  const tours = [...rawTours]
+    .filter(tour => {
+      // Price filter
+      if (priceRange === 'under-2m') return tour.price < 2000000
+      if (priceRange === '2m-5m') return tour.price >= 2000000 && tour.price <= 5000000
+      if (priceRange === 'over-5m') return tour.price > 5000000
+      return true
+    })
+    .filter(tour => {
+      // Duration filter
+      if (duration === '1-day') return tour.total_days === 1
+      if (duration === '2-3-days') return tour.total_days >= 2 && tour.total_days <= 3
+      if (duration === '4-plus-days') return tour.total_days >= 4
+      return true
+    })
+    .sort((a, b) => {
+      if (sortBy === 'price-asc') return a.price - b.price
+      if (sortBy === 'price-desc') return b.price - a.price
+      return 0
+    })
 
   if (isLoading) return <LoadingState message="Đang tải danh sách tour..." />
 
   return (
     <div className="min-h-screen pt-20 pb-16">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
-
+        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-on-surface mb-2">Danh sách Tour</h1>
           <p className="text-on-surface-variant">Tìm thấy {tours.length} tour phù hợp</p>
         </div>
 
+        {/* Toolbar */}
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-outline-variant">
-
+          {/* Filter Toggle */}
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors"
@@ -53,6 +87,7 @@ export default function GuestToursPage() {
             Bộ lọc
           </button>
 
+          {/* Sort */}
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -65,6 +100,7 @@ export default function GuestToursPage() {
             <option value="rating">Đánh giá cao nhất</option>
           </select>
 
+          {/* View Mode */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setViewMode('grid')}
@@ -86,41 +122,45 @@ export default function GuestToursPage() {
         {/* Filter Panel */}
         {filterOpen && (
           <div className="bg-surface-container-low p-6 rounded-xl mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="filter-destination" className="block text-sm font-medium mb-2">Điểm đến</label>
-                <select id="filter-destination" className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white">
-                  <option>Tất cả</option>
-                  <option>Hà Nội</option>
-                  <option>Đà Nẵng</option>
-                  <option>Sapa</option>
+                <label htmlFor="filter-price" className="block text-sm font-medium mb-2 text-on-surface">Khoảng giá</label>
+                <select 
+                  id="filter-price" 
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white text-on-surface focus:ring-2 focus:ring-primary"
+                >
+                  <option value="all">Tất cả giá</option>
+                  <option value="under-2m">Dưới 2.000.000₫</option>
+                  <option value="2m-5m">2.000.000₫ - 5.000.000₫</option>
+                  <option value="over-5m">Trên 5.000.000₫</option>
                 </select>
               </div>
               <div>
-                <label htmlFor="filter-price" className="block text-sm font-medium mb-2">Khoảng giá</label>
-                <select id="filter-price" className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white">
-                  <option>Tất cả</option>
-                  <option>Dưới 2 triệu</option>
-                  <option>2 - 5 triệu</option>
-                  <option>Trên 5 triệu</option>
+                <label htmlFor="filter-duration" className="block text-sm font-medium mb-2 text-on-surface">Thời gian</label>
+                <select 
+                  id="filter-duration" 
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white text-on-surface focus:ring-2 focus:ring-primary"
+                >
+                  <option value="all">Tất cả thời gian</option>
+                  <option value="1-day">1 ngày (Trong ngày)</option>
+                  <option value="2-3-days">2 - 3 ngày</option>
+                  <option value="4-plus-days">Từ 4 ngày trở lên</option>
                 </select>
               </div>
-              <div>
-                <label htmlFor="filter-duration" className="block text-sm font-medium mb-2">Thời gian</label>
-                <select id="filter-duration" className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white">
-                  <option>Tất cả</option>
-                  <option>1 ngày</option>
-                  <option>2-3 ngày</option>
-                  <option>4+ ngày</option>
-                </select>
-              </div>
-              <div>
-                <label htmlFor="filter-rating" className="block text-sm font-medium mb-2">Đánh giá</label>
-                <select id="filter-rating" className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white">
-                  <option>Tất cả</option>
-                  <option>4.5+ sao</option>
-                  <option>4+ sao</option>
-                </select>
+              <div className="flex items-end pb-1">
+                <button 
+                  onClick={() => {
+                    setPriceRange('all')
+                    setDuration('all')
+                  }}
+                  className="text-sm text-primary font-bold hover:text-primary-container transition-colors flex items-center gap-1"
+                >
+                  <span>✕</span> Đặt lại bộ lọc
+                </button>
               </div>
             </div>
           </div>
@@ -133,6 +173,7 @@ export default function GuestToursPage() {
             description="Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn."
             actionLabel="Xem tất cả tour"
             onAction={() => {
+              // Reset params logic here if needed
             }}
           />
         ) : viewMode === 'grid' ? (

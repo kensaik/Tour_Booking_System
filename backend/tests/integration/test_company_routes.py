@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 
 from tests.conftest import (
     make_booking,
@@ -179,8 +179,8 @@ def test_modify_itinerary_cross_company_returns_404(client, auth_client):
 def test_add_departure_success(client, auth_client):
     co = make_company(approved=True)
     tour = make_tour(co)
-    start = (datetime.now(UTC).replace(tzinfo=None) + timedelta(days=10)).isoformat()
-    end = (datetime.now(UTC).replace(tzinfo=None) + timedelta(days=13)).isoformat()
+    start = (datetime.utcnow() + timedelta(days=10)).isoformat()
+    end = (datetime.utcnow() + timedelta(days=13)).isoformat()
     res = auth_client(co).post(
         f"/api/company/tours/{tour.id}/departures",
         json={"start_date": start, "end_date": end, "total_seats": 20},
@@ -201,8 +201,8 @@ def test_add_departure_invalid_date_format_returns_400(client, auth_client):
 def test_add_departure_start_after_end_returns_400(client, auth_client):
     co = make_company(approved=True)
     tour = make_tour(co)
-    start = (datetime.now(UTC).replace(tzinfo=None) + timedelta(days=15)).isoformat()
-    end = (datetime.now(UTC).replace(tzinfo=None) + timedelta(days=10)).isoformat()
+    start = (datetime.utcnow() + timedelta(days=15)).isoformat()
+    end = (datetime.utcnow() + timedelta(days=10)).isoformat()
     res = auth_client(co).post(
         f"/api/company/tours/{tour.id}/departures",
         json={"start_date": start, "end_date": end, "total_seats": 10},
@@ -213,8 +213,8 @@ def test_add_departure_start_after_end_returns_400(client, auth_client):
 def test_add_departure_zero_seats_returns_400(client, auth_client):
     co = make_company(approved=True)
     tour = make_tour(co)
-    start = (datetime.now(UTC).replace(tzinfo=None) + timedelta(days=10)).isoformat()
-    end = (datetime.now(UTC).replace(tzinfo=None) + timedelta(days=13)).isoformat()
+    start = (datetime.utcnow() + timedelta(days=10)).isoformat()
+    end = (datetime.utcnow() + timedelta(days=13)).isoformat()
     res = auth_client(co).post(
         f"/api/company/tours/{tour.id}/departures",
         json={"start_date": start, "end_date": end, "total_seats": 0},
