@@ -11,7 +11,6 @@
 | Lê Duy Mạnh           | [2351010124] | Thực thi manual testing, ghi nhận bugs                                |                |
 | Nguyễn Trần Minh Quân | [2351010175] | Sửa UI bugs, cải thiện UX                                             |                |
 | Trương Hưng Phát      | [2351010154] | Chạy unit tests, fix test failures, update test cases                  |                |
-| Tô Nguyễn Sơn Nam     | [2351050109] | Chạy E2E tests, capture test screenshots                              |                |
 
 ## 2. Tiến độ tổng thể
 
@@ -31,7 +30,6 @@
 | Lê Duy Mạnh | Final testing, regression testing |
 | Nguyễn Trần Minh Quân | Final bug fixes |
 | Trương Hưng Phát | Write test report, test summary |
-| Tô Nguyễn Sơn Nam | Performance testing, prepare demo |
 
 ## 4. Khó khăn / Cần hỗ trợ
 - [ ] Một số edge cases cần xử lý thêm

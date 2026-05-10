@@ -11,7 +11,6 @@
 | Lê Duy Mạnh           | [2351010124] | Setup test environment, write test plan v1.0                           |                |
 | Nguyễn Trần Minh Quân | [2351010175] | Hoàn thành responsive design, form validations                         |                |
 | Trương Hưng Phát      | [2351010154] | Viết unit tests cho API endpoints, test cases                           |                |
-| Tô Nguyễn Sơn Nam     | [2351050109] | Setup Playwright, viết E2E test specs                                  |                |
 
 ## 2. Tiến độ tổng thể
 
@@ -31,7 +30,6 @@
 | Lê Duy Mạnh | Manual testing execution |
 | Nguyễn Trần Minh Quân | UI bug fixes, UX improvements |
 | Trương Hưng Phát | Chạy unit tests, fix failures |
-| Tô Nguyễn Sơn Nam | Run E2E tests, capture screenshots |
 
 ## 4. Khó khăn / Cần hỗ trợ
 - [ ] Một số E2E tests cần fix selectors

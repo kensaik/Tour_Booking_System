@@ -11,7 +11,6 @@
 | Lê Duy Mạnh           | [2351010124] | Setup CI/CD pipeline, review code backend                              |                |
 | Nguyễn Trần Minh Quân | [2351010175] | Hoàn thành Login/Register, HomePage, Tour Listing                      |                |
 | Trương Hưng Phát      | [2351010154] | Hoàn thành Auth API, User management endpoints                          |                |
-| Tô Nguy�n Sơn Nam     | [2351050109] | Hoàn thành Tour CRUD, Departures APIs                                   |                |
 
 ## 2. Tiến độ tổng thể
 
@@ -31,7 +30,6 @@
 | Lê Duy Mạnh | Integration testing backend |
 | Nguyễn Trần Minh Quân | Implement Tour Detail, Booking pages |
 | Trương Hưng Phát | Implement Booking, Payment APIs |
-| Tô Nguyễn Sơn Nam | Implement Company Dashboard, Admin APIs |
 
 ## 4. Khó khăn / Cần hỗ trợ
 - [ ] Cần tích hợp frontend với backend API

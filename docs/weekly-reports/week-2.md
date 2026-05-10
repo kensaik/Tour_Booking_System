@@ -11,7 +11,6 @@
 | Lê Duy Mạnh           | [2351010124] | Review Use case, tổng hợp tài liệu, vẽ sơ đồ ERD                    |                |
 | Nguyễn Trần Minh Quân | [2351010175] | Viết Use case phân hệ Du khách, bắt đầu vẽ Wireframe                  |                |
 | Trương Hưng Phát      | [2351010154] | Viết Use case phân hệ Công ty Du lịch                                   |                |
-| Tô Nguyễn Sơn Nam     | [2351050109] | Viết Use case phân hệ Admin                                             |                |
 
 ## 2. Tiến độ tổng thể
 
@@ -31,7 +30,6 @@
 | Lê Duy Mạnh | Hoàn thiện ERD, review database schema |
 | Nguyễn Trần Minh Quân | Hoàn thiện Wireframe tất cả màn hình |
 | Trương Hưng Phát | Thiết kế API endpoints, viết API docs |
-| Tô Nguyễn Sơn Nam | Setup database, viết migrations |
 
 ## 4. Khó khăn / Cần hỗ trợ
 - [ ] Cần thống nhất về naming convention cho database

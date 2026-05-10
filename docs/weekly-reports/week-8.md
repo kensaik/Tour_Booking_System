@@ -11,7 +11,6 @@
 | Lê Duy Mạnh           | [2351010124] | Final regression testing, compile test report                          |                |
 | Nguyễn Trần Minh Quân | [2351010175] | Final bug fixes, polish UI/UX, prepare demo                            |                |
 | Trương Hưng Phát      | [2351010154] | Hoàn thành test report, test summary, test data documentation          |                |
-| Tô Nguyễn Sơn Nam     | [2351050109] | Performance testing, final E2E test run, demo setup                     |                |
 
 ## 2. Tiến độ tổng thể
 

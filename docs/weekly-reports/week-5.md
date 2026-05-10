@@ -11,7 +11,6 @@
 | Lê Duy Mạnh           | [2351010124] | Integration testing, bug fixes, seed data                              |                |
 | Nguyễn Trần Minh Quân | [2351010175] | Hoàn thành Tour Detail, Booking pages, Checkout                        |                |
 | Trương Hưng Phát      | [2351010154] | Hoàn thành Booking, Payment APIs                                       |                |
-| Tô Nguyễn Sơn Nam     | [2351050109] | Hoàn thành Company Dashboard, Admin APIs                               |                |
 
 ## 2. Tiến độ tổng thể
 
@@ -31,7 +30,6 @@
 | Lê Duy Mạnh | Setup test environment, write test plan |
 | Nguyễn Trần Minh Quân | Fix remaining UI issues, responsive design |
 | Trương Hưng Phát | Write unit tests for APIs |
-| Tô Nguyễn Sơn Nam | E2E test setup, Playwright configuration |
 
 ## 4. Khó khăn / Cần hỗ trợ
 - [ ] Frontend cần thêm validation cho forms
