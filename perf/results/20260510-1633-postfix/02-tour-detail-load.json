@@ -1,0 +1,187 @@
+{
+    "metrics": {
+        "http_req_duration{kind:read}": {
+            "med": 9.8316,
+            "max": 218.8272,
+            "p(90)": 16.81506,
+            "p(95)": 19.810219999999987,
+            "avg": 10.990728915662595,
+            "min": 2.5117,
+            "thresholds": {
+                "p(95)<500": false
+            }
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 14858,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "http_req_connecting": {
+            "max": 1.9626,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.002997489567909544,
+            "min": 0,
+            "med": 0
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 50
+        },
+        "http_req_sending": {
+            "med": 0,
+            "max": 1.4373,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.0010978193565755819,
+            "min": 0
+        },
+        "http_req_duration": {
+            "max": 218.8272,
+            "p(90)": 16.81492,
+            "p(95)": 19.809664999999995,
+            "avg": 10.990267276887815,
+            "min": 2.5117,
+            "med": 9.8316
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_duration{expected_response:true}": {
+            "max": 218.8272,
+            "p(90)": 16.81492,
+            "p(95)": 19.809664999999995,
+            "avg": 10.990267276887815,
+            "min": 2.5117,
+            "med": 9.8316
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_reqs": {
+            "count": 14858,
+            "rate": 49.36336108426452
+        },
+        "http_req_waiting": {
+            "avg": 10.72436936330594,
+            "min": 2.5117,
+            "med": 9.5457,
+            "max": 218.0529,
+            "p(90)": 16.496190000000002,
+            "p(95)": 19.463815
+        },
+        "iterations": {
+            "count": 14857,
+            "rate": 49.36003874201898
+        },
+        "http_req_blocked": {
+            "avg": 0.0035872324673576527,
+            "min": 0,
+            "med": 0,
+            "max": 1.9626,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "iteration_duration": {
+            "avg": 1011.3912274012235,
+            "min": 1002.6093,
+            "med": 1010.2084,
+            "max": 1219.6702,
+            "p(90)": 1017.239,
+            "p(95)": 1020.2836199999999
+        },
+        "http_req_receiving": {
+            "p(95)": 1.0009149999999998,
+            "avg": 0.26480009422533435,
+            "min": 0,
+            "med": 0,
+            "max": 4.0526,
+            "p(90)": 0.8518
+        },
+        "checks": {
+            "passes": 29716,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_duration{kind:write}": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "data_sent": {
+            "count": 2228698,
+            "rate": 7404.497517955187
+        },
+        "data_received": {
+            "count": 10326113,
+            "rate": 34306.88145214147
+        }
+    },
+    "setup_data": {
+        "tourIds": [
+            1
+        ]
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "setup: tours: status 200": {
+                            "name": "setup: tours: status 200",
+                            "path": "::setup::setup: tours: status 200",
+                            "id": "6f2b443bf0488a4db7de458e280e60fe",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "setup: tours: body has 'tours'": {
+                            "name": "setup: tours: body has 'tours'",
+                            "path": "::setup::setup: tours: body has 'tours'",
+                            "id": "de771dddfdfe3e38122b01a48bef1838",
+                            "passes": 1,
+                            "fails": 0
+                        }
+                    },
+                "name": "setup",
+                "path": "::setup"
+            }
+        },
+        "checks": {
+            "tour detail id=1: status 200": {
+                "name": "tour detail id=1: status 200",
+                "path": "::tour detail id=1: status 200",
+                "id": "15bb70f2803b457ba1dad1324ef22e84",
+                "passes": 14857,
+                "fails": 0
+            },
+            "tour detail id=1: body has 'tour'": {
+                "name": "tour detail id=1: body has 'tour'",
+                "path": "::tour detail id=1: body has 'tour'",
+                "id": "c8824ce8d606a8d1ef796ab1647b786f",
+                "passes": 14857,
+                "fails": 0
+            }
+        }
+    }
+}

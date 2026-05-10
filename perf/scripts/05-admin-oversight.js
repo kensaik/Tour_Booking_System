@@ -1,6 +1,3 @@
-// Scenario 05 (optional) — admin login -> list companies -> list destinations.
-// Mirrors admin.py: GET /api/admin/companies, GET /api/admin/destinations.
-
 import { sleep } from 'k6';
 import { getJSON, assertOK, authHeaders } from '../lib/http.js';
 import { loginCached } from '../lib/auth.js';

@@ -1,12 +1,6 @@
-// Login helper with per-VU token cache. Refreshes once per iteration if needed.
-//
-// Usage:
-//   import { loginCached } from '../lib/auth.js';
-//   const token = loginCached(creds);
-
 import { postJSON, assertOK } from './http.js';
 
-const tokenCache = {}; // VU-local in k6 (each VU has its own module instance scope per iter? no — module state is per-VU)
+const tokenCache = {};
 
 export function login(email, password) {
   const res = postJSON('/api/auth/login', { email, password });
@@ -17,8 +11,6 @@ export function login(email, password) {
   return res.json('access_token');
 }
 
-// Cache token per (email) within the current VU lifetime.
-// k6 module state is per-VU, so this is safe — no cross-VU leakage.
 export function loginCached(creds) {
   const key = creds.email;
   if (!tokenCache[key]) {

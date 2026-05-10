@@ -1,6 +1,3 @@
-// Shared HTTP helpers for k6 scenarios.
-// Base URL via __ENV.BASE_URL (default http://127.0.0.1:8000).
-
 import http from 'k6/http';
 import { check } from 'k6';
 
@@ -32,7 +29,6 @@ export function putJSON(path, body, params = {}) {
   );
 }
 
-// expect: { status: 200, jsonKey: 'tours' } — both optional.
 export function assertOK(res, label, expect = {}) {
   const status = expect.status || 200;
   const checks = { [`${label}: status ${status}`]: (r) => r.status === status };

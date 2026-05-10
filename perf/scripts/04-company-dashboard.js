@@ -1,6 +1,3 @@
-// Scenario 04 — approved company login -> view own tours -> view own bookings.
-// Mirrors company.py: GET /api/company/tours, GET /api/company/bookings.
-
 import { sleep } from 'k6';
 import { getJSON, assertOK, authHeaders } from '../lib/http.js';
 import { loginCached } from '../lib/auth.js';

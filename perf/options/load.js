@@ -1,4 +1,3 @@
-// Load: 50 VU steady, 5min. SLO target.
 export const options = {
   vus: 50,
   duration: '5m',

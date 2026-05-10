@@ -1,4 +1,3 @@
-// Stress: ramp 10 -> 500 VU over 10min. Find the wall.
 export const options = {
   stages: [
     { duration: '1m', target: 10 },

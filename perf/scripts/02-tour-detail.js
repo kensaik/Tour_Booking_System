@@ -1,6 +1,3 @@
-// Scenario 02 — tour detail (tour + itineraries + departures eager-loaded).
-// Mirrors public.py: GET /api/public/tours, GET /api/public/tours/<id>
-
 import { sleep } from 'k6';
 import { getJSON, assertOK } from '../lib/http.js';
 import { resolveOptions } from '../options/profile.js';

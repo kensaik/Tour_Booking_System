@@ -1,14 +1,3 @@
-"""Aggregate k6 summary JSONs + request JSONLs into report-ready tables.
-
-Usage:
-    python perf/analyze-results.py perf/results/<run-id> [--out report-tables.md]
-
-Emits:
-- Per-scenario × profile summary table (p50/p95/p99/RPS/error-rate)
-- Top routes by p95 from request JSONL
-- VU-vs-latency series for stress runs (CSV-ready)
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -54,7 +43,6 @@ def summary_row(scenario: str, profile: str, summary: dict) -> dict:
 
 
 def jsonl_route_stats(jsonl: Path) -> list[dict]:
-    """Group request JSONL by rule, compute p95 + count + status mix."""
     groups: dict[str, list[dict]] = defaultdict(list)
     with jsonl.open("r", encoding="utf-8") as f:
         for line in f:
@@ -108,7 +96,6 @@ def main() -> None:
         if "summary" in sp.stem and "-" not in sp.stem.replace("-summary", ""):
             continue
         stem = sp.stem
-        # filename pattern: <scenario>-<profile>.json
         parts = stem.rsplit("-", 1)
         if len(parts) != 2:
             continue
