@@ -90,7 +90,8 @@ describe('authStore', () => {
   })
 
   it('persist partialize keeps only token', () => {
-    const persistOptions: any = (useAuthStore as any).persist?.getOptions?.()
+    type PersistOptions = { name: string; partialize: (s: unknown) => { token: string } }
+    const persistOptions = (useAuthStore as unknown as { persist?: { getOptions?: () => PersistOptions } }).persist?.getOptions?.()
     expect(persistOptions).toBeDefined()
     const partial = persistOptions.partialize({
       user: sampleUser,

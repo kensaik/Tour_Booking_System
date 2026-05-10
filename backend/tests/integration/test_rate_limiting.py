@@ -77,10 +77,14 @@ def test_authenticated_users_keyed_separately(rl_app, rl_client):
 
     # 60/minute on /api/public/tours; spend 30 on user 1, then 30 on user 2 — none should 429
     for _ in range(30):
-        r = rl_client.get("/api/public/tours", headers={"Authorization": f"Bearer {t1}"})
+        r = rl_client.get(
+            "/api/public/tours", headers={"Authorization": f"Bearer {t1}"}
+        )
         assert r.status_code == 200
     for _ in range(30):
-        r = rl_client.get("/api/public/tours", headers={"Authorization": f"Bearer {t2}"})
+        r = rl_client.get(
+            "/api/public/tours", headers={"Authorization": f"Bearer {t2}"}
+        )
         assert r.status_code == 200
 
 

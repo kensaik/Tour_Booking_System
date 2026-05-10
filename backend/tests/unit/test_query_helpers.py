@@ -120,7 +120,10 @@ def test_paginate_query_returns_envelope_with_correct_totals(app):
             make_tour(company, name=f"Tour {i}")
 
         result = paginate_query(
-            Tour.query, page=1, page_size=2, items_key="tours",
+            Tour.query,
+            page=1,
+            page_size=2,
+            items_key="tours",
             dump_fn=lambda items: [t.name for t in items],
         )
         assert result["pagination"] == {

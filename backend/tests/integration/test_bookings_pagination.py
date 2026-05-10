@@ -16,7 +16,9 @@ def _make_bookings_for_company(company):
     guest2 = make_guest()
     make_booking(guest1, dep, num_people=1, booking_status=BookingStatus.PENDING)
     make_booking(
-        guest2, dep, num_people=2,
+        guest2,
+        dep,
+        num_people=2,
         booking_status=BookingStatus.CONFIRMED,
         payment_status=PaymentStatus.FULLY_PAID,
     )
@@ -98,7 +100,8 @@ def test_guest_bookings_filter_and_paginate(app, auth_client):
     guest = make_guest()
     for i in range(3):
         make_booking(
-            guest, dep,
+            guest,
+            dep,
             booking_status=BookingStatus.PENDING if i < 2 else BookingStatus.CONFIRMED,
         )
 
