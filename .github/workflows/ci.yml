@@ -110,14 +110,9 @@ jobs:
         if: steps.detect.outputs.exists == 'true'
         run: npm run format:check
 
-      - name: Test
+      - name: Vitest (unit)
         if: steps.detect.outputs.exists == 'true'
-        run: |
-          if npm run | grep -qE '^[[:space:]]+test$'; then
-            npm test -- --run
-          else
-            echo "::notice::No 'test' script defined in package.json — skipping."
-          fi
+        run: npm run test:unit
 
       - name: TypeScript check
         if: steps.detect.outputs.exists == 'true'
