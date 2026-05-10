@@ -68,15 +68,6 @@ plans/
 assets/showoff/
 mobile/
 
-# Cursor / Claude Code / AI Tools
-.agents/
-.cursor/
-.claude/
-.commandcode/
-.omx/
-.workflow/
-workflow/
-
 # Temp folders
 temp-frontend/
 temp-*/
@@ -87,6 +78,3 @@ prompt_refactor.md
 workflow_index.mdc
 frontend_dep.html
 
-# Docs (keep api-docs, database-design, requirements, contributing, Tour_Booking, test-plan, test-case)
-# Already kept in git - only temp files above are ignored
-.gitnexus
