@@ -9,7 +9,7 @@ interface BookingContactInfo {
 
 export const GuestService = {
   async bookDeparture(departureId: number | string, numPeople: number, contact?: BookingContactInfo) {
-    const payload: Record<string, any> = { num_people: numPeople }
+    const payload: Record<string, unknown> = { num_people: numPeople }
 
     if (contact) {
       payload.contact_name = contact.name

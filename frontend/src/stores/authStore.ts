@@ -8,8 +8,8 @@ interface User {
   full_name: string
   role: string
   is_active: boolean
-  company_profile?: any
-  guest_profile?: any
+  company_profile?: Record<string, unknown>
+  guest_profile?: Record<string, unknown>
 }
 
 interface AuthState {
@@ -52,15 +52,15 @@ export const useAuthStore = create<AuthState>()(
         try {
           const data = await AuthService.getMe()
           set({ user: data.user, isAuthenticated: true, isLoading: false })
-        } catch (error: any) {
-
+        } catch (error: unknown) {
+          const apiError = error as { response?: { data?: { message?: string } } }
           localStorage.removeItem('access_token')
-          set({ 
-            user: null, 
-            token: null, 
-            isAuthenticated: false, 
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false,
             isLoading: false,
-            error: error.response?.data?.message || 'Failed to fetch user'
+            error: apiError.response?.data?.message || 'Failed to fetch user'
           })
         }
       }

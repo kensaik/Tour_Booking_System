@@ -7,7 +7,7 @@ export const CompanyService = {
     return response.data;
   },
 
-  createTour: async (data: any) => {
+  createTour: async (data: Record<string, unknown>) => {
     const response = await api.post('/company/tours', data);
     return response.data;
   },
@@ -17,7 +17,7 @@ export const CompanyService = {
     return response.data;
   },
 
-  updateTour: async (id: number | string, data: any) => {
+  updateTour: async (id: number | string, data: Record<string, unknown>) => {
     const response = await api.put(`/company/tours/${id}`, data);
     return response.data;
   },
@@ -27,12 +27,12 @@ export const CompanyService = {
     return response.data;
   },
 
-  addItinerary: async (tourId: number | string, data: any) => {
+  addItinerary: async (tourId: number | string, data: Record<string, unknown>) => {
     const response = await api.post(`/company/tours/${tourId}/itineraries`, data);
     return response.data;
   },
 
-  modifyItinerary: async (id: number | string, data: any, method: 'PUT' | 'DELETE') => {
+  modifyItinerary: async (id: number | string, data: Record<string, unknown>, method: 'PUT' | 'DELETE') => {
     const config = method === 'DELETE' ? { method: 'DELETE' } : { method: 'PUT', data };
     const response = await api(`/company/itineraries/${id}`, config);
     return response.data;
@@ -43,7 +43,7 @@ export const CompanyService = {
     return response.data;
   },
 
-  addDeparture: async (tourId: number | string, data: any) => {
+  addDeparture: async (tourId: number | string, data: Record<string, unknown>) => {
     const response = await api.post(`/company/tours/${tourId}/departures`, data);
     return response.data;
   },
