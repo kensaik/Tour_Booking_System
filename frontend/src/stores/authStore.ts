@@ -9,8 +9,8 @@ interface User {
   full_name: string
   role: string
   is_active: boolean
-  company_profile?: any
-  guest_profile?: any
+  company_profile?: Record<string, unknown>
+  guest_profile?: Record<string, unknown>
 }
 
 interface AuthState {
@@ -54,15 +54,16 @@ export const useAuthStore = create<AuthState>()(
     try {
       const data = await AuthService.getMe()
       set({ user: data.user, isAuthenticated: true, isLoading: false })
-    } catch (error: any) {
+    } catch (error: unknown) {
       localStorage.removeItem('access_token')
       queryClient.clear()
-      set({ 
-        user: null, 
-        token: null, 
-        isAuthenticated: false, 
+      const axiosErr = error as { response?: { data?: { message?: string } } }
+      set({
+        user: null,
+        token: null,
+        isAuthenticated: false,
         isLoading: false,
-        error: error.response?.data?.message || 'Failed to fetch user'
+        error: axiosErr.response?.data?.message || 'Failed to fetch user'
       })
     }
   }
