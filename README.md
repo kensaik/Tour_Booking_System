@@ -73,7 +73,59 @@ docker compose exec backend python -m database.seed
 
 ## Demo
 
-[Cập nhật link video demo / screenshots tại đây]
+> Toàn bộ ảnh chụp được lưu tại [`docs/screenshots/`](docs/screenshots/). Link video demo: _đang cập nhật_.
+
+### Trang chủ & Khám phá tour (Guest)
+
+| Hero / Tìm kiếm | Tour nổi bật |
+| --- | --- |
+| ![Home hero](docs/screenshots/home/home_hero_20260510.png) | ![Featured tours](docs/screenshots/home/home_featured-tours_20260510.png) |
+
+| Danh sách tour | Liên hệ |
+| --- | --- |
+| ![Tour list](docs/screenshots/home/home_tour-list_20260510.png) | ![Contact](docs/screenshots/home/home_contact_20260510.png) |
+
+### Đăng nhập / Đăng ký
+
+| Đăng nhập | Đăng ký |
+| --- | --- |
+| ![Sign in](docs/screenshots/login/login_signin_20260510.png) | ![Register](docs/screenshots/login/login_register_20260510.png) |
+
+### Chi tiết tour
+
+| Tổng quan | Thư viện ảnh | Khu vực đặt tour |
+| --- | --- | --- |
+| ![Tour overview](docs/screenshots/tour-detail/tour-detail_overview_20260510.png) | ![Tour gallery](docs/screenshots/tour-detail/tour-detail_gallery_20260510.png) | ![Booking section](docs/screenshots/tour-detail/tour-detail_booking-section_20260510.png) |
+
+### Luồng đặt tour & Thanh toán
+
+| Thông tin liên hệ | Phương thức thanh toán | QR VNPAY |
+| --- | --- | --- |
+| ![Contact info](docs/screenshots/booking/booking_contact_info_20260510.png) | ![Payment method](docs/screenshots/booking/booking_payment_method_20260510.png) | ![VNPAY QR](docs/screenshots/booking/booking_vnpay_qr_20260510.png) |
+
+| Đặt tour thành công | Lịch sử đặt tour |
+| --- | --- |
+| ![Booking success](docs/screenshots/booking/booking_success_20260510.png) | ![Booking history](docs/screenshots/booking/booking_history_20260510.png) |
+
+### Khu vực Công ty lữ hành
+
+| Dashboard | Quản lý tour |
+| --- | --- |
+| ![Company dashboard](docs/screenshots/company/company_dashboard_20260510.png) | ![Company tours](docs/screenshots/company/company_tours_20260510.png) |
+
+| Lịch khởi hành | Thêm lịch khởi hành | Quản lý booking |
+| --- | --- | --- |
+| ![Schedules](docs/screenshots/company/company_schedules_20260510.png) | ![Add schedule](docs/screenshots/company/company_add-schedule_20260510.png) | ![Company bookings](docs/screenshots/company/company_bookings_20260510.png) |
+
+### Khu vực Quản trị (Admin)
+
+| Dashboard | Danh sách công ty | Thêm công ty |
+| --- | --- | --- |
+| ![Admin dashboard](docs/screenshots/admin/admin_dashboard_20260510.png) | ![Companies](docs/screenshots/admin/admin_companies_20260510.png) | ![Add company](docs/screenshots/admin/admin_add-company-modal_20260510.png) |
+
+| Quản lý điểm đến | Thêm điểm đến |
+| --- | --- |
+| ![Destinations](docs/screenshots/admin/admin_destinations_20260510.png) | ![Add destination](docs/screenshots/admin/admin_add-destination-modal_20260510.png) |
 
 ## Tài liệu
 
