@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from flask_jwt_extended import create_access_token
@@ -174,7 +174,7 @@ def make_departure(
     status: str = DepartureStatus.PLANNED,
     **kwargs,
 ) -> Departure:
-    start = start_date or (datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(days=30))
+    start = start_date or (datetime.now(UTC).replace(tzinfo=None) + timedelta(days=30))
     end = end_date or (start + timedelta(days=tour.total_days or 3))
     dep = Departure(
         tour_id=tour.id,
