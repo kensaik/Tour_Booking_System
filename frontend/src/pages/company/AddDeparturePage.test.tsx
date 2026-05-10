@@ -65,7 +65,6 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const startDateInput = await screen.findByLabelText(/Ngày bắt đầu/i);
     await user.type(startDateInput, "2025-06-01T08:00");
 
@@ -83,14 +82,11 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const tourInput = await screen.findByPlaceholderText(/Gõ để tìm tour/i);
     await user.type(tourInput, "Tour Đà Lạt");
 
-
     const firstOption = await screen.findByText("Tour Đà Lạt 3 ngày");
     await user.click(firstOption);
-
 
     const saveBtn = screen.getByRole("button", { name: /Lưu lại/i });
     await user.click(saveBtn);
@@ -105,13 +101,11 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const tourInput = await screen.findByPlaceholderText(/Gõ để tìm tour/i);
     await user.type(tourInput, "Tour Đà Lạt");
 
     const firstOption = await screen.findByText("Tour Đà Lạt 3 ngày");
     await user.click(firstOption);
-
 
     const startDateInput = screen.getByLabelText(/Ngày bắt đầu/i);
     await user.type(startDateInput, "2025-06-03T17:00");
@@ -122,7 +116,6 @@ describe("CompanyAddDeparturePage", () => {
     const saveBtn = screen.getByRole("button", { name: /Lưu lại/i });
     await user.click(saveBtn);
 
-
     expect(CompanyService.addDeparture).toHaveBeenCalled();
   });
 
@@ -130,13 +123,11 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const tourInput = await screen.findByPlaceholderText(/Gõ để tìm tour/i);
     await user.type(tourInput, "Tour Đà Lạt");
 
     const firstOption = await screen.findByText("Tour Đà Lạt 3 ngày");
     await user.click(firstOption);
-
 
     const startDateInput = screen.getByLabelText(/Ngày bắt đầu/i);
     await user.type(startDateInput, "2025-06-01T08:00");
@@ -144,14 +135,12 @@ describe("CompanyAddDeparturePage", () => {
     const endDateInput = screen.getByLabelText(/Ngày kết thúc/i);
     await user.type(endDateInput, "2025-06-03T17:00");
 
-
     const capacityInput = screen.getByLabelText(/Số chỗ/i) as HTMLInputElement;
     await user.clear(capacityInput);
     await user.type(capacityInput, "0");
 
     const saveBtn = screen.getByRole("button", { name: /Lưu lại/i });
     await user.click(saveBtn);
-
 
     expect(CompanyService.addDeparture).toHaveBeenCalled();
   });
@@ -161,13 +150,11 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const tourInput = await screen.findByPlaceholderText(/Gõ để tìm tour/i);
     await user.type(tourInput, "Tour Đà Lạt");
 
     const firstOption = await screen.findByText("Tour Đà Lạt 3 ngày");
     await user.click(firstOption);
-
 
     const startDateInput = screen.getByLabelText(/Ngày bắt đầu/i);
     await user.type(startDateInput, "2025-06-01T08:00");
@@ -196,10 +183,8 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     let startInputs = await screen.findAllByLabelText(/Ngày bắt đầu/i);
     expect(startInputs.length).toBe(1);
-
 
     const addBtn = screen.getByRole("button", { name: /Thêm ngày/i });
     await user.click(addBtn);
@@ -212,13 +197,11 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const addBtn = screen.getByRole("button", { name: /Thêm ngày/i });
     await user.click(addBtn);
 
     let removeButtons = screen.getAllByLabelText(/Xóa ngày khởi hành/i);
     expect(removeButtons.length).toBe(2);
-
 
     await user.click(removeButtons[0]);
 
@@ -245,13 +228,11 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const tourInput = await screen.findByPlaceholderText(/Gõ để tìm tour/i);
     await user.type(tourInput, "Tour Đà Lạt");
 
     const firstOption = await screen.findByText("Tour Đà Lạt 3 ngày");
     await user.click(firstOption);
-
 
     const startDateInput = screen.getByLabelText(/Ngày bắt đầu/i);
     await user.type(startDateInput, "2025-06-01T08:00");
@@ -270,13 +251,11 @@ describe("CompanyAddDeparturePage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddDeparturePage />);
 
-
     const tourInput = await screen.findByPlaceholderText(/Gõ để tìm tour/i);
     await user.type(tourInput, "Tour Đà Lạt");
 
     const firstOption = await screen.findByText("Tour Đà Lạt 3 ngày");
     await user.click(firstOption);
-
 
     const startDateInput = screen.getByLabelText(/Ngày bắt đầu/i);
     await user.type(startDateInput, "2025-06-01T08:00");

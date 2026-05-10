@@ -34,8 +34,6 @@ def upload_image():
 
         file.save(os.path.join(upload_path, unique_filename))
 
-
-
         file_url = f"/static/uploads/{unique_filename}"
 
         return jsonify(url=file_url), 200

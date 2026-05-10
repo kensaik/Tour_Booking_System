@@ -33,7 +33,6 @@ describe("LoginPage", () => {
 
     await user.click(submitBtn);
 
-
     expect(AuthService.login).not.toHaveBeenCalled();
   });
 

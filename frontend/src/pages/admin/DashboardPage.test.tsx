@@ -96,7 +96,6 @@ describe("AdminDashboardPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
-
     expect(await screen.findByText(/Tổng doanh thu/i)).toBeInTheDocument();
     expect(screen.getByText(/Số công ty/i)).toBeInTheDocument();
     expect(screen.getByText(/Tổng khách hàng/i)).toBeInTheDocument();

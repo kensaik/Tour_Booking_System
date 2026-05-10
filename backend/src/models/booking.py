@@ -17,7 +17,6 @@ class Booking(db.Model):
     payment_status = db.Column(db.String(20), default=PaymentStatus.UNPAID)
     booking_status = db.Column(db.String(20), default=BookingStatus.PENDING)
 
-
     contact_name = db.Column(db.String(150), nullable=True)
     contact_email = db.Column(db.String(120), nullable=True)
     contact_phone = db.Column(db.String(20), nullable=True)

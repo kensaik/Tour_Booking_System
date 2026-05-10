@@ -37,7 +37,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-surface flex">
-
       <aside className="hidden md:flex flex-col w-64 bg-surface-container text-on-surface">
         <div className="p-6 border-b border-outline-variant">
           <h1 className="text-xl font-bold text-primary">TourGo Admin</h1>
@@ -100,7 +99,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-
       <div className="md:hidden fixed top-0 left-0 right-0 bg-surface-container text-on-surface z-40 px-4 py-3 flex items-center justify-between shadow-sm border-b border-outline-variant">
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2" aria-label="Mở menu">
           {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -110,7 +108,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {user?.full_name?.charAt(0) || "A"}
         </div>
       </div>
-
 
       {sidebarOpen && (
         <div
@@ -147,7 +144,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </aside>
         </div>
       )}
-
 
       <main className="flex-1 p-4 md:p-8 pt-20 md:pt-8">{children}</main>
     </div>

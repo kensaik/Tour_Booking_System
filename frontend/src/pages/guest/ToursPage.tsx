@@ -27,7 +27,6 @@ export default function GuestToursPage() {
   const [sortBy, setSortBy] = useState("popular");
   const [filterOpen, setFilterOpen] = useState(false);
 
-
   const [priceRange, setPriceRange] = useState("all");
   const [duration, setDuration] = useState("all");
 
@@ -44,17 +43,14 @@ export default function GuestToursPage() {
 
   const rawTours: Tour[] = toursData?.tours || [];
 
-
   const tours = [...rawTours]
     .filter((tour) => {
-
       if (priceRange === "under-2m") return tour.price < 2000000;
       if (priceRange === "2m-5m") return tour.price >= 2000000 && tour.price <= 5000000;
       if (priceRange === "over-5m") return tour.price > 5000000;
       return true;
     })
     .filter((tour) => {
-
       if (duration === "1-day") return tour.total_days === 1;
       if (duration === "2-3-days") return tour.total_days >= 2 && tour.total_days <= 3;
       if (duration === "4-plus-days") return tour.total_days >= 4;
@@ -71,15 +67,12 @@ export default function GuestToursPage() {
   return (
     <div className="min-h-screen pt-20 pb-16">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
-
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-on-surface mb-2">Danh sách Tour</h1>
           <p className="text-on-surface-variant">Tìm thấy {tours.length} tour phù hợp</p>
         </div>
 
-
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-outline-variant">
-
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors"
@@ -87,7 +80,6 @@ export default function GuestToursPage() {
             <Filter className="w-4 h-4" />
             Bộ lọc
           </button>
-
 
           <select
             value={sortBy}
@@ -100,7 +92,6 @@ export default function GuestToursPage() {
             <option value="price-desc">Giá: Cao đến thấp</option>
             <option value="rating">Đánh giá cao nhất</option>
           </select>
-
 
           <div className="flex items-center gap-2">
             <button
@@ -119,7 +110,6 @@ export default function GuestToursPage() {
             </button>
           </div>
         </div>
-
 
         {filterOpen && (
           <div className="bg-surface-container-low p-6 rounded-xl mb-6">
@@ -177,15 +167,12 @@ export default function GuestToursPage() {
           </div>
         )}
 
-
         {tours.length === 0 ? (
           <EmptyState
             title="Không tìm thấy tour nào phù hợp"
             description="Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn."
             actionLabel="Xem tất cả tour"
-            onAction={() => {
-
-            }}
+            onAction={() => {}}
           />
         ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

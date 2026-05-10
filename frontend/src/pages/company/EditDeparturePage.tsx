@@ -99,7 +99,6 @@ export default function CompanyEditDeparturePage() {
       />
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6">
-
         <div className="mb-6">
           <label className="block text-sm font-medium text-on-surface mb-2">Chọn Tour</label>
           <div className="relative">
@@ -145,7 +144,6 @@ export default function CompanyEditDeparturePage() {
             )}
           </div>
         </div>
-
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div>
@@ -195,7 +193,6 @@ export default function CompanyEditDeparturePage() {
             />
           </div>
         </div>
-
 
         <div className="flex gap-4 pt-6 border-t border-outline-variant">
           <button

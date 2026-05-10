@@ -75,14 +75,11 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-
     await user.type(screen.getByPlaceholderText(/Ví dụ: 1.500.000/i), "1000000");
     await user.type(screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i), "Description");
 
-
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     await user.click(submitBtn);
-
 
     expect(CompanyService.createTour).not.toHaveBeenCalled();
   });
@@ -94,7 +91,6 @@ describe("CompanyAddTourPage", () => {
     await user.type(screen.getByPlaceholderText(/Ví dụ: Tour Đà Lạt 3 ngày 2 đêm/i), "Tour Name");
     await user.type(screen.getByPlaceholderText(/Ví dụ: 1.500.000/i), "1000000");
     await user.type(screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i), "Description");
-
 
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     await user.click(submitBtn);
@@ -109,7 +105,6 @@ describe("CompanyAddTourPage", () => {
     await user.type(screen.getByPlaceholderText(/Ví dụ: Tour Đà Lạt 3 ngày 2 đêm/i), "Tour Name");
     await user.type(screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i), "Description");
 
-
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     await user.click(submitBtn);
 
@@ -121,7 +116,6 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-
     const nameInput = screen.getByPlaceholderText(/Ví dụ: Tour Đà Lạt 3 ngày 2 đêm/i);
     const priceInput = screen.getByPlaceholderText(/Ví dụ: 1.500.000/i);
     const descInput = screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i);
@@ -130,13 +124,11 @@ describe("CompanyAddTourPage", () => {
     await user.type(priceInput, "2500000");
     await user.type(descInput, "Tour description");
 
-
     const itineraryInputs = await screen.findAllByPlaceholderText(/Tiêu đề ngày/i);
     await user.type(itineraryInputs[0], "Departure from HCMC");
 
     const descInputs = await screen.findAllByPlaceholderText(/Những hoạt động chính/i);
     await user.type(descInputs[0], "Depart in morning");
-
 
     expect(nameInput).toBeInTheDocument();
     expect(priceInput).toBeInTheDocument();
@@ -144,7 +136,6 @@ describe("CompanyAddTourPage", () => {
   });
 
   it("displays backend error message handling", async () => {
-
     vi.mocked(CompanyService.createTour).mockRejectedValue({
       response: {
         data: {
@@ -155,7 +146,6 @@ describe("CompanyAddTourPage", () => {
 
     renderWithProviders(<AddTourPage />);
 
-
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     expect(submitBtn).toBeInTheDocument();
   });
@@ -164,10 +154,8 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-
     let dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(1);
-
 
     const addDayBtn = screen.getByRole("button", { name: /Thêm ngày/i });
     await user.click(addDayBtn);
@@ -180,15 +168,12 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-
     let dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(1);
-
 
     const addDayBtn = await screen.findByRole("button", { name: /Thêm ngày/i });
     await user.click(addDayBtn);
     await user.click(addDayBtn);
-
 
     dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(3);
@@ -198,13 +183,11 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-
     const addDayBtn = screen.getByRole("button", { name: /Thêm ngày/i });
     await user.click(addDayBtn);
 
     let dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(2);
-
 
     const removeButtons = screen.getAllByRole("button");
     const deleteBtn = removeButtons.find(

@@ -47,9 +47,7 @@ describe("MyTripsPage", () => {
       ],
     });
 
-
     renderWithProviders(<MyTripsPage />);
-
 
     expect(screen.getByText(/vui lòng đăng nhập/i)).toBeInTheDocument();
   });
@@ -61,7 +59,6 @@ describe("MyTripsPage", () => {
 
     renderWithProviders(<MyTripsPage />);
 
-
     expect(screen.getByText(/vui lòng đăng nhập/i)).toBeInTheDocument();
   });
 
@@ -69,7 +66,6 @@ describe("MyTripsPage", () => {
     vi.mocked(GuestService.getMyBookings).mockImplementation(() => new Promise(() => {}));
 
     renderWithProviders(<MyTripsPage />);
-
 
     expect(screen.getByText(/vui lòng đăng nhập/i)).toBeInTheDocument();
   });

@@ -358,7 +358,6 @@ describe("DestinationsPage", () => {
     const emptyStateText = screen.getByText(/Hãy bắt đầu bằng việc thêm điểm đến đầu tiên/i);
     expect(emptyStateText).toBeInTheDocument();
 
-
     const addButtons = screen.getAllByRole("button", { name: /Thêm điểm đến|Thêm Điểm đến/i });
     const actionBtn = addButtons[addButtons.length - 1];
     await user.click(actionBtn);

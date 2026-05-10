@@ -35,7 +35,6 @@ export default function CompanyAddTourPage() {
     }
   };
 
-
   const { data: destResponse } = useQuery({
     queryKey: ["destinations"],
     queryFn: () => PublicService.getDestinations(),
@@ -51,7 +50,6 @@ export default function CompanyAddTourPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
 
     const total_days = formData.itineraries.length;
 
@@ -111,7 +109,6 @@ export default function CompanyAddTourPage() {
         </div>
 
         <form id="add-tour-form" onSubmit={handleSubmit} className="space-y-6">
-
           <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
             <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
               <span className="w-1.5 h-6 bg-primary rounded-full"></span>
@@ -213,7 +210,6 @@ export default function CompanyAddTourPage() {
               </div>
             </div>
           </div>
-
 
           <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
             <div className="flex items-center justify-between mb-6">

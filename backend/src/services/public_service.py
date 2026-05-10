@@ -20,8 +20,6 @@ class PublicService:
         from src.constants import DepartureStatus
         from src.models.tour import Departure
 
-
-
         query = Tour.query.filter(Tour.status.ilike(TourStatus.ACTIVE))
 
         if destination_id:
@@ -62,15 +60,12 @@ class PublicService:
         if not tour or tour.status.upper() != TourStatus.ACTIVE:
             return None
 
-
         now = datetime.utcnow()
         valid_departures = [
             dep
             for dep in tour.departures.all()
             if dep.start_date > now and dep.available_seats > 0
         ]
-
-
 
         tour._valid_departures = valid_departures
 

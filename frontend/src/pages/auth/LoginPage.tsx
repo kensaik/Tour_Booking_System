@@ -14,7 +14,6 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login, user, isAuthenticated } = useAuthStore();
 
-
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("reason") === "not_approved") {
@@ -65,7 +64,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-
       <div className="fixed inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop"
@@ -74,9 +72,7 @@ export default function LoginPage() {
         />
       </div>
 
-
       <div className="relative z-10 w-full max-w-md min-w-[320px] sm:min-w-[400px]">
-
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
@@ -86,13 +82,11 @@ export default function LoginPage() {
         </Link>
 
         <div className="bg-surface/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-outline-variant">
-
           <div className="text-center mb-8">
             <span className="text-3xl font-bold text-primary">TourGo</span>
             <h1 className="text-2xl font-bold text-on-surface mt-4">Đăng nhập</h1>
             <p className="text-on-surface-variant mt-2">Chào mừng bạn quay trở lại</p>
           </div>
-
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {errorMsg && (
@@ -100,7 +94,6 @@ export default function LoginPage() {
                 {errorMsg}
               </div>
             )}
-
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
@@ -119,7 +112,6 @@ export default function LoginPage() {
                 />
               </div>
             </div>
-
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-on-surface mb-2">
@@ -146,7 +138,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -164,7 +155,6 @@ export default function LoginPage() {
                 Quên mật khẩu?
               </Link>
             </div>
-
 
             <button
               type="submit"
@@ -197,13 +187,11 @@ export default function LoginPage() {
             </button>
           </form>
 
-
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-outline-variant" />
             <span className="text-sm text-on-surface-variant">hoặc</span>
             <div className="flex-1 h-px bg-outline-variant" />
           </div>
-
 
           <div className="space-y-3">
             <button className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-lg border border-outline-variant bg-white hover:bg-surface-container transition-colors">
@@ -228,7 +216,6 @@ export default function LoginPage() {
               <span className="font-medium text-on-surface">Đăng nhập với Google</span>
             </button>
           </div>
-
 
           <p className="text-center mt-6 text-on-surface-variant">
             Chưa có tài khoản?{" "}

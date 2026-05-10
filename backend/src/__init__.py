@@ -9,7 +9,6 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-
     db.init_app(app)
     import os
 
@@ -37,17 +36,13 @@ def create_app(config_class=Config):
         resp.headers["Retry-After"] = str(retry_after)
         return resp
 
-
     from src.services.cloudinary_service import configure_cloudinary
 
     configure_cloudinary()
 
-
     import src.models
 
-
     register_error_handlers(app)
-
 
     from src.routes import main_bp
     from src.routes.admin import admin_bp

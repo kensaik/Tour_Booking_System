@@ -15,10 +15,8 @@ export default function CompanyToursPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-
   const [deleteId, setDeleteId] = useState<string | number | null>(null);
   const [publishId, setPublishId] = useState<string | number | null>(null);
-
 
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -98,7 +96,6 @@ export default function CompanyToursPage() {
         </Link>
       </div>
 
-
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -124,7 +121,6 @@ export default function CompanyToursPage() {
           </div>
         </div>
       </div>
-
 
       {filteredTours.length > 0 ? (
         <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden">

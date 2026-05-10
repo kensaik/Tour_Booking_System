@@ -1,7 +1,6 @@
 import api from "./api";
 
 export const CompanyService = {
-
   getMyTours: async () => {
     const response = await api.get("/company/tours");
     return response.data;
@@ -27,7 +26,6 @@ export const CompanyService = {
     return response.data;
   },
 
-
   addItinerary: async (tourId: number | string, data: Record<string, unknown>) => {
     const response = await api.post(`/company/tours/${tourId}/itineraries`, data);
     return response.data;
@@ -42,7 +40,6 @@ export const CompanyService = {
     const response = await api(`/company/itineraries/${id}`, config);
     return response.data;
   },
-
 
   getCompanyDepartures: async () => {
     const response = await api.get("/company/departures");
@@ -68,7 +65,6 @@ export const CompanyService = {
     const response = await api.delete(`/company/departures/${id}`);
     return response.data;
   },
-
 
   getCompanyBookings: async (params?: { status?: string; departure_id?: string | number }) => {
     const response = await api.get("/company/bookings", { params });

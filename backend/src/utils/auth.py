@@ -11,8 +11,6 @@ from src.models.user import User
 
 
 def _bcrypt_rounds() -> int:
-
-
     raw = os.environ.get("BCRYPT_ROUNDS")
     if raw:
         try:

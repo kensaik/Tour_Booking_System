@@ -159,7 +159,6 @@ export default function DestinationsPage() {
         </button>
       </div>
 
-
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" />
@@ -172,7 +171,6 @@ export default function DestinationsPage() {
           />
         </div>
       </div>
-
 
       {filteredDestinations.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -242,7 +240,6 @@ export default function DestinationsPage() {
           onAction={() => (searchTerm ? setSearchTerm("") : handleOpenAdd())}
         />
       )}
-
 
       <Modal
         isOpen={modalType === "add" || modalType === "edit"}
@@ -380,7 +377,6 @@ export default function DestinationsPage() {
         </form>
       </Modal>
 
-
       <Modal
         isOpen={modalType === "view"}
         onClose={() => setModalType(null)}
@@ -436,7 +432,6 @@ export default function DestinationsPage() {
           </div>
         )}
       </Modal>
-
 
       <ConfirmModal
         isOpen={!!deleteId}

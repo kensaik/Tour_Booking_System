@@ -43,7 +43,6 @@ export default function CompanyAddDeparturePage() {
       return;
     }
 
-
     const isInvalid = departures.some((departure) => !departure.start_date || !departure.end_date);
     if (isInvalid) {
       setToast({ message: "Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc.", type: "error" });
@@ -52,7 +51,6 @@ export default function CompanyAddDeparturePage() {
 
     setIsSubmitting(true);
     try {
-
       await Promise.all(
         departures.map((departure) => CompanyService.addDeparture(selectedTour, departure)),
       );
@@ -84,7 +82,6 @@ export default function CompanyAddDeparturePage() {
       <PageHeader title="Thêm Lịch khởi hành" description="Thêm ngày khởi hành cho tour của bạn" />
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6">
-
         <div className="mb-6">
           <label className="block text-sm font-medium text-on-surface mb-2">Chọn Tour</label>
           <div className="relative">
@@ -136,7 +133,6 @@ export default function CompanyAddDeparturePage() {
             )}
           </div>
         </div>
-
 
         <div className="space-y-4 mb-6">
           <div className="flex items-center justify-between">
@@ -215,7 +211,6 @@ export default function CompanyAddDeparturePage() {
             </div>
           ))}
         </div>
-
 
         <div className="flex gap-4 pt-6 border-t border-outline-variant">
           <button

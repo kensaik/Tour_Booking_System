@@ -40,7 +40,6 @@ class CompanyService:
         db.session.add(new_tour)
         db.session.flush()
 
-
         itineraries = data.get("itineraries", [])
         for iti_data in itineraries:
             iti = TourItinerary(
@@ -82,9 +81,7 @@ class CompanyService:
         if "destination_id" in data:
             tour.destination_id = int(data["destination_id"])
 
-
         if "itineraries" in data:
-
             TourItinerary.query.filter_by(tour_id=tour.id).delete()
             for iti_data in data["itineraries"]:
                 iti = TourItinerary(
@@ -353,7 +350,6 @@ class CompanyService:
 
         booking.booking_status = new_status
         db.session.commit()
-
 
         try:
             from src.services.notification_service import NotificationService

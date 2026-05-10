@@ -24,14 +24,11 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-background">
-
       <header className="fixed top-0 w-full z-50 bg-surface shadow-sm">
         <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
-
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-semibold text-primary">TourGo</span>
           </Link>
-
 
           <nav className="hidden md:flex items-center gap-10">
             {NAV_LINKS.map((link) => (
@@ -48,7 +45,6 @@ export default function Layout() {
               </Link>
             ))}
           </nav>
-
 
           <div className="flex items-center gap-4">
             {isAuthenticated && user ? (
@@ -121,7 +117,6 @@ export default function Layout() {
               </Link>
             )}
 
-
             <button
               className="md:hidden p-2 text-on-surface"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -130,7 +125,6 @@ export default function Layout() {
             </button>
           </div>
         </div>
-
 
         {mobileMenuOpen && (
           <nav className="md:hidden bg-surface border-t border-outline-variant px-4 py-4 space-y-4">
@@ -167,15 +161,12 @@ export default function Layout() {
         )}
       </header>
 
-
       <main className="pt-0">
         <Outlet />
       </main>
 
-
       <footer className="bg-surface-container-low border-t border-outline-variant">
         <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 py-12 flex flex-col md:flex-row justify-between gap-12">
-
           <div className="w-full md:w-1/3">
             <span className="text-2xl font-bold text-primary mb-4 block">TourGo</span>
             <p className="text-base text-on-surface-variant mb-6">
@@ -195,7 +186,6 @@ export default function Layout() {
               </a>
             </div>
           </div>
-
 
           <div className="w-full md:w-2/3 grid grid-cols-2 sm:grid-cols-3 gap-8">
             <div className="flex flex-col gap-2">

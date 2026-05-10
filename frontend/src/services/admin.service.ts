@@ -1,7 +1,6 @@
 import api from "./api";
 
 export const AdminService = {
-
   getDestinations: async () => {
     const response = await api.get("/admin/destinations");
     return response.data;
@@ -21,7 +20,6 @@ export const AdminService = {
     const response = await api.delete(`/admin/destinations/${id}`);
     return response.data;
   },
-
 
   getCompanies: async (status?: string) => {
     const params = status ? { status } : {};
@@ -45,11 +43,9 @@ export const AdminService = {
   },
 
   createCompany: async (data: Record<string, unknown>) => {
-
     const response = await api.post("/auth/register", { ...data, role: "company" });
     return response.data;
   },
-
 
   getStats: async () => {
     const response = await api.get("/admin/stats");

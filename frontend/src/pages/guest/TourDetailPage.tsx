@@ -113,7 +113,6 @@ export default function TourDetailPage() {
   return (
     <div className="min-h-screen pt-20 pb-16">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
-
         <nav className="text-sm text-on-surface-variant mb-4">
           <Link to="/" className="hover:text-primary">
             Trang chủ
@@ -125,7 +124,6 @@ export default function TourDetailPage() {
           <span className="mx-2">/</span>
           <span className="text-on-surface">{tour.name}</span>
         </nav>
-
 
         <div className="relative mb-8 rounded-xl overflow-hidden">
           <img
@@ -161,7 +159,6 @@ export default function TourDetailPage() {
           </div>
         </div>
 
-
         <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
           {images.map((img, index) => (
             <button
@@ -178,9 +175,7 @@ export default function TourDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
           <div className="lg:col-span-2 space-y-8">
-
             <div>
               <div className="flex items-center gap-2 text-on-surface-variant mb-2">
                 <MapPin className="w-4 h-4 text-primary" />
@@ -214,14 +209,12 @@ export default function TourDetailPage() {
               </div>
             </div>
 
-
             <div>
               <h2 className="text-xl font-bold text-on-surface mb-4">Giới thiệu</h2>
               <p className="text-on-surface-variant whitespace-pre-line">
                 {tour.description || "Chưa có thông tin mô tả."}
               </p>
             </div>
-
 
             <div>
               <h2 className="text-xl font-bold text-on-surface mb-4">Điểm nổi bật</h2>
@@ -234,7 +227,6 @@ export default function TourDetailPage() {
                 ))}
               </ul>
             </div>
-
 
             <div>
               <h2 className="text-xl font-bold text-on-surface mb-4">Lịch trình</h2>
@@ -255,7 +247,6 @@ export default function TourDetailPage() {
                 )}
               </div>
             </div>
-
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="border border-outline-variant rounded-xl p-6">
@@ -285,7 +276,6 @@ export default function TourDetailPage() {
             </div>
           </div>
 
-
           <div className="lg:col-span-1">
             <div className="sticky top-24 bg-surface-container-lowest rounded-xl shadow-lg p-6">
               <div className="mb-6">
@@ -293,7 +283,6 @@ export default function TourDetailPage() {
                 <p className="text-3xl font-bold text-primary">{formatPrice(tour.price)}</p>
                 <p className="text-on-surface-variant text-sm">/ người</p>
               </div>
-
 
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Chọn ngày khởi hành</label>
@@ -323,7 +312,6 @@ export default function TourDetailPage() {
                 </div>
               </div>
 
-
               <div className="mb-6">
                 <label className="block text-sm font-medium mb-2">Số khách</label>
                 <div className="flex items-center gap-4">
@@ -345,7 +333,6 @@ export default function TourDetailPage() {
                 </div>
               </div>
 
-
               <div className="border-t border-outline-variant pt-4 mb-6">
                 <div className="flex justify-between mb-2">
                   <span className="text-on-surface-variant">Giá tour</span>
@@ -356,7 +343,6 @@ export default function TourDetailPage() {
                   <span className="text-primary">{formatPrice(tour.price * guests)}</span>
                 </div>
               </div>
-
 
               <button
                 onClick={handleBookNow}

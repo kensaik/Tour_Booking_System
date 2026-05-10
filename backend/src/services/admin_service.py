@@ -167,16 +167,12 @@ class AdminService:
         from src.models.tour import Departure, Tour
         from src.models.user import GuestProfile
 
-
         total_companies = CompanyProfile.query.count()
         approved_companies = CompanyProfile.query.filter_by(is_approved=True).count()
 
-
         total_tours = Tour.query.filter_by(status="active").count()
 
-
         total_guests = GuestProfile.query.count()
-
 
         total_revenue = (
             db.session.query(db.func.sum(Payment.amount))
@@ -187,7 +183,6 @@ class AdminService:
             .scalar()
             or 0
         )
-
 
         total_bookings = Booking.query.count()
         pending_bookings = Booking.query.filter_by(booking_status="pending").count()

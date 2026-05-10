@@ -52,7 +52,6 @@ describe("TourDetailPage", () => {
       { route: "/tours/1" },
     );
 
-
     const heading = await screen.findByRole("heading", { name: /hạ long 3n2đ/i });
     expect(heading).toBeInTheDocument();
     expect(await screen.findByText(/khám phá vẻ đẹp kỳ bí của hạ long/i)).toBeInTheDocument();
@@ -87,23 +86,17 @@ describe("TourDetailPage", () => {
       { route: "/tours/1" },
     );
 
-
     await screen.findByRole("heading", { name: /hạ long 3n2đ/i });
-
 
     const bookBtn = screen.getByRole("button", { name: /đặt ngay/i });
     expect(bookBtn).toBeInTheDocument();
 
-
     await user.click(bookBtn);
-
 
     expect(await screen.findByText(/vui lòng chọn ngày khởi hành/i)).toBeInTheDocument();
 
-
     const closeBtn = screen.getByRole("button", { name: /đã hiểu/i });
     await user.click(closeBtn);
-
 
     expect(screen.queryByText(/vui lòng chọn ngày khởi hành/i)).not.toBeInTheDocument();
   });

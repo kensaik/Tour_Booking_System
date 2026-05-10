@@ -64,7 +64,6 @@ describe("HomePage", () => {
 
     renderWithProviders(<HomePage />);
 
-
     expect(await screen.findByText(/chưa có tour nổi bật nào/i)).toBeInTheDocument();
   });
 });

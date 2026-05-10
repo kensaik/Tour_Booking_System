@@ -46,7 +46,6 @@ describe("CompanySettingsPage", () => {
   it("renders all form fields", async () => {
     renderWithProviders(<SettingsPage />);
 
-
     expect(await screen.findByDisplayValue(/Tour Company ABC/)).toBeInTheDocument();
     expect(screen.getByDisplayValue(/company@example.com/)).toBeInTheDocument();
     expect(screen.getByDisplayValue(/0912345678/)).toBeInTheDocument();
@@ -134,7 +133,6 @@ describe("CompanySettingsPage", () => {
 
     await user.click(submitBtn);
 
-
     expect(screen.getByRole("button", { name: /Đang lưu/i })).toBeInTheDocument();
   });
 
@@ -146,9 +144,7 @@ describe("CompanySettingsPage", () => {
       name: /Lưu thay đổi/i,
     })) as HTMLButtonElement;
 
-
     await user.click(submitBtn);
-
 
     expect(screen.getByRole("button", { name: /Đang lưu/i })).toBeInTheDocument();
   });
@@ -219,7 +215,6 @@ describe("CompanySettingsPage", () => {
   it("displays form in professional layout with two columns on desktop", async () => {
     renderWithProviders(<SettingsPage />);
 
-
     const formContainer = await screen.findByText(/Tên công ty/i);
     expect(formContainer).toBeInTheDocument();
   });
@@ -232,7 +227,6 @@ describe("CompanySettingsPage", () => {
     expect(submitBtn).toBeInTheDocument();
 
     await user.click(submitBtn);
-
 
     expect(screen.getByRole("button", { name: /Đang lưu/i })).toBeInTheDocument();
   });

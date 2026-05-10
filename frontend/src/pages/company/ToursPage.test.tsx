@@ -121,15 +121,12 @@ describe("CompanyToursPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<ToursPage />);
 
-
     const deleteButtons = await screen.findAllByTitle(/Xóa tour/i);
     await user.click(deleteButtons[0]);
-
 
     expect(
       await screen.findByText(/Bạn có chắc chắn muốn xóa tour này không/i),
     ).toBeInTheDocument();
-
 
     const confirmBtn = screen.getByRole("button", { name: /Xóa ngay/i });
     await user.click(confirmBtn);

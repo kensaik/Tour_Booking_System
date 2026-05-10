@@ -45,7 +45,6 @@ class GuestService:
         db.session.add(booking)
         db.session.commit()
 
-
         try:
             from src.services.notification_service import NotificationService
 
@@ -120,7 +119,6 @@ class GuestService:
             booking.payment_status = PaymentStatus.DEPOSIT_PAID
 
         db.session.commit()
-
 
         try:
             from src.services.notification_service import NotificationService

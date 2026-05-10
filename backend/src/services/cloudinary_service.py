@@ -28,7 +28,6 @@ def upload_image(file_data: str, folder: str = "tour_booking") -> dict:
         dict với url, public_id của ảnh
     """
     try:
-
         if "," in file_data:
             file_data = file_data.split(",")[1]
 

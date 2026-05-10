@@ -1,10 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 
-
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-
 
 import HomePage from "./pages/guest/HomePage";
 import ToursPage from "./pages/guest/ToursPage";
@@ -13,7 +11,6 @@ import CheckoutPage from "./pages/guest/CheckoutPage";
 import MyTripsPage from "./pages/guest/MyTripsPage";
 import BookingDetailPage from "./pages/guest/BookingDetailPage";
 import ContactPage from "./pages/guest/ContactPage";
-
 
 import CompanyDashboardPage from "./pages/company/DashboardPage";
 import CompanyToursPage from "./pages/company/ToursPage";
@@ -24,7 +21,6 @@ import CompanyEditDeparturePage from "./pages/company/EditDeparturePage";
 import CompanyAddTourPage from "./pages/company/AddTourPage";
 import CompanyTourDetailPage from "./pages/company/TourDetailPage";
 import CompanySettingsPage from "./pages/company/SettingsPage";
-
 
 import AdminDashboardPage from "./pages/admin/DashboardPage";
 import AdminCompaniesPage from "./pages/admin/CompaniesPage";
@@ -44,10 +40,8 @@ function App() {
 
   return (
     <Routes>
-
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-
 
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
@@ -58,7 +52,6 @@ function App() {
         <Route path="bookings/:id" element={<BookingDetailPage />} />
         <Route path="contact" element={<ContactPage />} />
       </Route>
-
 
       <Route path="/company">
         <Route index element={<CompanyDashboardPage />} />
@@ -71,7 +64,6 @@ function App() {
         <Route path="bookings" element={<CompanyBookingsPage />} />
         <Route path="settings" element={<CompanySettingsPage />} />
       </Route>
-
 
       <Route path="/admin">
         <Route index element={<AdminDashboardPage />} />

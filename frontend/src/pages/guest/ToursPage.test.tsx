@@ -85,7 +85,6 @@ describe("ToursPage", () => {
       route: "/tours?destination_id=1&keyword=test",
     });
 
-
     expect(await screen.findByText(/hạ long 3n2đ/i)).toBeInTheDocument();
     expect(await screen.findByText(/sapa 2n1đ/i)).toBeInTheDocument();
     expect(await screen.findByText(/phú quốc 4n3đ/i)).toBeInTheDocument();
@@ -98,9 +97,7 @@ describe("ToursPage", () => {
 
     renderWithProviders(<GuestToursPage />);
 
-
     await screen.findByText(/hạ long 3n2đ/i);
-
 
     expect(screen.getByText(/1[.,]800[.,]000/)).toBeInTheDocument();
   });

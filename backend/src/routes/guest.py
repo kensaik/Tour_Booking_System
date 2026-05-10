@@ -71,7 +71,6 @@ def get_booking_detail(id):
             error="Not Found", message="Booking not found or access denied"
         ), 404
 
-
     return jsonify(booking=BookingSchema().dump(booking)), 200
 
 

@@ -46,7 +46,7 @@ export default function CompanyDeparturesPage() {
       await CompanyService.deleteDeparture(id);
       setToast({ message: "Xóa lịch khởi hành thành công", type: "success" });
 
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
       const apiError = error as { response?: { data?: { message?: string } } };
       setToast({
@@ -86,7 +86,6 @@ export default function CompanyDeparturesPage() {
           Thêm Lịch khởi hành
         </Link>
       </div>
-
 
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
@@ -129,7 +128,6 @@ export default function CompanyDeparturesPage() {
           </div>
         </div>
       </div>
-
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
         <div className="overflow-x-auto">

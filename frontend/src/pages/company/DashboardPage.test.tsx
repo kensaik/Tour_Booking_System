@@ -122,7 +122,6 @@ describe("CompanyDashboardPage", () => {
 
     renderWithProviders(<DashboardPage />);
 
-
     expect(await screen.findByText(/Tổng doanh thu/i)).toBeInTheDocument();
   });
 
@@ -132,7 +131,6 @@ describe("CompanyDashboardPage", () => {
     vi.mocked(CompanyService.getCompanyDepartures).mockResolvedValue(mockDeparturesData);
 
     renderWithProviders(<DashboardPage />);
-
 
     const bookingCards = await screen.findAllByText(/Đơn đặt tour/i);
     expect(bookingCards.length).toBeGreaterThan(0);
@@ -145,7 +143,6 @@ describe("CompanyDashboardPage", () => {
 
     renderWithProviders(<DashboardPage />);
 
-
     expect(await screen.findByText(/Khách hàng/i)).toBeInTheDocument();
   });
 
@@ -155,7 +152,6 @@ describe("CompanyDashboardPage", () => {
     vi.mocked(CompanyService.getCompanyDepartures).mockResolvedValue(mockDeparturesData);
 
     renderWithProviders(<DashboardPage />);
-
 
     expect(await screen.findByText(/Tour hoạt động/i)).toBeInTheDocument();
   });

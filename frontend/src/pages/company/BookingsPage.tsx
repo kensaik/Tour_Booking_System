@@ -124,7 +124,6 @@ export default function CompanyBookingsPage() {
         </button>
       </div>
 
-
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -160,7 +159,6 @@ export default function CompanyBookingsPage() {
           </select>
         </div>
       </div>
-
 
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
         <div className="overflow-x-auto">
@@ -273,7 +271,6 @@ export default function CompanyBookingsPage() {
         onCancel={() => setConfirmCancelId(null)}
         variant="error"
       />
-
 
       <Modal
         isOpen={!!viewingBooking}

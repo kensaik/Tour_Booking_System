@@ -326,7 +326,6 @@ describe("AdminCompaniesPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
-
     expect(await screen.findByText(/Quản lý Công ty/i)).toBeInTheDocument();
 
     expect(screen.queryByText(/TourCo/)).not.toBeInTheDocument();
