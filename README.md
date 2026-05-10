@@ -15,8 +15,10 @@ và cung cấp công cụ cho Admin quản trị các công ty đối tác cùng
 
 ## Công nghệ sử dụng
 - **Backend:** Python (Flask)
-- **Frontend:** React
+- **Frontend:** React + TypeScript + Vite
 - **Database:** MySQL
+- **Cloud Storage:** Cloudinary (upload hình ảnh)
+- **Email:** Gmail SMTP (xác nhận đặt tour, thông báo)
 
 ## Cài đặt và chạy
 
@@ -38,8 +40,13 @@ python -m venv venv
 pip install -r requirements.txt
 
 # 3. Cấu hình biến môi trường
-# Copy nội dung từ file .env.example sang file .env và điền thông tin Database MySQL
+# Copy nội dung từ file .env.example sang file .env và điền thông tin
 cp .env.example .env
+
+# Chỉnh sửa file .env với các thông tin:
+# - Database MySQL
+# - Cloudinary (lấy từ https://cloudinary.com/console)
+# - Email Gmail SMTP (sử dụng App Password, NOT regular password)
 
 # 4. Khởi tạo dữ liệu mẫu (Cực kỳ quan trọng để Test)
 # Lệnh này sẽ xóa DB cũ, tạo lại các bảng và bơm dữ liệu giả lập (Tours, Users, Bookings...)
@@ -93,6 +100,31 @@ API automation suite (Phase 6) runs against an ephemeral MySQL service in GitHub
 The PR coverage gate (`ci.yml` → backend job) enforces `--cov-fail-under=70` independently and blocks merges if backend coverage drops below 70%.
 
 ## Demo
+
+## Cấu hình dịch vụ
+
+### Cloudinary (Lưu trữ hình ảnh)
+1. Đăng ký tài khoản tại [Cloudinary](https://cloudinary.com/)
+2. Lấy thông tin từ Dashboard: `Cloud Name`, `API Key`, `API Secret`
+3. Thêm vào `.env`:
+```
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+CLOUDINARY_ENABLED=true
+```
+
+### Gmail SMTP (Gửi email)
+1. Bật 2-Factor Authentication trên Google Account
+2. Tạo App Password tại [Google App Passwords](https://myaccount.google.com/apppasswords)
+3. Thêm vào `.env`:
+```
+EMAIL_HOST=smtp.gmail.com
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-16-char-app-password
+EMAIL_PORT=587
+EMAIL_USE_TLS=true
+```
 
 ## Tài liệu
 - [Phân tích yêu cầu](docs/requirements.md)

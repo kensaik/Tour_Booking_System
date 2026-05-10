@@ -61,10 +61,7 @@ jobs:
           path: backend/coverage.xml
 
   # -----------------------------------------------------------------------
-  # Frontend: ESLint + Prettier check + (optional) test.
-  # The Vite app is scaffolded by Phase 0.5; until `frontend/package.json`
-  # exists this job is a no-op so CI stays green for backend-only PRs.
-  # Once package.json lands, this job auto-activates.
+  # Frontend: ESLint + Prettier check + TypeScript build check.
   # -----------------------------------------------------------------------
   frontend:
     name: Frontend (lint + test)
@@ -114,8 +111,6 @@ jobs:
         run: npm run format:check
 
       - name: Test
-        # Only runs if a `test` script exists in package.json — Vite scaffold
-        # does not include one by default, so we probe with `npm run` first.
         if: steps.detect.outputs.exists == 'true'
         run: |
           if npm run | grep -qE '^[[:space:]]+test$'; then
@@ -123,3 +118,7 @@ jobs:
           else
             echo "::notice::No 'test' script defined in package.json — skipping."
           fi
+
+      - name: TypeScript check
+        if: steps.detect.outputs.exists == 'true'
+        run: npx tsc --noEmit
