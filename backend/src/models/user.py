@@ -1,11 +1,11 @@
-from datetime import datetime, timezone
-
-
-def _utcnow():
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+from datetime import UTC, datetime
 
 from src.constants import UserRole
 from src.extensions import db
+
+
+def _utcnow():
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 class User(db.Model):
