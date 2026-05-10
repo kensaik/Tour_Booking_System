@@ -47,7 +47,7 @@ class TourSchema(Schema):
     image_url = fields.Str()
     created_at = fields.DateTime(dump_only=True)
 
-    # Nested fields for detailed view
+
     itineraries = fields.Method("get_itineraries")
     departures = fields.Method("get_valid_departures")
 

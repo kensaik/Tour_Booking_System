@@ -40,7 +40,7 @@ export default function AdminCompaniesPage() {
     queryFn: () => AdminService.getCompanies(),
   });
 
-  // Mutations
+
   const approveMutation = useMutation({
     mutationFn: (id: string | number) => AdminService.approveCompany(id),
     onSuccess: () => {
@@ -133,7 +133,7 @@ export default function AdminCompaniesPage() {
         </button>
       </div>
 
-      {/* Search & Filter */}
+
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -164,7 +164,7 @@ export default function AdminCompaniesPage() {
         </div>
       </div>
 
-      {/* Companies Table */}
+
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -274,7 +274,7 @@ export default function AdminCompaniesPage() {
         </div>
       </div>
 
-      {/* Add Company Modal */}
+
       <Modal
         isOpen={modalType === "add"}
         onClose={() => setModalType(null)}
@@ -335,7 +335,7 @@ export default function AdminCompaniesPage() {
         </form>
       </Modal>
 
-      {/* Edit Commission Modal */}
+
       <Modal
         isOpen={modalType === "edit"}
         onClose={() => setModalType(null)}
@@ -394,7 +394,7 @@ export default function AdminCompaniesPage() {
         </div>
       </Modal>
 
-      {/* View Details Modal */}
+
       <Modal
         isOpen={modalType === "view"}
         onClose={() => setModalType(null)}

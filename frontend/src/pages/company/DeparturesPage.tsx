@@ -45,8 +45,8 @@ export default function CompanyDeparturesPage() {
     try {
       await CompanyService.deleteDeparture(id);
       setToast({ message: "Xóa lịch khởi hành thành công", type: "success" });
-      // refetch or manual update
-      window.location.reload(); // Simple way to refresh for now
+
+      window.location.reload(); 
     } catch (error) {
       const apiError = error as { response?: { data?: { message?: string } } };
       setToast({
@@ -87,7 +87,7 @@ export default function CompanyDeparturesPage() {
         </Link>
       </div>
 
-      {/* Search */}
+
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -130,7 +130,7 @@ export default function CompanyDeparturesPage() {
         </div>
       </div>
 
-      {/* Departures Table */}
+
       <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">

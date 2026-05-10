@@ -121,16 +121,16 @@ describe("CompanyToursPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<ToursPage />);
 
-    // Find and click delete button for first tour
+
     const deleteButtons = await screen.findAllByTitle(/Xóa tour/i);
     await user.click(deleteButtons[0]);
 
-    // Confirm modal should appear with confirmation message
+
     expect(
       await screen.findByText(/Bạn có chắc chắn muốn xóa tour này không/i),
     ).toBeInTheDocument();
 
-    // Click confirm button
+
     const confirmBtn = screen.getByRole("button", { name: /Xóa ngay/i });
     await user.click(confirmBtn);
 

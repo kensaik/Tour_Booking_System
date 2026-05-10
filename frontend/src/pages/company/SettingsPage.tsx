@@ -24,7 +24,7 @@ export default function CompanySettingsPage() {
     e.preventDefault();
     setIsSaving(true);
 
-    // Simulate API call
+
     setTimeout(() => {
       setIsSaving(false);
       setToast({ message: "Đã cập nhật thông tin hồ sơ thành công!", type: "success" });
@@ -39,7 +39,7 @@ export default function CompanySettingsPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-        {/* Profile Form */}
+
         <div className="lg:col-span-2 space-y-6">
           <form
             onSubmit={handleSubmit}
@@ -136,7 +136,7 @@ export default function CompanySettingsPage() {
             </div>
           </form>
 
-          {/* Security Section */}
+
           <div className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant shadow-sm">
             <h2 className="text-lg font-bold text-on-surface flex items-center gap-2 mb-6">
               <Lock className="w-5 h-5 text-secondary" />
@@ -156,7 +156,7 @@ export default function CompanySettingsPage() {
           </div>
         </div>
 
-        {/* Info Sidebar */}
+
         <div className="space-y-6">
           <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10">
             <h3 className="font-bold text-primary mb-2 flex items-center gap-2">

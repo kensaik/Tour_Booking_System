@@ -1,30 +1,30 @@
 class TourStatus:
-    DRAFT = "DRAFT"  # Đang soạn thảo, chưa mở bán
-    PENDING = "PENDING"  # Chờ Admin duyệt (nếu cần)
-    ACTIVE = "ACTIVE"  # Đang mở bán
-    COMPLETED = "COMPLETED"  # Đã kết thúc
-    CANCELLED = "CANCELLED"  # Đã hủy
+    DRAFT = "DRAFT"
+    PENDING = "PENDING"
+    ACTIVE = "ACTIVE"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
 
 
 class DepartureStatus:
-    PLANNED = "PLANNED"  # Đang lên kế hoạch / Mở bán
-    IN_PROGRESS = "IN_PROGRESS"  # Đang diễn ra
-    COMPLETED = "COMPLETED"  # Đã kết thúc
-    CANCELLED = "CANCELLED"  # Đã hủy
+    PLANNED = "PLANNED"
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
 
 
 class PaymentStatus:
-    UNPAID = "UNPAID"  # Chưa thanh toán
-    DEPOSIT_PAID = "DEPOSIT_PAID"  # Đã thanh toán cọc
-    FULLY_PAID = "FULLY_PAID"  # Đã thanh toán toàn bộ
-    REFUNDED = "REFUNDED"  # Đã hoàn tiền
+    UNPAID = "UNPAID"
+    DEPOSIT_PAID = "DEPOSIT_PAID"
+    FULLY_PAID = "FULLY_PAID"
+    REFUNDED = "REFUNDED"
 
 
 class BookingStatus:
-    PENDING = "PENDING"  # Chờ xác nhận / Chờ thanh toán
-    CONFIRMED = "CONFIRMED"  # Đã xác nhận
-    COMPLETED = "COMPLETED"  # Đã hoàn thành tour
-    CANCELLED = "CANCELLED"  # Đã hủy
+    PENDING = "PENDING"
+    CONFIRMED = "CONFIRMED"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
 
 
 class UserRole:

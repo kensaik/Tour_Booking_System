@@ -189,7 +189,7 @@ describe("CompanyBookingsPage", () => {
     const cancelButtons = await screen.findAllByLabelText(/Hủy đặt tour/i);
     await user.click(cancelButtons[0]);
 
-    // Modal should appear
+
     expect(await screen.findByText(/Xác nhận hủy đơn/i)).toBeInTheDocument();
     expect(
       screen.getByText(/Bạn có chắc chắn muốn hủy đơn đặt tour này không/i),
@@ -210,7 +210,7 @@ describe("CompanyBookingsPage", () => {
     expect(exportBtn).toBeInTheDocument();
 
     await user.click(exportBtn);
-    // Button state updates to show loading
+
     expect(screen.getByRole("button", { name: /Đang xuất/i })).toBeInTheDocument();
   });
 
@@ -248,7 +248,7 @@ describe("CompanyBookingsPage", () => {
     const viewButtons = await screen.findAllByLabelText(/Xem chi tiết/i);
     await user.click(viewButtons[0]);
 
-    // Modal opens with booking detail
+
     expect(await screen.findByText(/Chi tiết đơn hàng/i)).toBeInTheDocument();
     const phones = screen.getAllByText(/0912345678/);
     expect(phones.length).toBeGreaterThan(0);
@@ -257,7 +257,7 @@ describe("CompanyBookingsPage", () => {
   it("displays tour name in booking detail modal", async () => {
     renderWithProviders(<BookingsPage />);
 
-    // Table shows tour name
+
     expect(await screen.findByText(/Tour Đà Lạt/)).toBeInTheDocument();
     expect(screen.getByText(/Tour Hạ Long/)).toBeInTheDocument();
   });

@@ -20,8 +20,8 @@ class PublicService:
         from src.constants import DepartureStatus
         from src.models.tour import Departure
 
-        # Note: Using .ilike or just checking for case-insensitivity depending on DB
-        # TourStatus.ACTIVE is "ACTIVE"
+
+
         query = Tour.query.filter(Tour.status.ilike(TourStatus.ACTIVE))
 
         if destination_id:
@@ -58,11 +58,11 @@ class PublicService:
     @staticmethod
     def get_tour_detail(tour_id):
         tour = db.session.get(Tour, tour_id)
-        # Use .upper() to handle case-insensitive status in DB (e.g. "active" vs "ACTIVE")
+
         if not tour or tour.status.upper() != TourStatus.ACTIVE:
             return None
 
-        # Filter valid departures dynamically
+
         now = datetime.utcnow()
         valid_departures = [
             dep
@@ -70,8 +70,8 @@ class PublicService:
             if dep.start_date > now and dep.available_seats > 0
         ]
 
-        # Override departures with only valid ones for serialization
-        # This is a bit of a hack but works for serialization purposes
+
+
         tour._valid_departures = valid_departures
 
         return tour

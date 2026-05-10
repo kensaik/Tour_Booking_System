@@ -61,7 +61,7 @@ export default function CompanyDashboardPage() {
         <p className="text-on-surface-variant">Xem tổng quan hoạt động kinh doanh của bạn</p>
       </div>
 
-      {/* Stats Grid */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatsCard
           label="Tổng doanh thu"
@@ -94,7 +94,7 @@ export default function CompanyDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Bookings */}
+
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant">
           <div className="p-6 border-b border-outline-variant">
             <h2 className="text-lg font-semibold text-on-surface">Đơn đặt tour gần đây</h2>
@@ -130,7 +130,7 @@ export default function CompanyDashboardPage() {
           </div>
         </div>
 
-        {/* Upcoming Departures */}
+
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant">
           <div className="p-6 border-b border-outline-variant">
             <h2 className="text-lg font-semibold text-on-surface">Lịch khởi hành sắp tới</h2>

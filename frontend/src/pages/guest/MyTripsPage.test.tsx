@@ -47,12 +47,10 @@ describe("MyTripsPage", () => {
       ],
     });
 
-    // Since MyTripsPage checks isAuthenticated, we need to provide auth context
-    // For now, this test verifies the query structure when enabled
+
     renderWithProviders(<MyTripsPage />);
 
-    // Without auth, empty state shown - that's OK for this test
-    // The important part is that when enabled, getMyBookings would be called
+
     expect(screen.getByText(/vui lòng đăng nhập/i)).toBeInTheDocument();
   });
 
@@ -63,7 +61,7 @@ describe("MyTripsPage", () => {
 
     renderWithProviders(<MyTripsPage />);
 
-    // Without auth, shows login prompt
+
     expect(screen.getByText(/vui lòng đăng nhập/i)).toBeInTheDocument();
   });
 
@@ -72,7 +70,7 @@ describe("MyTripsPage", () => {
 
     renderWithProviders(<MyTripsPage />);
 
-    // Without auth, shows login prompt (not loading)
+
     expect(screen.getByText(/vui lòng đăng nhập/i)).toBeInTheDocument();
   });
 });

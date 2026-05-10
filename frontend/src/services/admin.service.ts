@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const AdminService = {
-  // Destinations
+
   getDestinations: async () => {
     const response = await api.get("/admin/destinations");
     return response.data;
@@ -22,7 +22,7 @@ export const AdminService = {
     return response.data;
   },
 
-  // Companies
+
   getCompanies: async (status?: string) => {
     const params = status ? { status } : {};
     const response = await api.get("/admin/companies", { params });
@@ -45,12 +45,12 @@ export const AdminService = {
   },
 
   createCompany: async (data: Record<string, unknown>) => {
-    // We reuse auth register but with company role
+
     const response = await api.post("/auth/register", { ...data, role: "company" });
     return response.data;
   },
 
-  // Stats
+
   getStats: async () => {
     const response = await api.get("/admin/stats");
     return response.data;

@@ -73,7 +73,7 @@ class Departure(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tour_id = db.Column(db.Integer, db.ForeignKey("tours.id"), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
-    end_date = db.Column(db.DateTime, nullable=False)  # computed or provided
+    end_date = db.Column(db.DateTime, nullable=False)
     total_seats = db.Column(db.Integer, nullable=False)
     available_seats = db.Column(db.Integer, nullable=False)
     guide_name = db.Column(db.String(100), nullable=True)

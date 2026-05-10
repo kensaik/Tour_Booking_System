@@ -11,7 +11,7 @@ class NotificationService:
         "smtp_user": "your_email@gmail.com",
         "smtp_password": "your_app_password",
         "from_name": "TourGo System",
-        "enabled": False,  # Bật lên khi đã cấu hình SMTP
+        "enabled": False,
     }
 
     @classmethod

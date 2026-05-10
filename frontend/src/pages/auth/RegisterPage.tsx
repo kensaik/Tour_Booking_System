@@ -70,7 +70,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 py-8">
-      {/* Background */}
+
       <div className="fixed inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&h=1080&fit=crop"
@@ -79,9 +79,9 @@ export default function RegisterPage() {
         />
       </div>
 
-      {/* Register Card */}
+
       <div className="relative z-10 w-full max-w-lg min-w-[320px] sm:min-w-[480px]">
-        {/* Back Button */}
+
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
@@ -91,7 +91,7 @@ export default function RegisterPage() {
         </Link>
 
         <div className="bg-surface/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-outline-variant">
-          {/* Logo */}
+
           <div className="text-center mb-8">
             <span className="text-3xl font-bold text-primary">TourGo</span>
             <h1 className="text-2xl font-bold text-on-surface mt-4">Tạo tài khoản</h1>
@@ -100,7 +100,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Form */}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             {errorMsg && (
               <div className="bg-error-container text-on-error-container p-3 rounded-lg text-sm">
@@ -108,7 +108,7 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* Full Name */}
+
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-on-surface mb-2">
                 Họ và tên
@@ -128,7 +128,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Email */}
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
                 Email
@@ -148,7 +148,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Phone */}
+
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-on-surface mb-2">
                 Số điện thoại
@@ -168,7 +168,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Password */}
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-on-surface mb-2">
                 Mật khẩu
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                 </button>
               </div>
 
-              {/* Password Requirements */}
+
               <div className="mt-3 space-y-1">
                 {passwordRequirements.map((req, index) => (
                   <div
@@ -208,7 +208,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Confirm Password */}
+
             <div>
               <label
                 htmlFor="confirmPassword"
@@ -242,7 +242,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Terms */}
+
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -262,7 +262,7 @@ export default function RegisterPage() {
               </span>
             </label>
 
-            {/* Submit Button */}
+
             <button
               type="submit"
               disabled={isLoading}
@@ -294,14 +294,14 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          {/* Divider */}
+
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-outline-variant" />
             <span className="text-sm text-on-surface-variant">hoặc</span>
             <div className="flex-1 h-px bg-outline-variant" />
           </div>
 
-          {/* Social Register */}
+
           <div className="space-y-3">
             <button className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-lg border border-outline-variant bg-white hover:bg-surface-container transition-colors">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -326,7 +326,7 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          {/* Login Link */}
+
           <p className="text-center mt-6 text-on-surface-variant">
             Đã có tài khoản?{" "}
             <Link

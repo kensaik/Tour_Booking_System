@@ -38,9 +38,9 @@ class CompanyService:
             image_url=data.get("image_url"),
         )
         db.session.add(new_tour)
-        db.session.flush()  # Get ID without committing
+        db.session.flush()
 
-        # Save itineraries
+
         itineraries = data.get("itineraries", [])
         for iti_data in itineraries:
             iti = TourItinerary(
@@ -82,9 +82,9 @@ class CompanyService:
         if "destination_id" in data:
             tour.destination_id = int(data["destination_id"])
 
-        # Update itineraries if provided
+
         if "itineraries" in data:
-            # Simple approach: clear and re-add
+
             TourItinerary.query.filter_by(tour_id=tour.id).delete()
             for iti_data in data["itineraries"]:
                 iti = TourItinerary(
@@ -354,7 +354,7 @@ class CompanyService:
         booking.booking_status = new_status
         db.session.commit()
 
-        # Gửi email thông báo cho khách khi trạng thái thay đổi
+
         try:
             from src.services.notification_service import NotificationService
 

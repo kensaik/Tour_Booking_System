@@ -85,7 +85,7 @@ describe("ToursPage", () => {
       route: "/tours?destination_id=1&keyword=test",
     });
 
-    // Verify tours are displayed
+
     expect(await screen.findByText(/hạ long 3n2đ/i)).toBeInTheDocument();
     expect(await screen.findByText(/sapa 2n1đ/i)).toBeInTheDocument();
     expect(await screen.findByText(/phú quốc 4n3đ/i)).toBeInTheDocument();
@@ -98,10 +98,10 @@ describe("ToursPage", () => {
 
     renderWithProviders(<GuestToursPage />);
 
-    // Wait for tours to load and verify prices are formatted
+
     await screen.findByText(/hạ long 3n2đ/i);
 
-    // Check for formatted price (Vitest should render VND prices)
+
     expect(screen.getByText(/1[.,]800[.,]000/)).toBeInTheDocument();
   });
 });

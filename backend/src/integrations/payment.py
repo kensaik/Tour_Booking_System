@@ -19,7 +19,7 @@ def charge_deposit(booking_id: int, amount: float) -> dict:
     transaction_id = f"sim_{uuid.uuid4().hex[:12]}"
 
     if has_app_context():
-        # DEBUG keeps PII out of production INFO logs once a real impl lands.
+
         current_app.logger.debug(
             "charge_deposit booking_id=%s amount=%s tx=%s",
             booking_id,

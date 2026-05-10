@@ -52,11 +52,11 @@ describe("TourDetailPage", () => {
       { route: "/tours/1" },
     );
 
-    // Use more specific query to find the main heading
+
     const heading = await screen.findByRole("heading", { name: /hạ long 3n2đ/i });
     expect(heading).toBeInTheDocument();
     expect(await screen.findByText(/khám phá vẻ đẹp kỳ bí của hạ long/i)).toBeInTheDocument();
-    // Price formatted as VND
+
     expect(await screen.findByText(/2[.,]500[.,]000/)).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe("TourDetailPage", () => {
     );
 
     expect(await screen.findByText(/chọn ngày khởi hành/i)).toBeInTheDocument();
-    // Departure dates should be visible
+
     const departureButtons = screen.getAllByRole("button");
     expect(departureButtons.length).toBeGreaterThan(0);
   });
@@ -87,25 +87,24 @@ describe("TourDetailPage", () => {
       { route: "/tours/1" },
     );
 
-    // Wait for data to load using specific query
+
     await screen.findByRole("heading", { name: /hạ long 3n2đ/i });
 
-    // Initially button should work (no disabled state based on departure)
-    // but clicking without departure should show warning modal
+
     const bookBtn = screen.getByRole("button", { name: /đặt ngay/i });
     expect(bookBtn).toBeInTheDocument();
 
-    // Click without selecting departure
+
     await user.click(bookBtn);
 
-    // Warning modal appears
+
     expect(await screen.findByText(/vui lòng chọn ngày khởi hành/i)).toBeInTheDocument();
 
-    // Close modal
+
     const closeBtn = screen.getByRole("button", { name: /đã hiểu/i });
     await user.click(closeBtn);
 
-    // Modal should be closed
+
     expect(screen.queryByText(/vui lòng chọn ngày khởi hành/i)).not.toBeInTheDocument();
   });
 

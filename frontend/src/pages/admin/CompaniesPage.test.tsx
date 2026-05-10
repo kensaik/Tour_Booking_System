@@ -243,7 +243,7 @@ describe("AdminCompaniesPage", () => {
 
     await screen.findByText(/TourCo Approved/i);
     await screen.findByText(/TourCo Pending/i);
-    // Status badges should be rendered
+
     expect(screen.getAllByText(/Chờ duyệt|Đã duyệt/i).length).toBeGreaterThan(0);
   });
 
@@ -302,7 +302,7 @@ describe("AdminCompaniesPage", () => {
     });
 
     await screen.findByText(/TourCo Approved/i);
-    // Date should be formatted and displayed
+
     const dateTexts = screen.getAllByText(/2026/);
     expect(dateTexts.length).toBeGreaterThan(0);
   });
@@ -315,7 +315,7 @@ describe("AdminCompaniesPage", () => {
     });
 
     await screen.findByText(/TourCo Pending/i);
-    // Badge should indicate pending status
+
     expect(screen.getAllByText(/Chờ duyệt/i).length).toBeGreaterThan(0);
   });
 
@@ -326,9 +326,9 @@ describe("AdminCompaniesPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
-    // Should still render the page structure
+
     expect(await screen.findByText(/Quản lý Công ty/i)).toBeInTheDocument();
-    // Table should be empty
+
     expect(screen.queryByText(/TourCo/)).not.toBeInTheDocument();
   });
 });

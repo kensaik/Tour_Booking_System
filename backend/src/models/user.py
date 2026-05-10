@@ -38,8 +38,8 @@ class CompanyProfile(db.Model):
     company_name = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=True)
     logo_url = db.Column(db.String(500), nullable=True)
-    commission_rate = db.Column(db.Float, default=10.0)  # Admin configures this
-    is_approved = db.Column(db.Boolean, default=False)  # Admin needs to approve
+    commission_rate = db.Column(db.Float, default=10.0)
+    is_approved = db.Column(db.Boolean, default=False)
 
     tours = db.relationship("Tour", backref="company", lazy="dynamic")
 

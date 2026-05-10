@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors - Vibrant Horizon Design System */
+  
   --color-surface-container-highest: #e1e3e4;
   --color-tertiary-fixed: #ffdea1;
   --color-on-error: #ffffff;
@@ -50,7 +50,7 @@
   --color-tertiary: #795900;
   --color-tertiary-fixed-dim: #ecc065;
 
-  /* Border Radius */
+  
   --radius-sm: 0.25rem;
   --radius-DEFAULT: 0.5rem;
   --radius-md: 0.75rem;
@@ -58,7 +58,7 @@
   --radius-xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Spacing */
+  
   --spacing-unit: 4px;
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -69,7 +69,7 @@
   --spacing-gutter: 20px;
   --spacing-max-width: 1200px;
 
-  /* Font Family */
+  
   --font-body-md: "Be Vietnam Pro", sans-serif;
   --font-body-lg: "Be Vietnam Pro", sans-serif;
   --font-headline-md: "Be Vietnam Pro", sans-serif;
@@ -81,7 +81,7 @@
   --font-label-sm: "Be Vietnam Pro", sans-serif;
 }
 
-/* Custom utilities */
+
 .tour-card-shadow {
   box-shadow: 0px 4px 20px rgba(0, 78, 137, 0.08);
 }

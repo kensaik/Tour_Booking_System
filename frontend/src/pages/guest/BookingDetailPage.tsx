@@ -59,9 +59,9 @@ export default function BookingDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
+
           <div className="lg:col-span-2 space-y-6">
-            {/* Header Info */}
+
             <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
               <div className="flex flex-wrap justify-between items-start gap-4 mb-6">
                 <div>
@@ -103,7 +103,7 @@ export default function BookingDetailPage() {
               </div>
             </div>
 
-            {/* Contact Info */}
+
             <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
               <h2 className="text-lg font-bold text-on-surface mb-4">Thông tin liên hệ</h2>
               <div className="space-y-3">
@@ -131,7 +131,7 @@ export default function BookingDetailPage() {
             </div>
           </div>
 
-          {/* Sidebar - Payment Info */}
+
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
               <h2 className="text-lg font-bold text-on-surface mb-4">Thanh toán</h2>

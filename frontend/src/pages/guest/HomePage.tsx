@@ -45,14 +45,14 @@ export default function HomePage() {
   const [guests, setGuests] = useState(1);
   const navigate = useNavigate();
 
-  // Fetch destinations
+
   const { data: destinationsData } = useQuery({
     queryKey: ["destinations"],
     queryFn: PublicService.getDestinations,
   });
   const destinations = destinationsData?.destinations || [];
 
-  // Fetch featured tours (we just get all tours for now and take first 3)
+
   const { data: toursData, isLoading: isLoadingTours } = useQuery({
     queryKey: ["tours", "featured"],
     queryFn: () => PublicService.getTours(),
@@ -69,9 +69,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
+
       <section className="relative min-h-[700px] flex items-center justify-center pt-24 pb-12 overflow-hidden bg-slate-900 border-b-2 border-red-200">
-        {/* Background Image */}
+
         <div className="absolute inset-0 z-0 bg-black/40">
           <img
             alt="Ha Long Bay"
@@ -80,15 +80,15 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Content */}
+
         <div className="relative z-10 w-full max-w-[1200px] px-4 md:px-8 text-center">
           <h1 className="text-5xl font-bold text-white mb-10 drop-shadow-lg leading-tight">
             Khám phá vẻ đẹp Việt Nam
           </h1>
 
-          {/* Search Box */}
+
           <div className="bg-surface/95 backdrop-blur-md p-6 rounded-xl shadow-xl max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-end">
-            {/* Destination */}
+
             <div className="w-full text-left">
               <label
                 htmlFor="destination"
@@ -114,7 +114,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Date */}
+
             <div className="w-full text-left">
               <label
                 htmlFor="departureDate"
@@ -134,7 +134,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Guests */}
+
             <div className="w-full text-left">
               <label
                 htmlFor="guests"
@@ -157,7 +157,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Search Button */}
+
             <button
               onClick={handleSearch}
               className="w-full md:w-auto bg-primary hover:bg-primary-container text-white font-medium text-sm px-10 py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 whitespace-nowrap transition-all"
@@ -169,7 +169,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Tours */}
+
       <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-20 bg-white border-b-2 border-blue-200">
         <div className="flex justify-between items-end mb-10">
           <div>
@@ -199,7 +199,7 @@ export default function HomePage() {
                 key={tour.id}
                 className="bg-surface-container-lowest rounded-xl overflow-hidden tour-card-shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-[0px_8px_30px_rgba(0,78,137,0.12)]"
               >
-                {/* Image */}
+
                 <div className="relative h-64 bg-slate-200">
                   <img
                     alt={tour.name}
@@ -209,7 +209,7 @@ export default function HomePage() {
                     }
                     className="w-full h-full object-cover"
                   />
-                  {/* Badge fallback if no specific logic for badge yet */}
+
                   <div className="absolute top-4 left-4 flex gap-2">
                     <span className="bg-primary/90 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
                       Đang mở bán
@@ -217,7 +217,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Content */}
+
                 <div className="p-6">
                   <div className="flex items-center gap-1 text-on-surface-variant mb-2">
                     <MapPin className="text-primary w-4 h-4" />
@@ -259,7 +259,7 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* Why Choose Us */}
+
       <section className="bg-surface-container py-20 border-b-2 border-green-200">
         <div className="max-w-[1200px] mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -280,7 +280,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* Image */}
+
             <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-square md:aspect-video">
               <img
                 alt="TourGo Service"
@@ -292,7 +292,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+
       <section className="bg-primary py-16">
         <div className="max-w-[1200px] mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Sẵn sàng cho chuyến đi của bạn?</h2>

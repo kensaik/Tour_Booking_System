@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
         <p className="text-on-surface-variant">Tổng quan hệ thống TourGo</p>
       </div>
 
-      {/* Stats Grid */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {statCards.map((stat, index) => (
           <StatsCard
@@ -102,7 +102,7 @@ export default function AdminDashboardPage() {
         ))}
       </div>
 
-      {/* Sub Stats */}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {subStats.map((stat, index) => (
           <div
@@ -137,7 +137,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Companies */}
+
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant">
           <div className="p-6 border-b border-outline-variant">
             <h2 className="text-lg font-semibold text-on-surface">Top công ty</h2>
@@ -172,7 +172,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Quick Actions */}
+
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant">
           <div className="p-6 border-b border-outline-variant">
             <h2 className="text-lg font-semibold text-on-surface">Thao tác nhanh</h2>

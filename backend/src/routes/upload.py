@@ -25,7 +25,7 @@ def upload_image():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        # Add uuid to avoid filename collisions
+
         unique_filename = f"{uuid.uuid4().hex}_{filename}"
 
         upload_path = os.path.join(current_app.root_path, "static", "uploads")
@@ -34,8 +34,8 @@ def upload_image():
 
         file.save(os.path.join(upload_path, unique_filename))
 
-        # In a real app, this would be a full URL.
-        # For local dev, we return the relative path from the static folder
+
+
         file_url = f"/static/uploads/{unique_filename}"
 
         return jsonify(url=file_url), 200

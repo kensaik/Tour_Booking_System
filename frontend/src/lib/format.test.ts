@@ -4,7 +4,7 @@ import { formatPrice, formatDate, formatDateTime } from "./format";
 describe("formatPrice", () => {
   it("formats 3,500,000 with vi-VN thousands separators and đ suffix", () => {
     const result = formatPrice(3500000);
-    // vi-VN locale uses '.' as thousands separator
+
     expect(result).toMatch(/3[.\s]500[.\s]000/);
     expect(result.endsWith("đ")).toBe(true);
   });
@@ -21,7 +21,7 @@ describe("formatPrice", () => {
 describe("formatDate", () => {
   it("formats a valid ISO date string", () => {
     const result = formatDate("2026-05-10");
-    // vi-VN locale yields dd/MM/yyyy with possible whitespace variations
+
     expect(result).toMatch(/10[/.\s]+0?5[/.\s]+2026/);
   });
 

@@ -95,3 +95,4 @@ frontend_dep.html
 
 # Docs (keep api-docs, database-design, requirements, contributing, Tour_Booking, test-plan, test-case)
 # Already kept in git - only temp files above are ignored
+.gitnexus

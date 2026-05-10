@@ -28,12 +28,12 @@ const renderCheckout = () => {
     </Routes>,
     {
       route: "/checkout",
-      // pass state via history entry
+
     },
   );
 };
 
-// Helper that uses MemoryRouter `initialEntries` with state
+
 import { MemoryRouter } from "react-router-dom";
 import { render } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -75,7 +75,7 @@ describe("CheckoutPage", () => {
   it("renders order summary with formatted price and date", () => {
     renderCheckoutWithState(validBookingState);
     expect(screen.getByText(/hạ long 3n2đ/i)).toBeInTheDocument();
-    // total = 2 * 1,500,000 = 3,000,000đ
+
     expect(screen.getAllByText(/3[.,]000[.,]000đ/).length).toBeGreaterThan(0);
   });
 

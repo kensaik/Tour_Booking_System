@@ -61,7 +61,7 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />);
     await fillRequiredFields(user);
-    // skip acceptTerms checkbox
+
     await user.click(screen.getByRole("button", { name: /^đăng ký$/i }));
     expect(await screen.findByText(/chấp nhận điều khoản/i)).toBeInTheDocument();
     expect(AuthService.register).not.toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe("RegisterPage", () => {
     expect(screen.getByText(/mật khẩu khớp/i)).toBeInTheDocument();
 
     await user.type(screen.getByLabelText(/^mật khẩu$/i), "Abc12345");
-    // requirement labels remain in DOM regardless of met state
+
     expect(screen.getByText(/ít nhất 8 ký tự/i)).toBeInTheDocument();
   });
 

@@ -11,8 +11,8 @@ from src.models.user import User
 
 
 def _bcrypt_rounds() -> int:
-    # Allow non-production envs (CI/E2E/dev) to use a cheap cost factor so login
-    # latency does not dominate parallel test runs. Bcrypt default is 12.
+
+
     raw = os.environ.get("BCRYPT_ROUNDS")
     if raw:
         try:

@@ -15,11 +15,11 @@ export default function CompanyToursPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Modal states
+
   const [deleteId, setDeleteId] = useState<string | number | null>(null);
   const [publishId, setPublishId] = useState<string | number | null>(null);
 
-  // Toast state
+
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const {
@@ -98,7 +98,7 @@ export default function CompanyToursPage() {
         </Link>
       </div>
 
-      {/* Search & Filter */}
+
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -125,7 +125,7 @@ export default function CompanyToursPage() {
         </div>
       </div>
 
-      {/* Tours Table or Empty State */}
+
       {filteredTours.length > 0 ? (
         <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden">
           <div className="overflow-x-auto">
@@ -226,7 +226,7 @@ export default function CompanyToursPage() {
           }}
         />
       )}
-      {/* Modals */}
+
       <ConfirmModal
         isOpen={!!deleteId}
         onClose={() => setDeleteId(null)}

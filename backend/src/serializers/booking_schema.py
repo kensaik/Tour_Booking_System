@@ -18,13 +18,13 @@ class BookingSchema(Schema):
     booking_status = fields.Str()
     created_at = fields.DateTime(dump_only=True)
 
-    # Contact info
+
     contact_name = fields.Str()
     contact_email = fields.Str()
     contact_phone = fields.Str()
     notes = fields.Str()
 
-    # Nested/Method fields for context
+
     guest_name = fields.Method("get_guest_name")
     guest_phone = fields.Method("get_guest_phone")
     tour = fields.Method("get_tour_info")

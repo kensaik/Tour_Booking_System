@@ -18,7 +18,7 @@ class AdminService:
             return image_data
 
         if not current_app.config.get("CLOUDINARY_ENABLED"):
-            return image_data  # Fallback: lưu Base64 nếu chưa config Cloudinary
+            return image_data
 
         try:
             from src.services.cloudinary_service import upload_image
@@ -167,17 +167,17 @@ class AdminService:
         from src.models.tour import Departure, Tour
         from src.models.user import GuestProfile
 
-        # Count companies
+
         total_companies = CompanyProfile.query.count()
         approved_companies = CompanyProfile.query.filter_by(is_approved=True).count()
 
-        # Count tours (active)
+
         total_tours = Tour.query.filter_by(status="active").count()
 
-        # Count guests
+
         total_guests = GuestProfile.query.count()
 
-        # Calculate revenue: Only CONFIRMED bookings with SUCCESS payments
+
         total_revenue = (
             db.session.query(db.func.sum(Payment.amount))
             .join(Booking, Payment.booking_id == Booking.id)
@@ -188,7 +188,7 @@ class AdminService:
             or 0
         )
 
-        # Count bookings
+
         total_bookings = Booking.query.count()
         pending_bookings = Booking.query.filter_by(booking_status="pending").count()
 

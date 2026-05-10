@@ -89,7 +89,7 @@ const mockDeparturesData = {
 describe("CompanyDashboardPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset store before setting new state
+
     useAuthStore.setState({
       user: null,
       token: null,
@@ -122,7 +122,7 @@ describe("CompanyDashboardPage", () => {
 
     renderWithProviders(<DashboardPage />);
 
-    // Revenue metric is displayed
+
     expect(await screen.findByText(/Tổng doanh thu/i)).toBeInTheDocument();
   });
 
@@ -133,7 +133,7 @@ describe("CompanyDashboardPage", () => {
 
     renderWithProviders(<DashboardPage />);
 
-    // Bookings card displays
+
     const bookingCards = await screen.findAllByText(/Đơn đặt tour/i);
     expect(bookingCards.length).toBeGreaterThan(0);
   });
@@ -145,7 +145,7 @@ describe("CompanyDashboardPage", () => {
 
     renderWithProviders(<DashboardPage />);
 
-    // Customer metric is displayed
+
     expect(await screen.findByText(/Khách hàng/i)).toBeInTheDocument();
   });
 
@@ -156,7 +156,7 @@ describe("CompanyDashboardPage", () => {
 
     renderWithProviders(<DashboardPage />);
 
-    // Tours metric is displayed
+
     expect(await screen.findByText(/Tour hoạt động/i)).toBeInTheDocument();
   });
 

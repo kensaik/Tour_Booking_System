@@ -96,7 +96,7 @@ describe("AdminDashboardPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
-    // Check main metric cards are rendered
+
     expect(await screen.findByText(/Tổng doanh thu/i)).toBeInTheDocument();
     expect(screen.getByText(/Số công ty/i)).toBeInTheDocument();
     expect(screen.getByText(/Tổng khách hàng/i)).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe("AdminDashboardPage", () => {
     });
 
     expect(await screen.findByText(/Tổng doanh thu/i)).toBeInTheDocument();
-    // Revenue should be formatted
+
     expect(await screen.findByText(/50[.,]000[.,]000đ/)).toBeInTheDocument();
   });
 
@@ -175,7 +175,7 @@ describe("AdminDashboardPage", () => {
     });
 
     expect(await screen.findByText(/Top công ty/i)).toBeInTheDocument();
-    // Check that top company (by revenue) is rendered
+
     expect(await screen.findByText(/TourCo 1/)).toBeInTheDocument();
   });
 

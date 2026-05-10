@@ -17,7 +17,7 @@ def get_current_company_id():
     return user.company_profile.id if user and user.company_profile else None
 
 
-# TOUR MANAGEMENT
+
 @company_bp.route("/tours", methods=["GET"])
 @company_required()
 def get_my_tours():
@@ -85,7 +85,7 @@ def delete_tour(id):
     return jsonify(message="Tour deleted successfully"), 200
 
 
-# ITINERARY MANAGEMENT
+
 @company_bp.route("/tours/<int:tour_id>/itineraries", methods=["POST"])
 @company_required()
 def add_itinerary(tour_id):
@@ -119,7 +119,7 @@ def modify_itinerary(id):
     return jsonify(message=msg), 200
 
 
-# DEPARTURE MANAGEMENT
+
 @company_bp.route("/tours/<int:tour_id>/departures", methods=["POST"])
 @company_required()
 def add_departure(tour_id):
@@ -186,7 +186,7 @@ def delete_departure(id):
     return jsonify(message="Departure deleted successfully"), 200
 
 
-# BOOKING MANAGEMENT
+
 @company_bp.route("/bookings", methods=["GET"])
 @company_required()
 def get_company_bookings():

@@ -75,15 +75,15 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-    // Fill only some fields, leave name empty (destination, price, description)
+
     await user.type(screen.getByPlaceholderText(/Ví dụ: 1.500.000/i), "1000000");
     await user.type(screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i), "Description");
 
-    // Click submit button
+
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     await user.click(submitBtn);
 
-    // Browser HTML5 validation prevents submission
+
     expect(CompanyService.createTour).not.toHaveBeenCalled();
   });
 
@@ -94,7 +94,7 @@ describe("CompanyAddTourPage", () => {
     await user.type(screen.getByPlaceholderText(/Ví dụ: Tour Đà Lạt 3 ngày 2 đêm/i), "Tour Name");
     await user.type(screen.getByPlaceholderText(/Ví dụ: 1.500.000/i), "1000000");
     await user.type(screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i), "Description");
-    // Leave destination empty
+
 
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     await user.click(submitBtn);
@@ -108,7 +108,7 @@ describe("CompanyAddTourPage", () => {
 
     await user.type(screen.getByPlaceholderText(/Ví dụ: Tour Đà Lạt 3 ngày 2 đêm/i), "Tour Name");
     await user.type(screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i), "Description");
-    // Leave price empty
+
 
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     await user.click(submitBtn);
@@ -121,7 +121,7 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-    // Populate form fields
+
     const nameInput = screen.getByPlaceholderText(/Ví dụ: Tour Đà Lạt 3 ngày 2 đêm/i);
     const priceInput = screen.getByPlaceholderText(/Ví dụ: 1.500.000/i);
     const descInput = screen.getByPlaceholderText(/Giới thiệu sơ lược về tour/i);
@@ -130,21 +130,21 @@ describe("CompanyAddTourPage", () => {
     await user.type(priceInput, "2500000");
     await user.type(descInput, "Tour description");
 
-    // Fill itinerary
+
     const itineraryInputs = await screen.findAllByPlaceholderText(/Tiêu đề ngày/i);
     await user.type(itineraryInputs[0], "Departure from HCMC");
 
     const descInputs = await screen.findAllByPlaceholderText(/Những hoạt động chính/i);
     await user.type(descInputs[0], "Depart in morning");
 
-    // Form structure is correct
+
     expect(nameInput).toBeInTheDocument();
     expect(priceInput).toBeInTheDocument();
     expect(descInput).toBeInTheDocument();
   });
 
   it("displays backend error message handling", async () => {
-    // Tests that the form catches and displays API errors
+
     vi.mocked(CompanyService.createTour).mockRejectedValue({
       response: {
         data: {
@@ -155,7 +155,7 @@ describe("CompanyAddTourPage", () => {
 
     renderWithProviders(<AddTourPage />);
 
-    // Verify form is ready to submit
+
     const submitBtn = await screen.findByRole("button", { name: /Lưu và Đăng tour/i });
     expect(submitBtn).toBeInTheDocument();
   });
@@ -164,11 +164,11 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-    // Initially 1 day
+
     let dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(1);
 
-    // Click "Thêm ngày"
+
     const addDayBtn = screen.getByRole("button", { name: /Thêm ngày/i });
     await user.click(addDayBtn);
 
@@ -180,16 +180,16 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-    // Initially 1 day
+
     let dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(1);
 
-    // Add 2 more days
+
     const addDayBtn = await screen.findByRole("button", { name: /Thêm ngày/i });
     await user.click(addDayBtn);
     await user.click(addDayBtn);
 
-    // Should now have 3 days
+
     dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(3);
   });
@@ -198,14 +198,14 @@ describe("CompanyAddTourPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
-    // Add 2 days
+
     const addDayBtn = screen.getByRole("button", { name: /Thêm ngày/i });
     await user.click(addDayBtn);
 
     let dayLabels = screen.getAllByText(/Ngày \d+/);
     expect(dayLabels.length).toBe(2);
 
-    // Remove first day
+
     const removeButtons = screen.getAllByRole("button");
     const deleteBtn = removeButtons.find(
       (btn) => btn.getAttribute("aria-label")?.includes("Xóa") || btn.querySelector("svg"),

@@ -45,7 +45,7 @@ class GuestService:
         db.session.add(booking)
         db.session.commit()
 
-        # Gửi email xác nhận cho khách và thông báo cho công ty
+
         try:
             from src.services.notification_service import NotificationService
 
@@ -121,7 +121,7 @@ class GuestService:
 
         db.session.commit()
 
-        # Gửi email xác nhận thanh toán
+
         try:
             from src.services.notification_service import NotificationService
 

@@ -42,7 +42,7 @@ def _is_admin():
     user_id = claims.get("sub")
     if not user_id:
         return False
-    # Lookup role; cache on request to avoid repeated DB hits per request.
+
     cache = getattr(request, "_rate_limit_admin_cache", None)
     if cache is not None:
         return cache

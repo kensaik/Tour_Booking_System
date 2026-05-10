@@ -27,7 +27,7 @@ def get_tours():
         start_date=start_date,
         min_guests=min_guests,
     )
-    # Exclude itineraries and departures for the list view
+
     tour_schema = TourSchema(many=True, exclude=("itineraries", "departures"))
     return jsonify(tours=tour_schema.dump(tours)), 200
 

@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const CompanyService = {
-  // Tour Management
+
   getMyTours: async () => {
     const response = await api.get("/company/tours");
     return response.data;
@@ -27,7 +27,7 @@ export const CompanyService = {
     return response.data;
   },
 
-  // Itinerary Management
+
   addItinerary: async (tourId: number | string, data: Record<string, unknown>) => {
     const response = await api.post(`/company/tours/${tourId}/itineraries`, data);
     return response.data;
@@ -43,7 +43,7 @@ export const CompanyService = {
     return response.data;
   },
 
-  // Departure Management
+
   getCompanyDepartures: async () => {
     const response = await api.get("/company/departures");
     return response.data;
@@ -69,7 +69,7 @@ export const CompanyService = {
     return response.data;
   },
 
-  // Booking Management
+
   getCompanyBookings: async (params?: { status?: string; departure_id?: string | number }) => {
     const response = await api.get("/company/bookings", { params });
     return response.data;

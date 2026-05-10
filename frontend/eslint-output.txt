@@ -1,0 +1,114 @@
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\components\ui\StatusBadge.tsx
+  19:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\components\ui\Toast.tsx
+  22:6  warning  React Hook useEffect has a missing dependency: 'handleClose'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\admin\CompaniesPage.tsx
+   14:58  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   58:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   68:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   86:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   92:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  184:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\admin\DashboardPage.tsx
+  24:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\admin\DestinationsPage.tsx
+   15:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   37:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   64:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   95:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  105:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  166:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\auth\LoginPage.tsx
+  52:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\auth\RegisterPage.tsx
+  53:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\company\AddDeparturePage.tsx
+   61:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  110:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\company\AddTourPage.tsx
+   46:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\company\DashboardPage.tsx
+   37:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   42:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   46:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   53:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  107:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  143:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\company\DeparturesPage.tsx
+   31:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\company\EditDeparturePage.tsx
+   68:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  116:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  124:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  125:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\company\TourDetailPage.tsx
+   18:44  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+   55:9   warning  The 'destinations' logical expression could make the dependencies of useEffect Hook (at line 71) change on every render. To fix this, wrap the initialization of 'destinations' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   68:42  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+   74:24  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  122:60  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  123:48  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  220:29  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  230:37  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  231:34  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  249:48  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  347:47  warning  Unexpected any. Specify a different type                                                                                                                                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\company\ToursPage.tsx
+   36:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  143:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\guest\CheckoutPage.tsx
+   90:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\pages\guest\HomePage.tsx
+  108:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  197:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\services\admin.service.ts
+  10:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  15:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\services\auth.service.ts
+  4:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\services\company.service.ts
+  10:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  20:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\tamla\Downloads\tour booking\Tour_Booking_System\frontend\src\services\guest.service.ts
+  16:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 71 problems (0 errors, 71 warnings)
+

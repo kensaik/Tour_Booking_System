@@ -159,7 +159,7 @@ export default function DestinationsPage() {
         </button>
       </div>
 
-      {/* Search */}
+
       <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant mb-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" />
@@ -173,7 +173,7 @@ export default function DestinationsPage() {
         </div>
       </div>
 
-      {/* Destinations Grid */}
+
       {filteredDestinations.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDestinations.map((dest) => (
@@ -243,7 +243,7 @@ export default function DestinationsPage() {
         />
       )}
 
-      {/* Add/Edit Modal */}
+
       <Modal
         isOpen={modalType === "add" || modalType === "edit"}
         onClose={() => {
@@ -380,7 +380,7 @@ export default function DestinationsPage() {
         </form>
       </Modal>
 
-      {/* View Modal */}
+
       <Modal
         isOpen={modalType === "view"}
         onClose={() => setModalType(null)}
@@ -437,7 +437,7 @@ export default function DestinationsPage() {
         )}
       </Modal>
 
-      {/* Delete Confirm Modal */}
+
       <ConfirmModal
         isOpen={!!deleteId}
         onClose={() => setDeleteId(null)}

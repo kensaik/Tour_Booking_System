@@ -122,7 +122,7 @@ describe("DestinationsPage", () => {
     });
 
     await screen.findByText(/Phú Quốc/i);
-    // MapPin icon should be rendered as fallback
+
     expect(screen.getAllByRole("img", { hidden: true }).length).toBeGreaterThan(0);
   });
 
@@ -358,7 +358,7 @@ describe("DestinationsPage", () => {
     const emptyStateText = screen.getByText(/Hãy bắt đầu bằng việc thêm điểm đến đầu tiên/i);
     expect(emptyStateText).toBeInTheDocument();
 
-    // Click the action button - get all buttons with that name and click the last one (empty state action)
+
     const addButtons = screen.getAllByRole("button", { name: /Thêm điểm đến|Thêm Điểm đến/i });
     const actionBtn = addButtons[addButtons.length - 1];
     await user.click(actionBtn);
@@ -445,7 +445,7 @@ describe("DestinationsPage", () => {
     });
 
     await screen.findByText(/Phú Quốc/i);
-    // Should render without image display issues
+
     expect(screen.getByText(/Phú Quốc/i)).toBeInTheDocument();
   });
 

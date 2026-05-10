@@ -30,10 +30,10 @@ describe("LoginPage", () => {
     renderWithProviders(<LoginPage />);
 
     const submitBtn = screen.getByRole("button", { name: /^đăng nhập$/i });
-    // Click with empty fields - HTML5 required validation prevents native submit
+
     await user.click(submitBtn);
 
-    // AuthService should not be called due to HTML5 validation
+
     expect(AuthService.login).not.toHaveBeenCalled();
   });
 

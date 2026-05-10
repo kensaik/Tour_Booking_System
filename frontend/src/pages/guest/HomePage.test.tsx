@@ -35,7 +35,7 @@ describe("HomePage", () => {
     vi.mocked(PublicService.getDestinations).mockResolvedValue({
       destinations: [],
     });
-    // Never resolves to keep loading state
+
     vi.mocked(PublicService.getTours).mockImplementation(() => new Promise(() => {}));
 
     renderWithProviders(<HomePage />);
@@ -64,9 +64,7 @@ describe("HomePage", () => {
 
     renderWithProviders(<HomePage />);
 
-    // Error is caught by React Query; loading state is shown first
-    // then query error boundary should display, but HomePage doesn't
-    // have explicit error UI — just shows empty
+
     expect(await screen.findByText(/chưa có tour nổi bật nào/i)).toBeInTheDocument();
   });
 });
