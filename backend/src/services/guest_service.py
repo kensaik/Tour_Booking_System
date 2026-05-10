@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.constants import PaymentStatus
 from src.extensions import db
@@ -16,7 +16,7 @@ class GuestService:
         if not departure:
             return {"error": "Departure not found", "status": 404}
 
-        if departure.start_date <= datetime.utcnow():
+        if departure.start_date <= datetime.now(timezone.utc).replace(tzinfo=None):
             return {
                 "error": "Cannot book a departure that has already started or is in the past",
                 "status": 400,

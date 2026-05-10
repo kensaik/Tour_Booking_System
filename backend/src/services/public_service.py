@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import or_
 
@@ -36,7 +36,7 @@ class PublicService:
         if not tour or tour.status != TourStatus.ACTIVE:
             return None
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
         tour._valid_departures = (
             tour.departures.filter(
                 Departure.start_date > now,

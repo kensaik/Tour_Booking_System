@@ -1,0 +1,52 @@
+# Development stack: MySQL + Flask backend with hot reload.
+# Frontend is not yet scaffolded and is intentionally omitted.
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: tour-booking-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: tour_booking
+    ports:
+      # Host 3307 → container 3306 to avoid clashing with a local MySQL on 3306.
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tour-booking-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FLASK_APP: run.py
+      FLASK_DEBUG: "1"
+      SECRET_KEY: dev-secret-key
+      JWT_SECRET_KEY: dev-jwt-secret
+      DATABASE_URL: mysql+pymysql://root:password@db:3306/tour_booking
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_USER: root
+      DB_PASSWORD: password
+    ports:
+      - "5000:5000"
+    volumes:
+      # Hot reload: edits on host immediately reflect in container.
+      - ./backend:/app
+      # Persist the "seed already ran" marker across restarts.
+      - backend-state:/var/lib/tour-booking
+
+volumes:
+  mysql-data:
+  backend-state:
