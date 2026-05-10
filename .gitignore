@@ -74,3 +74,9 @@ assets/showoff/
 # Code coverage
 .coverage
 backend/.coverage
+frontend/coverage/
+
+# Playwright
+frontend/playwright-report/
+frontend/test-results/
+frontend/playwright/.cache/
