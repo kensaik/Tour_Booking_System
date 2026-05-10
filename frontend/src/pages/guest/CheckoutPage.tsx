@@ -96,7 +96,6 @@ export default function CheckoutPage() {
           Quay lại
         </Link>
 
-        {/* Progress Steps */}
         <div className="flex items-center justify-center mb-8">
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center">

@@ -27,7 +27,7 @@ interface Booking {
 export default function MyTripsPage() {
   const navigate = useNavigate()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  
+
   const { data: response, isLoading, error } = useQuery({
     queryKey: ['my-bookings'],
     queryFn: () => GuestService.getMyBookings(),
@@ -66,7 +66,6 @@ export default function MyTripsPage() {
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         <h1 className="text-3xl font-bold text-on-surface mb-8">Chuyến đi của tôi</h1>
 
-        {/* Active Trips */}
         <section className="mb-12">
           <h2 className="text-xl font-semibold text-on-surface mb-4">Chuyến đi sắp tới</h2>
           {activeTrips.length > 0 ? (
@@ -142,7 +141,6 @@ export default function MyTripsPage() {
           )}
         </section>
 
-        {/* Past Trips */}
         <section>
           <h2 className="text-xl font-semibold text-on-surface mb-4">Chuyến đi đã hoàn thành</h2>
           {pastTrips.length > 0 ? (

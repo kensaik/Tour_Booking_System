@@ -5,9 +5,9 @@ export default function ContactPage() {
     <div className="min-h-screen bg-background pt-24 pb-16">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         <h1 className="text-4xl font-bold text-on-surface mb-8 text-center">Liên hệ với chúng tôi</h1>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Info */}
+
           <div className="bg-surface p-8 rounded-xl shadow-sm border border-outline-variant">
             <h2 className="text-2xl font-semibold text-on-surface mb-6">Thông tin liên hệ</h2>
             <div className="space-y-6">
@@ -35,7 +35,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Contact Form */}
           <div className="bg-surface p-8 rounded-xl shadow-sm border border-outline-variant">
             <h2 className="text-2xl font-semibold text-on-surface mb-6">Gửi tin nhắn</h2>
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>

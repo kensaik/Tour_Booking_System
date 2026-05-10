@@ -37,15 +37,14 @@ export default function GuestToursPage() {
   return (
     <div className="min-h-screen pt-20 pb-16">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
-        {/* Header */}
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-on-surface mb-2">Danh sách Tour</h1>
           <p className="text-on-surface-variant">Tìm thấy {tours.length} tour phù hợp</p>
         </div>
 
-        {/* Toolbar */}
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-outline-variant">
-          {/* Filter Toggle */}
+
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors"
@@ -54,7 +53,6 @@ export default function GuestToursPage() {
             Bộ lọc
           </button>
 
-          {/* Sort */}
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -67,7 +65,6 @@ export default function GuestToursPage() {
             <option value="rating">Đánh giá cao nhất</option>
           </select>
 
-          {/* View Mode */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setViewMode('grid')}
@@ -136,7 +133,6 @@ export default function GuestToursPage() {
             description="Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn."
             actionLabel="Xem tất cả tour"
             onAction={() => {
-              // Reset params logic here if needed
             }}
           />
         ) : viewMode === 'grid' ? (
