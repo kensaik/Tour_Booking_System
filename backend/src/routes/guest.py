@@ -6,6 +6,7 @@ from src.models.user import User
 from src.serializers.booking_schema import BookingSchema, PaymentSchema
 from src.services.guest_service import GuestService
 from src.utils.auth import guest_required
+from src.utils.query_helpers import build_envelope_or_list
 
 guest_bp = Blueprint("guest", __name__, url_prefix="/api/guest")
 
@@ -45,8 +46,16 @@ def get_my_bookings():
     if not guest_id:
         return jsonify(error="Forbidden", message="Guest profile not found"), 403
 
-    bookings = GuestService.get_my_bookings(guest_id)
-    return jsonify(bookings=BookingSchema(many=True).dump(bookings)), 200
+    status_filter = request.args.get("status")
+    query = GuestService.get_my_bookings_query(guest_id, status_filter=status_filter)
+    try:
+        return jsonify(
+            build_envelope_or_list(
+                query, request.args, "bookings", BookingSchema(many=True).dump
+            )
+        ), 200
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400
 
 
 @guest_bp.route("/bookings/<int:id>", methods=["GET"])
@@ -60,7 +69,6 @@ def get_booking_detail(id):
             error="Not Found", message="Booking not found or access denied"
         ), 404
 
-    # BookingSchema handles nested properties like guest, tour, departure implicitly based on our setup
     return jsonify(booking=BookingSchema().dump(booking)), 200
 
 
@@ -92,5 +100,12 @@ def get_my_payments():
     guest_id = get_current_guest_id()
     booking_id = request.args.get("booking_id")
 
-    payments = GuestService.get_my_payments(guest_id, booking_id)
-    return jsonify(payments=PaymentSchema(many=True).dump(payments)), 200
+    query = GuestService.get_my_payments_query(guest_id, booking_id)
+    try:
+        return jsonify(
+            build_envelope_or_list(
+                query, request.args, "payments", PaymentSchema(many=True).dump
+            )
+        ), 200
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400

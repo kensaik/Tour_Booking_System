@@ -1,6 +1,6 @@
 from src.extensions import db
 from src.models.tour import Destination
-from src.models.user import CompanyProfile
+from src.models.user import CompanyProfile, User
 
 
 class AdminService:
@@ -64,11 +64,28 @@ class AdminService:
         return {"status": 200}
 
     @staticmethod
-    def get_companies(status_filter=None):
+    def get_companies_query(status_filter=None, keyword=None):
         query = CompanyProfile.query
         if status_filter == "pending":
             query = query.filter_by(is_approved=False)
-        return query.all()
+        if keyword:
+            query = query.filter(CompanyProfile.company_name.ilike(f"%{keyword}%"))
+        return query.order_by(CompanyProfile.id.asc())
+
+    @staticmethod
+    def get_companies(status_filter=None):
+        return AdminService.get_companies_query(status_filter).all()
+
+    @staticmethod
+    def get_users_query(role=None, is_active=None, email=None):
+        query = User.query
+        if role:
+            query = query.filter(User.role == role)
+        if is_active is not None:
+            query = query.filter(User.is_active.is_(is_active))
+        if email:
+            query = query.filter(User.email.ilike(f"%{email}%"))
+        return query.order_by(User.id.asc())
 
     @staticmethod
     def approve_company(company_id):

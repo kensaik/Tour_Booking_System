@@ -7,6 +7,7 @@ from src.serializers.booking_schema import BookingSchema
 from src.serializers.tour_schema import TourSchema
 from src.services.company_service import CompanyService
 from src.utils.auth import company_required
+from src.utils.query_helpers import build_envelope_or_list
 
 company_bp = Blueprint("company", __name__, url_prefix="/api/company")
 
@@ -17,14 +18,18 @@ def get_current_company_id():
     return user.company_profile.id if user and user.company_profile else None
 
 
-# TOUR MANAGEMENT
 @company_bp.route("/tours", methods=["GET"])
 @company_required()
 def get_my_tours():
     company_id = get_current_company_id()
-    tours = CompanyService.get_my_tours(company_id)
+    query = CompanyService.get_my_tours_query(company_id)
     tour_schema = TourSchema(many=True, exclude=("itineraries", "departures"))
-    return jsonify(tours=tour_schema.dump(tours)), 200
+    try:
+        return jsonify(
+            build_envelope_or_list(query, request.args, "tours", tour_schema.dump)
+        ), 200
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400
 
 
 @company_bp.route("/tours", methods=["POST"])
@@ -79,7 +84,6 @@ def delete_tour(id):
     return jsonify(message="Tour deleted successfully"), 200
 
 
-# ITINERARY MANAGEMENT
 @company_bp.route("/tours/<int:tour_id>/itineraries", methods=["POST"])
 @company_required()
 def add_itinerary(tour_id):
@@ -113,7 +117,6 @@ def modify_itinerary(id):
     return jsonify(message=msg), 200
 
 
-# DEPARTURE MANAGEMENT
 @company_bp.route("/tours/<int:tour_id>/departures", methods=["POST"])
 @company_required()
 def add_departure(tour_id):
@@ -129,18 +132,28 @@ def add_departure(tour_id):
     ), 201
 
 
-# BOOKING MANAGEMENT
 @company_bp.route("/bookings", methods=["GET"])
 @company_required()
 def get_company_bookings():
     company_id = get_current_company_id()
     status_filter = request.args.get("status")
+    payment_status = request.args.get("payment_status")
     departure_id = request.args.get("departure_id")
 
-    bookings = CompanyService.get_company_bookings(
-        company_id, status_filter, departure_id
+    query = CompanyService.get_company_bookings_query(
+        company_id,
+        status_filter=status_filter,
+        payment_status=payment_status,
+        departure_id=departure_id,
     )
-    return jsonify(bookings=BookingSchema(many=True).dump(bookings)), 200
+    try:
+        return jsonify(
+            build_envelope_or_list(
+                query, request.args, "bookings", BookingSchema(many=True).dump
+            )
+        ), 200
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400
 
 
 @company_bp.route("/bookings/<int:id>", methods=["GET"])

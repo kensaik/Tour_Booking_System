@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from sqlalchemy.orm import joinedload
+
 from src.constants import BookingStatus
 from src.extensions import db
 from src.models.booking import Booking
@@ -8,8 +10,8 @@ from src.models.tour import Departure, Destination, Tour, TourItinerary
 
 class CompanyService:
     @staticmethod
-    def get_my_tours(company_id):
-        return Tour.query.filter_by(company_id=company_id).all()
+    def get_my_tours_query(company_id):
+        return Tour.query.filter_by(company_id=company_id)
 
     @staticmethod
     def create_tour(company_id, data):
@@ -170,19 +172,27 @@ class CompanyService:
         return {"departure": dep, "status": 201}
 
     @staticmethod
-    def get_company_bookings(company_id, status_filter=None, departure_id=None):
+    def get_company_bookings_query(
+        company_id, status_filter=None, payment_status=None, departure_id=None
+    ):
         query = (
-            Booking.query.join(Departure)
+            Booking.query.options(
+                joinedload(Booking.guest),
+                joinedload(Booking.departure).joinedload(Departure.tour),
+            )
+            .join(Departure)
             .join(Tour)
             .filter(Tour.company_id == company_id)
         )
 
         if status_filter:
             query = query.filter(Booking.booking_status == status_filter)
+        if payment_status:
+            query = query.filter(Booking.payment_status == payment_status)
         if departure_id:
             query = query.filter(Booking.departure_id == int(departure_id))
 
-        return query.all()
+        return query
 
     @staticmethod
     def get_booking_detail(company_id, booking_id):

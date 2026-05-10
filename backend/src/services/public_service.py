@@ -4,7 +4,7 @@ from sqlalchemy import or_
 
 from src.constants import TourStatus
 from src.extensions import db
-from src.models.tour import Destination, Tour
+from src.models.tour import Departure, Destination, Tour
 
 
 class PublicService:
@@ -13,7 +13,7 @@ class PublicService:
         return Destination.query.all()
 
     @staticmethod
-    def search_active_tours(destination_id=None, keyword=None):
+    def search_active_tours_query(destination_id=None, keyword=None):
         query = Tour.query.filter_by(status=TourStatus.ACTIVE)
 
         if destination_id:
@@ -28,7 +28,7 @@ class PublicService:
                 )
             )
 
-        return query.all()
+        return query
 
     @staticmethod
     def get_tour_detail(tour_id):
@@ -36,16 +36,14 @@ class PublicService:
         if not tour or tour.status != TourStatus.ACTIVE:
             return None
 
-        # Filter valid departures dynamically
         now = datetime.utcnow()
-        valid_departures = [
-            dep
-            for dep in tour.departures.all()
-            if dep.start_date > now and dep.available_seats > 0
-        ]
-
-        # Override departures with only valid ones for serialization
-        # This is a bit of a hack but works for serialization purposes
-        tour._valid_departures = valid_departures
+        tour._valid_departures = (
+            tour.departures.filter(
+                Departure.start_date > now,
+                Departure.available_seats > 0,
+            )
+            .order_by(Departure.start_date)
+            .all()
+        )
 
         return tour

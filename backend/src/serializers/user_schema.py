@@ -8,6 +8,14 @@ class UserSchema(Schema):
     created_at = fields.DateTime(dump_only=True)
 
 
+class AdminUserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    email = fields.Email()
+    role = fields.Str()
+    is_active = fields.Bool()
+    created_at = fields.DateTime()
+
+
 class CompanyProfileSchema(Schema):
     id = fields.Int(dump_only=True)
     user_id = fields.Int(dump_only=True)
