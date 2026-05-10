@@ -1,3 +1,4 @@
+import os
 from functools import wraps
 
 import bcrypt
@@ -9,8 +10,22 @@ from src.extensions import db
 from src.models.user import User
 
 
+def _bcrypt_rounds() -> int:
+    # Allow non-production envs (CI/E2E/dev) to use a cheap cost factor so login
+    # latency does not dominate parallel test runs. Bcrypt default is 12.
+    raw = os.environ.get("BCRYPT_ROUNDS")
+    if raw:
+        try:
+            return max(4, min(15, int(raw)))
+        except ValueError:
+            pass
+    if os.environ.get("FLASK_ENV") == "production":
+        return 12
+    return 4
+
+
 def hash_password(password: str) -> str:
-    salt = bcrypt.gensalt()
+    salt = bcrypt.gensalt(rounds=_bcrypt_rounds())
     hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 

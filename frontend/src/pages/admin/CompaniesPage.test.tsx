@@ -327,7 +327,7 @@ describe("AdminCompaniesPage", () => {
     });
 
     // Should still render the page structure
-    expect(screen.getByText(/Quản lý Công ty/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Quản lý Công ty/i)).toBeInTheDocument();
     // Table should be empty
     expect(screen.queryByText(/TourCo/)).not.toBeInTheDocument();
   });

@@ -31,6 +31,12 @@ test.describe('Admin company management', () => {
     const approveBtn = pendingRow.locator('button[title*="Duyệt" i]')
     await approveBtn.click()
 
+    // After approval the row drops out of the "pending" filter, so switch
+    // back to "all" before asserting the status badge flipped.
+    if (await statusSelect.count()) {
+      await statusSelect.selectOption('all')
+    }
+
     // Status badge should flip — wait for "Đã duyệt" inside the row
     await expect(pendingRow.getByText(/đã duyệt/i)).toBeVisible({
       timeout: 10_000,

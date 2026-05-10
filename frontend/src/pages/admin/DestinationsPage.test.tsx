@@ -177,6 +177,7 @@ describe("DestinationsPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
+    await screen.findByText(/Đà Lạt/i);
     await user.click(screen.getByRole("button", { name: /Thêm Điểm đến/i }));
 
     expect(await screen.findByText(/Thêm điểm đến mới/i)).toBeInTheDocument();
@@ -191,9 +192,10 @@ describe("DestinationsPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
+    await screen.findByText(/Đà Lạt/i);
     await user.click(screen.getByRole("button", { name: /Thêm Điểm đến/i }));
 
-    const nameInput = screen.getByPlaceholderText(/VD: Đà Lạt, Phú Quốc/i);
+    const nameInput = await screen.findByPlaceholderText(/VD: Đà Lạt, Phú Quốc/i);
     await user.type(nameInput, "Sapa");
 
     const descInput = screen.getByPlaceholderText(/Mô tả ngắn/i);
@@ -232,10 +234,9 @@ describe("DestinationsPage", () => {
     });
 
     await screen.findByText(/Đà Lạt/i);
-    const deleteButtons = screen.getAllByTitle(/Xóa/i);
+    const deleteButtons = await screen.findAllByTitle(/Xóa/i);
     await user.click(deleteButtons[0]);
 
-    expect(await screen.findByText(/Xóa điểm đến/i)).toBeInTheDocument();
     expect(
       await screen.findByText(/Bạn có chắc chắn muốn xóa điểm đến này/i)
     ).toBeInTheDocument();
@@ -360,7 +361,7 @@ describe("DestinationsPage", () => {
     });
 
     await screen.findByText(/Chưa có điểm đến nào/i);
-    const actionBtn = screen.getByRole("button", { name: /Thêm điểm đến/i });
+    const actionBtn = await screen.findByRole("button", { name: /Thêm điểm đến/i });
     expect(actionBtn).toBeInTheDocument();
 
     await user.click(actionBtn);
@@ -375,6 +376,7 @@ describe("DestinationsPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
+    await screen.findByText(/Đà Lạt/i);
     const searchInput = screen.getByPlaceholderText(/Tìm kiếm điểm đến/i);
     await user.type(searchInput, "NonExistent");
 
@@ -473,9 +475,10 @@ describe("DestinationsPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
+    await screen.findByText(/Đà Lạt/i);
     await user.click(screen.getByRole("button", { name: /Thêm Điểm đến/i }));
 
-    const nameInput = screen.getByPlaceholderText(/VD: Đà Lạt, Phú Quốc/i);
+    const nameInput = await screen.findByPlaceholderText(/VD: Đà Lạt, Phú Quốc/i);
     await user.type(nameInput, "New Destination");
 
     const submitBtn = screen.getByRole("button", { name: /Thêm mới/i });

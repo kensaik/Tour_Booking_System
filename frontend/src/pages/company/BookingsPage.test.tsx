@@ -251,7 +251,6 @@ describe("CompanyBookingsPage", () => {
   });
 
   it("displays tour name in booking detail modal", async () => {
-    const user = userEvent.setup();
     renderWithProviders(<BookingsPage />);
 
     // Table shows tour name

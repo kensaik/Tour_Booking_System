@@ -44,7 +44,7 @@ test.describe('Auth — login + role redirect', () => {
 
     await expect(
       page.getByText(/đăng nhập thất bại|không chính xác|invalid/i),
-    ).toBeVisible({ timeout: 5_000 })
+    ).toBeVisible({ timeout: 15_000 })
     await expect(page).toHaveURL(/\/login/)
   })
 
