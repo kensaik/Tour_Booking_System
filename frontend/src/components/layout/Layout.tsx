@@ -24,15 +24,14 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+
       <header className="fixed top-0 w-full z-50 bg-surface shadow-sm">
         <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
-          {/* Logo */}
+
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-semibold text-primary">TourGo</span>
           </Link>
 
-          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-10">
             {NAV_LINKS.map((link) => (
               <Link

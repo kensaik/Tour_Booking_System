@@ -27,7 +27,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-surface flex">
-      {/* Sidebar - Desktop */}
+
       <aside className="hidden md:flex flex-col w-64 bg-surface-container text-on-surface">
         <div className="p-6 border-b border-outline-variant">
           <h1 className="text-xl font-bold text-primary">TourGo Admin</h1>

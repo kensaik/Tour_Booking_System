@@ -3,7 +3,6 @@ import { LayoutDashboard, Globe, Calendar, BookOpen, ChevronDown, LogOut, Menu, 
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 
-// Admin Layout for Company Dashboard
 export default function CompanyLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -30,7 +29,7 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
 
   return (
     <div className="min-h-screen bg-surface flex">
-      {/* Sidebar - Desktop */}
+
       <aside className="hidden md:flex flex-col w-64 bg-surface-container text-on-surface border-r border-outline-variant">
         <div className="p-6 border-b border-outline-variant">
           <div className="flex items-center gap-3">
