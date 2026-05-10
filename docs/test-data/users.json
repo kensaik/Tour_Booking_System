@@ -1,0 +1,36 @@
+{
+  "users": [
+    {
+      "email": "admin@test.com",
+      "password": "Admin@123",
+      "role": "ADMIN",
+      "is_active": true
+    },
+    {
+      "email": "abc@travel.com",
+      "password": "Company@123",
+      "role": "COMPANY",
+      "is_active": true,
+      "company_name": "ABC Travel",
+      "is_approved": true,
+      "commission_rate": 10.0
+    },
+    {
+      "email": "pending@travel.com",
+      "password": "Company@123",
+      "role": "COMPANY",
+      "is_active": true,
+      "company_name": "Pending Travel",
+      "is_approved": false,
+      "commission_rate": 0.0
+    },
+    {
+      "email": "a@gmail.com",
+      "password": "Guest@123",
+      "role": "GUEST",
+      "is_active": true,
+      "full_name": "Nguyen Van A",
+      "phone_number": "0900000000"
+    }
+  ]
+}

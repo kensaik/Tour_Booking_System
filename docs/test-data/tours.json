@@ -1,0 +1,66 @@
+{
+  "destinations": [
+    {
+      "id": 1,
+      "name": "Đà Lạt",
+      "description": "Thành phố sương mù, khí hậu mát mẻ quanh năm"
+    },
+    {
+      "id": 2,
+      "name": "Phú Quốc",
+      "description": "Đảo ngọc với bãi biển đẹp"
+    },
+    {
+      "id": 3,
+      "name": "Nha Trang",
+      "description": "Thành phố biển nổi tiếng"
+    },
+    {
+      "id": 4,
+      "name": "Hà Nội",
+      "description": "Thủ đô ngàn năm văn hiến"
+    }
+  ],
+  "tours": [
+    {
+      "id": 1,
+      "name": "Tour Đà Lạt 3N2Đ",
+      "description": "Khám phá Đà Lạt - Thành phố mộng mơ",
+      "price": 1500000,
+      "total_days": 3,
+      "status": "ACTIVE",
+      "destination_id": 1,
+      "company_id": 2
+    },
+    {
+      "id": 2,
+      "name": "Tour Phú Quốc 4N3Đ",
+      "description": "Thiên đường biển đảo Phú Quốc",
+      "price": 2500000,
+      "total_days": 4,
+      "status": "ACTIVE",
+      "destination_id": 2,
+      "company_id": 2
+    },
+    {
+      "id": 3,
+      "name": "Tour Nha Trang 2N1Đ",
+      "description": "Nha Trang - Biển xanh cát trắng",
+      "price": 1200000,
+      "total_days": 2,
+      "status": "ACTIVE",
+      "destination_id": 3,
+      "company_id": 2
+    },
+    {
+      "id": 5,
+      "name": "Tour Hà Nội 4N3Đ",
+      "description": "Hà Nội - Hành trình ngàn năm văn hiến",
+      "price": 3000000,
+      "total_days": 4,
+      "status": "ACTIVE",
+      "destination_id": 4,
+      "company_id": 2
+    }
+  ]
+}
