@@ -170,24 +170,24 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -208,39 +208,39 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { AuthService } from '../services/auth.service'
-import { queryClient } from '../lib/queryClient'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { AuthService } from "../services/auth.service";
+import { queryClient } from "../lib/queryClient";
 &nbsp;
 interface User {
-  id: number
-  email: string
-  full_name: string
-  role: string
-  is_active: boolean
-  company_profile?: Record&lt;string, unknown&gt;
-  guest_profile?: Record&lt;string, unknown&gt;
+  id: number;
+  email: string;
+  full_name: string;
+  role: string;
+  is_active: boolean;
+  company_profile?: Record&lt;string, unknown&gt;;
+  guest_profile?: Record&lt;string, unknown&gt;;
 }
 &nbsp;
 interface AuthState {
-  user: User | null
-  token: string | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  error: string | null
-  
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+&nbsp;
   // Actions
-  login: (token: string, user: User) =&gt; void
-  logout: () =&gt; void
-  fetchUser: () =&gt; Promise&lt;void&gt;
+  login: (token: string, user: User) =&gt; void;
+  logout: () =&gt; void;
+  fetchUser: () =&gt; Promise&lt;void&gt;;
 }
 &nbsp;
 export const useAuthStore = create&lt;AuthState&gt;()(
@@ -253,44 +253,44 @@ export const useAuthStore = create&lt;AuthState&gt;()(
       error: null,
 &nbsp;
       login: (token, user) =&gt; {
-        localStorage.setItem('access_token', token)
-        set({ user, token, isAuthenticated: true, error: null })
+        localStorage.setItem("access_token", token);
+        set({ user, token, isAuthenticated: true, error: null });
       },
 &nbsp;
-  logout: () =&gt; {
-    localStorage.removeItem('access_token')
-    queryClient.clear()
-    set({ user: null, token: null, isAuthenticated: false })
-  },
+      logout: () =&gt; {
+        localStorage.removeItem("access_token");
+        queryClient.clear();
+        set({ user: null, token: null, isAuthenticated: false });
+      },
 &nbsp;
-  fetchUser: async () =&gt; {
-    const { token } = get()
-    if (!token) return
+      fetchUser: async () =&gt; {
+        const { token } = get();
+        if (!token) return;
 &nbsp;
-    set({ isLoading: true, error: null })
-    try {
-      const data = await AuthService.getMe()
-      set({ user: data.user, isAuthenticated: true, isLoading: false })
-    } catch (error: unknown) {
-      localStorage.removeItem('access_token')
-      queryClient.clear()
-      const axiosErr = error as { response?: { data?: { message?: string } } }
-      set({
-        user: null,
-        token: null,
-        isAuthenticated: false,
-        isLoading: false,
-        error: axiosErr.response?.data?.<span class="branch-0 cbranch-no" title="branch not covered" >message || 'Failed to fetch user'</span>
-      })
-    }
-  }
+        set({ isLoading: true, error: null });
+        try {
+          const data = await AuthService.getMe();
+          set({ user: data.user, isAuthenticated: true, isLoading: false });
+        } catch (error: unknown) {
+          localStorage.removeItem("access_token");
+          queryClient.clear();
+          const axiosErr = error as { response?: { data?: { message?: string } } };
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: axiosErr.response?.data?.<span class="branch-0 cbranch-no" title="branch not covered" >message || "Failed to fetch user",</span>
+          });
+        }
+      },
     }),
     {
-      name: 'auth-storage', // name of the item in the storage (must be unique)
+      name: "auth-storage", // name of the item in the storage (must be unique)
       partialize: (state) =&gt; ({ token: state.token }), // only save the token
-    }
-  )
-)
+    },
+  ),
+);
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -298,7 +298,7 @@ export const useAuthStore = create&lt;AuthState&gt;()(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-10T14:34:15.071Z
+                at 2026-05-10T15:12:04.706Z
             </div>
         <script src="../prettify.js"></script>
         <script>
