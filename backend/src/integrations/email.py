@@ -1,8 +1,3 @@
-"""Email integration stub.
-
-Default implementation logs and returns True. Real SMTP/provider wiring
-replaces this body without altering the call signature.
-"""
 
 from flask import current_app, has_app_context
 
