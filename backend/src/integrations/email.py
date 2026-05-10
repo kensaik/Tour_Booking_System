@@ -1,4 +1,3 @@
-
 from flask import current_app, has_app_context
 
 

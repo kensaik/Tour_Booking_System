@@ -28,9 +28,7 @@ class Booking(db.Model):
     notes = db.Column(db.Text, nullable=True)
 
     created_at = db.Column(db.DateTime, default=_utcnow)
-    updated_at = db.Column(
-        db.DateTime, default=_utcnow, onupdate=_utcnow
-    )
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     payments = db.relationship(
         "Payment", backref="booking", lazy="dynamic", cascade="all, delete-orphan"

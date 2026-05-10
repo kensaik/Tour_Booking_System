@@ -39,9 +39,7 @@ class Tour(db.Model):
     status = db.Column(db.String(20), default=TourStatus.DRAFT)
     image_url = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=_utcnow)
-    updated_at = db.Column(
-        db.DateTime, default=_utcnow, onupdate=_utcnow
-    )
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     itineraries = db.relationship(
         "TourItinerary",

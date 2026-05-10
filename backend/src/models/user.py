@@ -17,9 +17,7 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False, default=UserRole.GUEST)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=_utcnow)
-    updated_at = db.Column(
-        db.DateTime, default=_utcnow, onupdate=_utcnow
-    )
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     company_profile = db.relationship(
         "CompanyProfile", backref="user", uselist=False, cascade="all, delete-orphan"
