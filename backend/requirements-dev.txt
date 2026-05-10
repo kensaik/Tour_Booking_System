@@ -1,0 +1,14 @@
+# Backend developer / lint / test tooling.
+# Install with: `pip install -r requirements.txt -r requirements-dev.txt`
+
+# Lint
+ruff==0.6.9
+
+# Test infra (Phase 1 — 260507-1254-testing-implementation)
+pytest-cov==5.0.0
+pytest-mock==3.14.0
+freezegun==1.5.1
+
+# Automation suite (Phase 6)
+pytest-html==4.1.1
+requests==2.32.3

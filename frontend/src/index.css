@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors - Vibrant Horizon Design System */
+  --color-surface-container-highest: #e1e3e4;
+  --color-tertiary-fixed: #ffdea1;
+  --color-on-error: #ffffff;
+  --color-primary-fixed: #ffdbd0;
+  --color-on-primary-container: #5f1900;
+  --color-on-primary-fixed-variant: #832600;
+  --color-surface-dim: #d9dadb;
+  --color-tertiary-container: #bb943e;
+  --color-on-secondary: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-tertiary-fixed: #261900;
+  --color-secondary-container: #87bcfe;
+  --color-on-tertiary: #ffffff;
+  --color-on-primary-fixed: #390c00;
+  --color-error: #ba1a1a;
+  --color-surface-tint: #ab3500;
+  --color-on-surface: #191c1d;
+  --color-on-secondary-container: #004b84;
+  --color-background: #f8f9fa;
+  --color-secondary-fixed: #d2e4ff;
+  --color-outline: #8d7168;
+  --color-inverse-on-surface: #f0f1f2;
+  --color-secondary: #24619d;
+  --color-on-secondary-fixed-variant: #004880;
+  --color-on-background: #191c1d;
+  --color-primary: #ab3500;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface: #f8f9fa;
+  --color-surface-container: #edeeef;
+  --color-primary-fixed-dim: #ffb59d;
+  --color-secondary-fixed-dim: #a1c9ff;
+  --color-on-secondary-fixed: #001c37;
+  --color-outline-variant: #e1bfb5;
+  --color-on-error-container: #93000a;
+  --color-on-tertiary-container: #422f00;
+  --color-inverse-surface: #2e3132;
+  --color-surface-variant: #e1e3e4;
+  --color-error-container: #ffdad6;
+  --color-on-tertiary-fixed-variant: #5c4300;
+  --color-primary-container: #ff6b35;
+  --color-inverse-primary: #ffb59d;
+  --color-on-surface-variant: #594139;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-bright: #f8f9fa;
+  --color-on-primary: #ffffff;
+  --color-tertiary: #795900;
+  --color-tertiary-fixed-dim: #ecc065;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-DEFAULT: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-unit: 4px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+  --spacing-xxl: 64px;
+  --spacing-gutter: 20px;
+  --spacing-max-width: 1200px;
+
+  /* Font Family */
+  --font-body-md: "Be Vietnam Pro", sans-serif;
+  --font-body-lg: "Be Vietnam Pro", sans-serif;
+  --font-headline-md: "Be Vietnam Pro", sans-serif;
+  --font-title-lg: "Be Vietnam Pro", sans-serif;
+  --font-headline-lg-mobile: "Be Vietnam Pro", sans-serif;
+  --font-display-lg: "Be Vietnam Pro", sans-serif;
+  --font-headline-lg: "Be Vietnam Pro", sans-serif;
+  --font-label-md: "Be Vietnam Pro", sans-serif;
+  --font-label-sm: "Be Vietnam Pro", sans-serif;
+}
+
+/* Custom utilities */
+.tour-card-shadow {
+  box-shadow: 0px 4px 20px rgba(0, 78, 137, 0.08);
+}
+
+.tour-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 8px 30px rgba(0, 78, 137, 0.12);
+}
