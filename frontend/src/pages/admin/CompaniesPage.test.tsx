@@ -302,8 +302,9 @@ describe("AdminCompaniesPage", () => {
     });
 
     await screen.findByText(/TourCo Approved/i);
-    // Date should be formatted and displayed - check for any date like format
-    expect(screen.getByText(/01\/03\/2026|03\/01\/2026|2026/i)).toBeInTheDocument();
+    // Date should be formatted and displayed
+    const dateTexts = screen.getAllByText(/2026/);
+    expect(dateTexts.length).toBeGreaterThan(0);
   });
 
   it("shows pending badge for unapproved companies in table", async () => {
