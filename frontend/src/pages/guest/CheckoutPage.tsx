@@ -92,7 +92,8 @@ export default function CheckoutPage() {
       setModalConfig({
         isOpen: true,
         title: "Lỗi đặt tour",
-        message: apiErr.response?.data?.message || "Có lỗi xảy ra khi đặt tour. Vui lòng thử lại sau.",
+        message:
+          apiErr.response?.data?.message || "Có lỗi xảy ra khi đặt tour. Vui lòng thử lại sau.",
       });
     }
   };

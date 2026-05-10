@@ -17,7 +17,10 @@ interface StatusBadgeProps {
 
 const STATUS_MAP: Record<
   StatusType,
-  Record<string, { label: string; colorClass: string; icon?: ComponentType<{ className?: string }> }>
+  Record<
+    string,
+    { label: string; colorClass: string; icon?: ComponentType<{ className?: string }> }
+  >
 > = {
   booking: BOOKING_STATUS,
   payment: PAYMENT_STATUS,

@@ -56,7 +56,10 @@ export default function DestinationsPage() {
     },
     onError: (err) => {
       const apiErr = err as { response?: { data?: { message?: string } } };
-      setToast({ message: apiErr.response?.data?.message || "Lỗi khi thêm điểm đến", type: "error" });
+      setToast({
+        message: apiErr.response?.data?.message || "Lỗi khi thêm điểm đến",
+        type: "error",
+      });
     },
   });
 

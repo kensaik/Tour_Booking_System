@@ -33,7 +33,11 @@ export const CompanyService = {
     return response.data;
   },
 
-  modifyItinerary: async (id: number | string, data: Record<string, unknown>, method: "PUT" | "DELETE") => {
+  modifyItinerary: async (
+    id: number | string,
+    data: Record<string, unknown>,
+    method: "PUT" | "DELETE",
+  ) => {
     const config = method === "DELETE" ? { method: "DELETE" } : { method: "PUT", data };
     const response = await api(`/company/itineraries/${id}`, config);
     return response.data;
