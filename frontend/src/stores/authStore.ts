@@ -18,8 +18,8 @@ interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null
+
   
-  // Actions
   login: (token: string, user: User) => void
   logout: () => void
   fetchUser: () => Promise<void>
@@ -53,7 +53,7 @@ export const useAuthStore = create<AuthState>()(
           const data = await AuthService.getMe()
           set({ user: data.user, isAuthenticated: true, isLoading: false })
         } catch (error: any) {
-          // If token is invalid/expired
+
           localStorage.removeItem('access_token')
           set({ 
             user: null, 
@@ -66,8 +66,8 @@ export const useAuthStore = create<AuthState>()(
       }
     }),
     {
-      name: 'auth-storage', // name of the item in the storage (must be unique)
-      partialize: (state) => ({ token: state.token }), // only save the token
+      name: 'auth-storage', 
+      partialize: (state) => ({ token: state.token }), 
     }
   )
 )
