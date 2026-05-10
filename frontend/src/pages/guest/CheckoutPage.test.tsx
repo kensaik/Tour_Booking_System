@@ -79,15 +79,14 @@ describe('CheckoutPage', () => {
     expect(screen.getAllByText(/3[.,]000[.,]000đ/).length).toBeGreaterThan(0)
   })
 
-  it('blocks submission when required contact fields are empty (alert)', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+  it('blocks submission when required contact fields are empty (modal)', async () => {
     const user = userEvent.setup()
     renderCheckoutWithState(validBookingState)
 
     await user.click(screen.getByRole('button', { name: /tiếp tục/i }))
-    expect(alertSpy).toHaveBeenCalledWith(
-      expect.stringMatching(/điền đầy đủ thông tin/i),
-    )
+    expect(
+      await screen.findByText(/điền đầy đủ thông tin/i),
+    ).toBeInTheDocument()
     expect(GuestService.bookDeparture).not.toHaveBeenCalled()
   })
 
@@ -112,11 +111,10 @@ describe('CheckoutPage', () => {
     )
   })
 
-  it('shows backend error via alert when booking fails', async () => {
+  it('shows backend error via modal when booking fails', async () => {
     vi.mocked(GuestService.bookDeparture).mockRejectedValue({
       response: { data: { message: 'Hết chỗ' } },
     })
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
     const user = userEvent.setup()
     renderCheckoutWithState(validBookingState)
 
@@ -125,8 +123,6 @@ describe('CheckoutPage', () => {
     await user.type(screen.getByPlaceholderText(/0xxx/i), '012')
     await user.click(screen.getByRole('button', { name: /tiếp tục/i }))
 
-    // wait for promise rejection to flow through
-    await new Promise(r => setTimeout(r, 0))
-    expect(alertSpy).toHaveBeenCalledWith(expect.stringMatching(/hết chỗ/i))
+    expect(await screen.findByText(/hết chỗ/i)).toBeInTheDocument()
   })
 })

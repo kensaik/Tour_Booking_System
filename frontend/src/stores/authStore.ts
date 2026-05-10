@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { AuthService } from '../services/auth.service'
-import { queryClient } from '../main'
+import { queryClient } from '../lib/queryClient'
 
 interface User {
   id: number

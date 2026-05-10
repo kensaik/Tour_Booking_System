@@ -8,6 +8,7 @@ export const BOOKING_STATUS: Record<string, { label: string; colorClass: string;
 }
 
 export const PAYMENT_STATUS: Record<string, { label: string; colorClass: string }> = {
+  paid: { label: 'Đã thanh toán', colorClass: 'bg-green-100 text-green-700' },
   fully_paid: { label: 'Đã thanh toán', colorClass: 'bg-green-100 text-green-700' },
   deposit_paid: { label: 'Đã đặt cọc', colorClass: 'bg-blue-100 text-blue-700' },
   pending: { label: 'Chờ thanh toán', colorClass: 'bg-amber-100 text-amber-700' },
