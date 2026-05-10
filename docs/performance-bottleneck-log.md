@@ -59,22 +59,6 @@ Tổng hợp bottleneck qua các run. ID = `{run-date-short}-F{n}` để tránh 
 | `260510-F5` | Lọc departure trong bộ nhớ (tiềm ẩn) | `backend/src/services/public_service.py:64-68` |
 | `260510-F6` | Worker thread starvation khuếch đại latency | `perf/run-server.ps1:21` |
 
-### Danh sách fix ưu tiên
-
-| Thứ tự | ID | Tác động dự kiến | Công sức |
-|---|---|---|---|
-| 1 | `260510-F2` — eager-load relationships trong `get_company_bookings` | p95 của `/api/company/bookings` từ 5,9 giây → có thể <500 ms (10×) | XS — một dòng `.options(joinedload(…))` |
-| 2 | `260510-F1` — giới hạn hoặc bắt buộc phân trang trên list endpoint | Giới hạn worst case cho MỌI endpoint phân trang | S — cần coordinate với FE |
-| 3 | `260510-F3` — atomic seat decrement | Xóa lỗi lost-update + giảm write p99 từ 1,04 giây → ~50 ms | S — viết lại một query + kiểm tra rowcount |
-| 4 | `260510-F5` — đẩy departure filter vào SQL | Tiềm ẩn — quan trọng khi tour có nhiều departure | XS |
-| 5 | `260510-F4` — bcrypt cost khi login | Không khuyến nghị sửa; bảo mật quan trọng hơn | n/a |
-| 6 | `260510-F6` — waitress thread count | Không tune. Fix #1 làm nó không còn quan trọng. | n/a |
-
-### Quyết định (2026-05-10)
-
-- **Phân trang ngay.** Frontend chưa tồn tại (`frontend/` chỉ có config + README), không có consumer nào bị ràng buộc với shape không phân trang. Áp dụng envelope `{items, total, page, page_size}` đồng nhất cho mọi list endpoint. Default `page_size=20`, `max_page_size=200`.
-- **Giữ flask-limiter.** Đã wired sẵn JWT-aware key + admin bypass — reverse-proxy không thay thế được phần per-user. Thay đổi duy nhất cần làm: đổi `storage_uri="memory://"` → Redis khi chạy >1 worker (memory storage là per-process, counter sẽ drift).
-
 ---
 
 ## Run `20260510-1633-postfix`
@@ -91,13 +75,3 @@ Tổng hợp bottleneck qua các run. ID = `{run-date-short}-F{n}` để tránh 
 | `260510-F3` | 25,7 ms p95 / 1.040 ms p99 stress | 21,9 ms p95 (max 1.462 ms) | **Fixed** — atomic UPDATE; tail max do MySQL serialize |
 | `260510-F5` | n/a (single tour seed) | n/a | Không có dữ liệu mới — cần seed đa-departure |
 | `260510-F7` (mới) | n/a | 60 s timeout (load 50 VU) | **Open** — legacy path bị F2 amplify |
-
-### Phát hiện mới
-
-- **F7 — DoS vector ở legacy non-paginated path.** `build_envelope_or_list` fallback về `query.all()` khi không có `page` query param. Sau fix F2 (`joinedload(guest, departure.tour)`), fallback path materialize toàn bộ bookings + relations → ~4 MB/request. Ở 50 VU, waitress accept queue saturate → 60 s k6 timeout.
-- **Mitigation đề xuất:**
-  1. Enforce `?page=` ở backend (return 400 nếu thiếu trên paginated endpoint), HOẶC
-  2. Auto-default `page=1, page_size=20` khi không truyền (an toàn nhất, backward-compat).
-- **Không re-test stress:** không có dữ liệu mới về F3 tail behavior ở 150–500 VU; max=1.462 ms ở 50 VU gợi ý atomic UPDATE serialize chứ không scale.
-
----
