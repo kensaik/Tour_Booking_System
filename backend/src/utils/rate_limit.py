@@ -70,9 +70,15 @@ def _admin_exempt():
     Also bypassed entirely when PERF_PROFILING is set, so the perf rig
     can exercise endpoint code (not the limiter) and surface real
     bottlenecks. Documented in perf/README.md.
+
+    Bypassed when DISABLE_RATE_LIMIT is truthy — used by Playwright E2E
+    where workers share one IP and the 5/min login cap would 429 every
+    fixture login after the first handful.
     """
     import os
 
     if os.environ.get("PERF_PROFILING"):
+        return True
+    if os.environ.get("DISABLE_RATE_LIMIT", "").lower() in {"1", "true", "yes"}:
         return True
     return _is_admin()

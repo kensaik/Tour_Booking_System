@@ -45,6 +45,9 @@ jobs:
       # Cheap bcrypt for CI — login latency dominates parallel Playwright runs
       # at the default cost of 12. 4 rounds keeps verification < 5ms per call.
       BCRYPT_ROUNDS: "4"
+      # Playwright workers share one IP; the 5/min login cap would 429 fixture
+      # logins after the first handful. Disable the limiter for the E2E run.
+      DISABLE_RATE_LIMIT: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
