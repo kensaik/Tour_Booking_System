@@ -1,0 +1,10 @@
+{
+  "approved": {
+    "email": "abc@travel.com",
+    "password": "Company@123"
+  },
+  "pending": {
+    "email": "pending@travel.com",
+    "password": "Company@123"
+  }
+}

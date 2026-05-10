@@ -1,0 +1,205 @@
+{
+    "metrics": {
+        "iteration_duration": {
+            "avg": 1009.8854599999999,
+            "min": 1007.454,
+            "med": 1009.91825,
+            "max": 1012.7878,
+            "p(90)": 1011.2292,
+            "p(95)": 1011.845965
+        },
+        "http_req_waiting": {
+            "min": 1.095,
+            "med": 2.92,
+            "max": 5.0843,
+            "p(90)": 4.2197,
+            "p(95)": 4.3788,
+            "avg": 2.8648745856353597
+        },
+        "http_req_receiving": {
+            "max": 1.0048,
+            "p(90)": 0.7915,
+            "p(95)": 0.9079,
+            "avg": 0.27608618784530387,
+            "min": 0,
+            "med": 0
+        },
+        "data_sent": {
+            "count": 28687,
+            "rate": 473.4000986389099
+        },
+        "http_reqs": {
+            "count": 181,
+            "rate": 2.9869075837014223
+        },
+        "data_received": {
+            "count": 69853,
+            "rate": 1152.7317980347814
+        },
+        "iterations": {
+            "count": 60,
+            "rate": 0.990135110619256
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(90)": 4.4393,
+            "p(95)": 4.6305,
+            "avg": 3.1493187845303847,
+            "min": 1.095,
+            "med": 3.0721,
+            "max": 5.757
+        },
+        "checks": {
+            "passes": 362,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_tls_handshaking": {
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0
+        },
+        "vus_max": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        },
+        "http_req_blocked": {
+            "min": 0,
+            "med": 0,
+            "max": 1.0354,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.01139668508287293
+        },
+        "http_req_connecting": {
+            "avg": 0.008608287292817679,
+            "min": 0,
+            "med": 0,
+            "max": 1.0354,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        },
+        "http_req_sending": {
+            "avg": 0.008358011049723757,
+            "min": 0,
+            "med": 0,
+            "max": 0.9971,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_duration": {
+            "med": 3.0721,
+            "max": 5.757,
+            "p(90)": 4.4393,
+            "p(95)": 4.6305,
+            "avg": 3.1493187845303847,
+            "min": 1.095,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 181,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        }
+    },
+    "setup_data": {
+        "destinationIds": [
+            1,
+            2,
+            3
+        ],
+        "keywords": [
+            "Đà",
+            "Tour",
+            "Phú",
+            "Paris",
+            ""
+        ]
+    },
+    "root_group": {
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "setup: destinations: status 200": {
+                            "path": "::setup::setup: destinations: status 200",
+                            "id": "c6a28240245fa7c9957065d57f6e9c4b",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "setup: destinations: status 200"
+                        },
+                        "setup: destinations: body has 'destinations'": {
+                            "name": "setup: destinations: body has 'destinations'",
+                            "path": "::setup::setup: destinations: body has 'destinations'",
+                            "id": "0c55466d5cfb35596a565212f0941abb",
+                            "passes": 1,
+                            "fails": 0
+                        }
+                    }
+            }
+        },
+        "checks": {
+            "list tours: status 200": {
+                "name": "list tours: status 200",
+                "path": "::list tours: status 200",
+                "id": "f3bbd1da87a114f32fbfad04a518f889",
+                "passes": 60,
+                "fails": 0
+            },
+            "list tours: body has 'tours'": {
+                "path": "::list tours: body has 'tours'",
+                "id": "6f15759aa37f6fcc3f87cc334ecba6ab",
+                "passes": 60,
+                "fails": 0,
+                "name": "list tours: body has 'tours'"
+            },
+            "filter by destination: status 200": {
+                "path": "::filter by destination: status 200",
+                "id": "cc310ddfaf5b6d4cde08d62512f60d00",
+                "passes": 60,
+                "fails": 0,
+                "name": "filter by destination: status 200"
+            },
+            "filter by destination: body has 'tours'": {
+                "passes": 60,
+                "fails": 0,
+                "name": "filter by destination: body has 'tours'",
+                "path": "::filter by destination: body has 'tours'",
+                "id": "1aef6220e9c3e740a774c55fa27e2c6c"
+            },
+            "search by keyword: status 200": {
+                "name": "search by keyword: status 200",
+                "path": "::search by keyword: status 200",
+                "id": "c414500886abd22a19e604e4a0861c94",
+                "passes": 60,
+                "fails": 0
+            },
+            "search by keyword: body has 'tours'": {
+                "passes": 60,
+                "fails": 0,
+                "name": "search by keyword: body has 'tours'",
+                "path": "::search by keyword: body has 'tours'",
+                "id": "51064bff01c13c087e1288d9fee5c1f1"
+            }
+        },
+        "name": ""
+    }
+}

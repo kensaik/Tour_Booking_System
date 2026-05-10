@@ -1,0 +1,168 @@
+{
+    "metrics": {
+        "http_req_failed": {
+            "fails": 121,
+            "passes": 0,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "http_reqs": {
+            "count": 121,
+            "rate": 1.983751966396186
+        },
+        "iterations": {
+            "count": 60,
+            "rate": 0.9836786610229021
+        },
+        "http_req_connecting": {
+            "avg": 0.008332231404958678,
+            "min": 0,
+            "med": 0,
+            "max": 1.0082,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_sending": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0
+        },
+        "http_req_duration": {
+            "p(95)": 7.7326,
+            "avg": 7.989630578512394,
+            "min": 4.6038,
+            "med": 6.0964,
+            "max": 212.1915,
+            "p(90)": 7.5414,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "checks": {
+            "passes": 242,
+            "fails": 0,
+            "value": 1
+        },
+        "iteration_duration": {
+            "p(90)": 1014.17156,
+            "p(95)": 1014.689805,
+            "avg": 1016.5921449999998,
+            "min": 1010.0024,
+            "med": 1013.2716,
+            "max": 1229.7598
+        },
+        "data_sent": {
+            "rate": 986.2690148302624,
+            "count": 60158
+        },
+        "http_req_blocked": {
+            "med": 0,
+            "max": 1.0082,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.008332231404958678,
+            "min": 0
+        },
+        "http_req_waiting": {
+            "p(90)": 7.2703,
+            "p(95)": 7.5414,
+            "avg": 7.779168595041319,
+            "min": 4.232,
+            "med": 6.021,
+            "max": 212.1915
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 7.989630578512394,
+            "min": 4.6038,
+            "med": 6.0964,
+            "max": 212.1915,
+            "p(90)": 7.5414,
+            "p(95)": 7.7326
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        },
+        "data_received": {
+            "rate": 6171.550735324637,
+            "count": 376437
+        },
+        "http_req_tls_handshaking": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0
+        },
+        "http_req_receiving": {
+            "med": 0,
+            "max": 0.9987,
+            "p(90)": 0.7944,
+            "p(95)": 0.8784,
+            "avg": 0.2104619834710744,
+            "min": 0
+        },
+        "vus_max": {
+            "max": 1,
+            "value": 1,
+            "min": 1
+        }
+    },
+    "root_group": {
+        "groups": {},
+        "checks": {
+                "login(abc@travel.com): status 200": {
+                    "name": "login(abc@travel.com): status 200",
+                    "path": "::login(abc@travel.com): status 200",
+                    "id": "82f7fedd3bf648f9a16cbe21b3fcbda4",
+                    "passes": 1,
+                    "fails": 0
+                },
+                "login(abc@travel.com): body has 'access_token'": {
+                    "name": "login(abc@travel.com): body has 'access_token'",
+                    "path": "::login(abc@travel.com): body has 'access_token'",
+                    "id": "228879871826c391d04c45ad00ad6259",
+                    "passes": 1,
+                    "fails": 0
+                },
+                "company tours: status 200": {
+                    "name": "company tours: status 200",
+                    "path": "::company tours: status 200",
+                    "id": "e08de330551f90e99f578b3bbf5df80b",
+                    "passes": 60,
+                    "fails": 0
+                },
+                "company tours: body has 'tours'": {
+                    "fails": 0,
+                    "name": "company tours: body has 'tours'",
+                    "path": "::company tours: body has 'tours'",
+                    "id": "04269699bdb8fab548695326c801f213",
+                    "passes": 60
+                },
+                "company bookings: status 200": {
+                    "passes": 60,
+                    "fails": 0,
+                    "name": "company bookings: status 200",
+                    "path": "::company bookings: status 200",
+                    "id": "e32197f124ce0553506ea6df562ea526"
+                },
+                "company bookings: body has 'bookings'": {
+                    "passes": 60,
+                    "fails": 0,
+                    "name": "company bookings: body has 'bookings'",
+                    "path": "::company bookings: body has 'bookings'",
+                    "id": "a447d8e872361a1fab1bc5cc2a950370"
+                }
+            },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e"
+    }
+}

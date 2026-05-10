@@ -1,0 +1,224 @@
+{
+    "root_group": {
+        "checks": {
+            "list tours: status 200": {
+                "name": "list tours: status 200",
+                "path": "::list tours: status 200",
+                "id": "f3bbd1da87a114f32fbfad04a518f889",
+                "passes": 14744,
+                "fails": 0
+            },
+            "list tours: body has 'tours'": {
+                "name": "list tours: body has 'tours'",
+                "path": "::list tours: body has 'tours'",
+                "id": "6f15759aa37f6fcc3f87cc334ecba6ab",
+                "passes": 14744,
+                "fails": 0
+            },
+            "filter by destination: status 200": {
+                "name": "filter by destination: status 200",
+                "path": "::filter by destination: status 200",
+                "id": "cc310ddfaf5b6d4cde08d62512f60d00",
+                "passes": 14744,
+                "fails": 0
+            },
+            "filter by destination: body has 'tours'": {
+                "id": "1aef6220e9c3e740a774c55fa27e2c6c",
+                "passes": 14744,
+                "fails": 0,
+                "name": "filter by destination: body has 'tours'",
+                "path": "::filter by destination: body has 'tours'"
+            },
+            "search by keyword: status 200": {
+                "name": "search by keyword: status 200",
+                "path": "::search by keyword: status 200",
+                "id": "c414500886abd22a19e604e4a0861c94",
+                "passes": 14744,
+                "fails": 0
+            },
+            "search by keyword: body has 'tours'": {
+                "name": "search by keyword: body has 'tours'",
+                "path": "::search by keyword: body has 'tours'",
+                "id": "51064bff01c13c087e1288d9fee5c1f1",
+                "passes": 14744,
+                "fails": 0
+            }
+        },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "setup: destinations: status 200": {
+                            "id": "c6a28240245fa7c9957065d57f6e9c4b",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "setup: destinations: status 200",
+                            "path": "::setup::setup: destinations: status 200"
+                        },
+                        "setup: destinations: body has 'destinations'": {
+                            "name": "setup: destinations: body has 'destinations'",
+                            "path": "::setup::setup: destinations: body has 'destinations'",
+                            "id": "0c55466d5cfb35596a565212f0941abb",
+                            "passes": 1,
+                            "fails": 0
+                        }
+                    }
+            }
+        }
+    },
+    "metrics": {
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 44233,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "vus": {
+            "value": 4,
+            "min": 4,
+            "max": 50
+        },
+        "http_req_blocked": {
+            "avg": 0.0021146361313951114,
+            "min": 0,
+            "med": 0,
+            "max": 2.0016,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_connecting": {
+            "avg": 0.0006096737729749281,
+            "min": 0,
+            "med": 0,
+            "max": 2.0016,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_sending": {
+            "max": 2.5766,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.005252851943119391,
+            "min": 0,
+            "med": 0
+        },
+        "http_req_duration{kind:write}": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_req_duration{expected_response:true}": {
+            "min": 0.5024,
+            "med": 4.6439,
+            "max": 228.7209,
+            "p(90)": 10.9476,
+            "p(95)": 13.36454,
+            "avg": 6.216994183075976
+        },
+        "http_req_receiving": {
+            "p(95)": 1.0061,
+            "avg": 0.2896729681459526,
+            "min": 0,
+            "med": 0,
+            "max": 3.4925,
+            "p(90)": 0.8802
+        },
+        "iteration_duration": {
+            "p(90)": 1030.81929,
+            "p(95)": 1036.562105,
+            "avg": 1019.1625952523041,
+            "min": 1005.0006,
+            "med": 1016.02755,
+            "max": 1358.6329
+        },
+        "http_req_tls_handshaking": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+        },
+        "iterations": {
+            "count": 14744,
+            "rate": 48.98112214764175
+        },
+        "http_req_duration": {
+            "avg": 6.216994183075976,
+            "min": 0.5024,
+            "med": 4.6439,
+            "max": 228.7209,
+            "p(90)": 10.9476,
+            "p(95)": 13.36454
+        },
+        "http_req_waiting": {
+            "max": 227.2387,
+            "p(90)": 10.56114,
+            "p(95)": 12.958020000000001,
+            "avg": 5.922068362986956,
+            "min": 0.5024,
+            "med": 4.3685
+        },
+        "checks": {
+            "fails": 0,
+            "passes": 88466,
+            "value": 1
+        },
+        "http_reqs": {
+            "count": 44233,
+            "rate": 146.94668854833407
+        },
+        "data_received": {
+            "count": 16826761,
+            "rate": 55900.27373102105
+        },
+        "http_req_duration{kind:read}": {
+            "max": 228.7209,
+            "p(90)": 10.9476,
+            "p(95)": 13.364545,
+            "avg": 6.217089469162589,
+            "min": 0.5024,
+            "med": 4.644,
+            "thresholds": {
+                "p(95)<500": false
+            }
+        },
+        "data_sent": {
+            "rate": 23306.061068200703,
+            "count": 7015449
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        }
+    },
+    "setup_data": {
+        "destinationIds": [
+            1,
+            2,
+            3
+        ],
+        "keywords": [
+            "Đà",
+            "Tour",
+            "Phú",
+            "Paris",
+            ""
+        ]
+    }
+}
