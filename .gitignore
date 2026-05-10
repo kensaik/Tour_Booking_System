@@ -70,3 +70,7 @@ assets/showoff/
 # AI / Claude Code
 .claude/
 .omx/
+
+# Code coverage
+.coverage
+backend/.coverage
