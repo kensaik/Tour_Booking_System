@@ -52,7 +52,11 @@ class TourSchema(Schema):
     def get_itineraries(self, obj):
         if not hasattr(obj, "itineraries") or obj.itineraries is None:
             return []
-        iti = obj.itineraries.all() if hasattr(obj.itineraries, "all") else obj.itineraries
+        iti = (
+            obj.itineraries.all()
+            if hasattr(obj.itineraries, "all")
+            else obj.itineraries
+        )
         return TourItinerarySchema(many=True).dump(iti)
 
     def get_valid_departures(self, obj):
