@@ -121,13 +121,6 @@ Tập hợp các lần đo hiệu năng (smoke / load / stress). Phân tích bot
 **Tác giả:** perf rig (k6 + waitress + JSONL middleware)
 **Phân tích bottleneck:** [`performance-bottleneck-log.md#run-20260510-1633-postfix`](./performance-bottleneck-log.md)
 
-### Tóm tắt
-
-- `/api/company/bookings` **paginated** (`?page=1&page_size=20`): load p95 = **20,6 ms** (baseline 5.935 ms server / 29.407 ms client) — **~288× nhanh hơn** ở server-side.
-- `/api/company/bookings` **legacy non-paginated**: load melted ở **60 s** timeout (k6 default). Trước fix: 5,9 s server. Hồi quy do `joinedload(guest, departure.tour)` trong `get_company_bookings` khiến payload toàn bộ bookings + relations bị materialize → ~4 MB/request × 50 VU.
-- `/api/guest/departures/<id>/book` (atomic seat decrement): load p95 = 21,9 ms (baseline 25,7 ms). Max=1,46 s — tail mới do MySQL serialize atomic UPDATE thay cho row-lock contention. 0% lỗi.
-- Endpoint đọc public không bị ảnh hưởng: 01 browse load p95 = 13,4 ms (giữ nguyên), 02 detail load p95 = 19,8 ms (giữ nguyên).
-
 ### Môi trường
 
 Giống [`20260510-1310`](#run-20260510-1310). Không re-seed; departure `id=1` vẫn 200.000 seats. Không stress (theo yêu cầu user — chỉ smoke + load).
