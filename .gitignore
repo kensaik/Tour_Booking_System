@@ -81,12 +81,7 @@ workflow/
 temp-frontend/
 temp-*/
 
-# Docs & AI generated
-docs/test-run-log.md
-docs/test-report.md
-docs/automation/
-docs/evidence/
-weekly-reports/
+# Docs
 implementation_plan.md
 prompt_refactor.md
 workflow_index.mdc
