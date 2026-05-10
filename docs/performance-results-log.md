@@ -9,6 +9,7 @@ Tập hợp các lần đo hiệu năng (smoke / load / stress). Phân tích bot
 | Ngày | Thay đổi |
 |---|---|
 | 2026-05-10 | Tạo tài liệu, ghi nhận run `20260510-1310`. |
+| 2026-05-10 | Thêm run `20260510-1633-postfix` (sau khi fix F1/F2/F3/F5). |
 
 ---
 
@@ -17,6 +18,7 @@ Tập hợp các lần đo hiệu năng (smoke / load / stress). Phân tích bot
 | Run | Branch | Ghi chú |
 |---|---|---|
 | [`20260510-1310`](#run-20260510-1310) | `test/add-testing-infrastructure` | Baseline đầu tiên. Phát hiện 6 bottleneck. |
+| [`20260510-1633-postfix`](#run-20260510-1633-postfix) | `main` | Sau fix F1/F2/F3/F5. Smoke + load (skip stress). `/api/company/bookings` paginated p95 từ 5.935 ms → 21 ms (288×). Legacy non-paginated path melted ở 60 s timeout — joinedload khuếch đại payload. |
 
 ---
 
@@ -109,27 +111,72 @@ Tập hợp các lần đo hiệu năng (smoke / load / stress). Phân tích bot
 | 8 | 22,0 | 2,75 | 4,22 | `UPDATE departures SET available_seats=185116 WHERE id=1` |
 | 8 | 17,0 | 2,12 | 2,50 | `UPDATE departures SET available_seats=185119 WHERE id=1` |
 
-### Artifacts
 
-`perf/results/20260510-1310/`:
-- `01-browse-search-stress-points.json` (~1,1 GB)
-- `03-guest-booking-stress-points.json` (~7,3 GB)
+---
 
-Gộp bằng: `python perf/analyze-results.py perf/results/20260510-1310 --out perf/results/20260510-1310/tables.md`
+## Run `20260510-1633-postfix`
 
-### Caveats
+**Branch:** `main`
+**Plan:** validate fixes F1/F2/F3/F5 (xem [`performance-bottleneck-log.md`](./performance-bottleneck-log.md))
+**Tác giả:** perf rig (k6 + waitress + JSONL middleware)
+**Phân tích bottleneck:** [`performance-bottleneck-log.md#run-20260510-1633-postfix`](./performance-bottleneck-log.md)
 
-- Loopback only — không network latency, không TLS.
-- Single host — k6 + waitress + MySQL share CPU/IO.
-- Waitress thay vì gunicorn (Windows native).
-- Rate limiter bỏ qua (cố ý).
-- Departure seats nâng lên 200.000 → đo write contention, không phải workload thực.
-- Sepay mock tại boundary.
-- MySQL config mặc định, không tune.
-- Schema từ models, không qua alembic migration.
-- Stress points file ~1–7 GB, giữ local.
-- Chỉ một departure (`id=1`) → kết quả contention bị skew.
+### Tóm tắt
 
-### Câu hỏi chưa giải quyết
+- `/api/company/bookings` **paginated** (`?page=1&page_size=20`): load p95 = **20,6 ms** (baseline 5.935 ms server / 29.407 ms client) — **~288× nhanh hơn** ở server-side.
+- `/api/company/bookings` **legacy non-paginated**: load melted ở **60 s** timeout (k6 default). Trước fix: 5,9 s server. Hồi quy do `joinedload(guest, departure.tour)` trong `get_company_bookings` khiến payload toàn bộ bookings + relations bị materialize → ~4 MB/request × 50 VU.
+- `/api/guest/departures/<id>/book` (atomic seat decrement): load p95 = 21,9 ms (baseline 25,7 ms). Max=1,46 s — tail mới do MySQL serialize atomic UPDATE thay cho row-lock contention. 0% lỗi.
+- Endpoint đọc public không bị ảnh hưởng: 01 browse load p95 = 13,4 ms (giữ nguyên), 02 detail load p95 = 19,8 ms (giữ nguyên).
 
-- `mysql.slow_log` chỉ ghi ~500 câu trong stress 03 dù k6 ghi ~1.800.000 request. Cần `pcap`/`tcpdump` để xác minh request có đến MySQL không.
+### Môi trường
+
+Giống [`20260510-1310`](#run-20260510-1310). Không re-seed; departure `id=1` vẫn 200.000 seats. Không stress (theo yêu cầu user — chỉ smoke + load).
+
+Khác biệt:
+- Branch: `main` (đã merge các fix F1/F2/F3/F5).
+- Thêm scenario `04-company-dashboard-paginated.js` để exercise paginated path mà 04 gốc không pass `?page=`.
+
+### SLO
+
+Giữ nguyên ngưỡng baseline (đọc p95 < 500 ms, ghi p95 < 1.500 ms, lỗi < 1%).
+
+| Endpoint | p95 đo được | SLO | Pass? |
+|---|---|---|---|
+| `/api/public/tours` (load) | 13,4 ms | < 500 ms | ✓ |
+| `/api/public/tours/<id>` (load) | 19,8 ms | < 500 ms | ✓ |
+| `/api/guest/departures/<id>/book` (load) | 21,9 ms | < 1.500 ms | ✓ |
+| `/api/company/bookings?page=1` (load) | 20,6 ms | < 500 ms | ✓ |
+| `/api/company/bookings` không page (load) | 60.000 ms (timeout) | < 500 ms | ✗ |
+
+### Smoke (1 VU × 60 s)
+
+| Scenario | p50 | p95 | Max | Reqs | Lỗi |
+|---|---|---|---|---|---|
+| 01 browse-search | 3,2 ms | 4,7 ms | 5,1 ms | 181 | 0% |
+| 02 tour-detail | 5,6 ms | 7,4 ms | 9,9 ms | 61 | 0% |
+| 03 guest-booking | 6,3 ms | 8,3 ms | 208,6 ms | 121 | 0% |
+| 04 company-dashboard (legacy) | 8,0 ms | 11,1 ms | 217,8 ms | 119 | 0% |
+| 04 company-dashboard (paginated) | 9,5 ms | 12,7 ms | 207,1 ms | 119 | 0% |
+
+### Load (50 VU × 5 phút) — k6 client
+
+| Scenario | p50 | p95 | Max | RPS | Reqs | Lỗi |
+|---|---|---|---|---|---|---|
+| 01 browse-search | 4,7 ms | 13,4 ms | 214,7 ms | 146,9 | 44.209 | 0% |
+| 02 tour-detail | 9,8 ms | 19,8 ms | 218,8 ms | 49,4 | 14.858 | 0% |
+| 03 guest-booking | 9,4 ms | **21,9 ms** | **1.462,7 ms** | 97,4 | 29.306 | 0% |
+| 04 company-dashboard (legacy) | **60.000 ms** | **60.000 ms** | 60.000 ms | 1,1 | 356 | 0% |
+| 04 company-dashboard (paginated) | 10,7 ms | **20,6 ms** | 1.457,8 ms | 97,3 | 29.282 | 0% |
+
+> Scenario 04 legacy (không pass `page` param) hồi quy nặng so với baseline (16,7 s wall / 5,9 s server → 60 s timeout). Nguyên nhân: `joinedload` materialize toàn bộ bookings + relations × 50 VU. Pagination là bắt buộc trên client.
+
+### Đối chiếu baseline
+
+| Metric | Baseline `20260510-1310` | Postfix `20260510-1633-postfix` | Delta |
+|---|---|---|---|
+| `/api/company/bookings` paginated p95 | n/a (chưa có pagination) | 20,6 ms | n/a |
+| `/api/company/bookings` server p95 (load) | 5.935 ms | 60.000 ms (timeout, legacy) / 20,6 ms (paginated) | -288× / +10× |
+| 03 booking p95 (load) | 25,7 ms | 21,9 ms | -15% |
+| 03 booking p99 (stress) — *không re-test stress* | 1.040 ms | n/a | — |
+| 01 browse p95 (load) | 13,4 ms | 13,4 ms | 0% |
+| 02 detail p95 (load) | 20,2 ms | 19,8 ms | -2% |
