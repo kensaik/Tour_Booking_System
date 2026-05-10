@@ -1,55 +1,74 @@
-import CompanyLayout from '@/components/company/CompanyLayout'
-import { Link, useNavigate } from 'react-router-dom'
-import { Plus, Search, Calendar, Users, Edit, Trash2 } from 'lucide-react'
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { CompanyService } from '@/services/company.service'
-import { formatPrice, formatDate } from '@/lib/format'
-import StatusBadge from '@/components/ui/StatusBadge'
-import Toast, { ToastType } from '@/components/ui/Toast'
-import ConfirmModal from '@/components/ui/ConfirmModal'
+import CompanyLayout from "@/components/company/CompanyLayout";
+import { Link, useNavigate } from "react-router-dom";
+import { Plus, Search, Calendar, Users, Edit, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { CompanyService } from "@/services/company.service";
+import { formatPrice, formatDate } from "@/lib/format";
+import StatusBadge from "@/components/ui/StatusBadge";
+import Toast, { ToastType } from "@/components/ui/Toast";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function CompanyDeparturesPage() {
-  const navigate = useNavigate()
-  const { data: response, isLoading, error } = useQuery({
-    queryKey: ['company-departures'],
+  const navigate = useNavigate();
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["company-departures"],
     queryFn: () => CompanyService.getCompanyDepartures(),
-  })
+  });
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [filterDate, setFilterDate] = useState('')
-  const [filterStatus, setFilterStatus] = useState('Tất cả')
-  const [isDeleting, setIsDeleting] = useState<string | null>(null)
-  const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterDate, setFilterDate] = useState("");
+  const [filterStatus, setFilterStatus] = useState("Tất cả");
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const departures = response?.departures || []
+  const departures = response?.departures || [];
 
   const filteredDepartures = departures.filter((dep: any) => {
-    const matchesSearch = dep.tour?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         `tour #${dep.tour_id}`.includes(searchTerm.toLowerCase())
-    const matchesDate = !filterDate || dep.start_date.startsWith(filterDate)
-    const matchesStatus = filterStatus === 'Tất cả' || 
-                         (filterStatus === 'Đang hoạt động' && dep.available_seats > 0) ||
-                         (filterStatus === 'Đã đầy' && dep.available_seats === 0)
-    
-    return matchesSearch && matchesDate && matchesStatus
-  })
+    const matchesSearch =
+      dep.tour?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `tour #${dep.tour_id}`.includes(searchTerm.toLowerCase());
+    const matchesDate = !filterDate || dep.start_date.startsWith(filterDate);
+    const matchesStatus =
+      filterStatus === "Tất cả" ||
+      (filterStatus === "Đang hoạt động" && dep.available_seats > 0) ||
+      (filterStatus === "Đã đầy" && dep.available_seats === 0);
+
+    return matchesSearch && matchesDate && matchesStatus;
+  });
 
   const handleDelete = async (id: string) => {
     try {
-      await CompanyService.deleteDeparture(id)
-      setToast({ message: 'Xóa lịch khởi hành thành công', type: 'success' })
+      await CompanyService.deleteDeparture(id);
+      setToast({ message: "Xóa lịch khởi hành thành công", type: "success" });
       // refetch or manual update
-      window.location.reload() // Simple way to refresh for now
+      window.location.reload(); // Simple way to refresh for now
     } catch (error: any) {
-      setToast({ message: error.response?.data?.message || 'Lỗi khi xóa lịch khởi hành', type: 'error' })
+      setToast({
+        message: error.response?.data?.message || "Lỗi khi xóa lịch khởi hành",
+        type: "error",
+      });
     } finally {
-      setIsDeleting(null)
+      setIsDeleting(null);
     }
-  }
+  };
 
-  if (isLoading) return <CompanyLayout><div className="text-center py-20">Đang tải danh sách lịch trình...</div></CompanyLayout>
-  if (error) return <CompanyLayout><div className="text-center py-20 text-red-500">Lỗi tải danh sách lịch trình.</div></CompanyLayout>
+  if (isLoading)
+    return (
+      <CompanyLayout>
+        <div className="text-center py-20">Đang tải danh sách lịch trình...</div>
+      </CompanyLayout>
+    );
+  if (error)
+    return (
+      <CompanyLayout>
+        <div className="text-center py-20 text-red-500">Lỗi tải danh sách lịch trình.</div>
+      </CompanyLayout>
+    );
 
   return (
     <CompanyLayout>
@@ -81,7 +100,9 @@ export default function CompanyDeparturesPage() {
             />
           </div>
           <div>
-            <label htmlFor="filter-date" className="sr-only">Ngày khởi hành</label>
+            <label htmlFor="filter-date" className="sr-only">
+              Ngày khởi hành
+            </label>
             <input
               id="filter-date"
               type="date"
@@ -91,9 +112,11 @@ export default function CompanyDeparturesPage() {
             />
           </div>
           <div>
-            <label htmlFor="filter-dep-status" className="sr-only">Trạng thái</label>
-            <select 
-              id="filter-dep-status" 
+            <label htmlFor="filter-dep-status" className="sr-only">
+              Trạng thái
+            </label>
+            <select
+              id="filter-dep-status"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none transition-all"
@@ -112,22 +135,37 @@ export default function CompanyDeparturesPage() {
           <table className="w-full">
             <thead className="bg-surface-container border-b border-outline-variant">
               <tr>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Tour</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Ngày khởi hành</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Chỗ</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Giá</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Trạng thái</th>
-                <th className="text-right px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Thao tác</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Tour
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Ngày khởi hành
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Chỗ
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Giá
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Trạng thái
+                </th>
+                <th className="text-right px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Thao tác
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant">
               {filteredDepartures.map((departure: any) => {
-                const booked = departure.total_seats - departure.available_seats
-                const departureStatus = departure.available_seats === 0 ? 'full' : 'active'
-                const price = departure.tour?.price || 0
+                const booked = departure.total_seats - departure.available_seats;
+                const departureStatus = departure.available_seats === 0 ? "full" : "active";
+                const price = departure.tour?.price || 0;
 
                 return (
-                  <tr key={departure.id} className="hover:bg-surface-container-low transition-colors">
+                  <tr
+                    key={departure.id}
+                    className="hover:bg-surface-container-low transition-colors"
+                  >
                     <td className="px-6 py-4 font-medium text-on-surface">
                       {departure.tour?.name || `Tour #${departure.tour_id}`}
                     </td>
@@ -141,37 +179,41 @@ export default function CompanyDeparturesPage() {
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1 text-on-surface">
                           <Users className="w-4 h-4 text-on-surface-variant" />
-                          <span>{booked}/{departure.total_seats}</span>
+                          <span>
+                            {booked}/{departure.total_seats}
+                          </span>
                         </div>
                         <div className="w-20 h-2 bg-surface-container rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full ${
-                              booked >= departure.total_seats ? 'bg-error' :
-                              booked >= departure.total_seats * 0.8 ? 'bg-tertiary' :
-                              'bg-primary'
+                              booked >= departure.total_seats
+                                ? "bg-error"
+                                : booked >= departure.total_seats * 0.8
+                                  ? "bg-tertiary"
+                                  : "bg-primary"
                             }`}
-                            style={{ width: `${Math.min(100, (booked / departure.total_seats) * 100)}%` }}
+                            style={{
+                              width: `${Math.min(100, (booked / departure.total_seats) * 100)}%`,
+                            }}
                           />
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-semibold text-primary">
-                      {formatPrice(price)}
-                    </td>
+                    <td className="px-6 py-4 font-semibold text-primary">{formatPrice(price)}</td>
                     <td className="px-6 py-4">
                       <StatusBadge status={departureStatus} type="departure" showIcon={false} />
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
-                        <button 
-                          className="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant hover:text-on-surface" 
+                        <button
+                          className="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant hover:text-on-surface"
                           aria-label="Chỉnh sửa lịch khởi hành"
                           onClick={() => navigate(`/company/departures/${departure.id}/edit`)}
                         >
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button 
-                          className="p-2 hover:bg-error-container rounded-lg text-on-surface-variant hover:text-error" 
+                        <button
+                          className="p-2 hover:bg-error-container rounded-lg text-on-surface-variant hover:text-error"
                           aria-label="Xóa lịch khởi hành"
                           onClick={() => setIsDeleting(departure.id)}
                         >
@@ -180,7 +222,7 @@ export default function CompanyDeparturesPage() {
                       </div>
                     </td>
                   </tr>
-                )
+                );
               })}
             </tbody>
           </table>
@@ -200,13 +242,7 @@ export default function CompanyDeparturesPage() {
         onCancel={() => setIsDeleting(null)}
       />
 
-      {toast && (
-        <Toast 
-          message={toast.message} 
-          type={toast.type} 
-          onClose={() => setToast(null)} 
-        />
-      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </CompanyLayout>
-  )
+  );
 }

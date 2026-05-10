@@ -1,22 +1,22 @@
-import AdminLayout from '@/components/admin/AdminLayout'
-import { Users, Building2, Globe, DollarSign, TrendingUp } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { AdminService } from '@/services/admin.service'
-import StatsCard from '@/components/ui/StatsCard'
-import { formatPrice } from '@/lib/format'
+import AdminLayout from "@/components/admin/AdminLayout";
+import { Users, Building2, Globe, DollarSign, TrendingUp } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { AdminService } from "@/services/admin.service";
+import StatsCard from "@/components/ui/StatsCard";
+import { formatPrice } from "@/lib/format";
 
 export default function AdminDashboardPage() {
   const { data: stats } = useQuery({
-    queryKey: ['admin-stats'],
+    queryKey: ["admin-stats"],
     queryFn: () => AdminService.getStats(),
-  })
+  });
 
   const { data: companiesResponse } = useQuery({
-    queryKey: ['admin-companies'],
+    queryKey: ["admin-companies"],
     queryFn: () => AdminService.getCompanies(),
-  })
+  });
 
-  const companies = companiesResponse?.companies || []
+  const companies = companiesResponse?.companies || [];
 
   const topCompanies = [...companies]
     .sort((a, b) => (b.total_revenue || 0) - (a.total_revenue || 0))
@@ -25,16 +25,16 @@ export default function AdminDashboardPage() {
       name: company.company_name,
       tours: company.tours_count || 0,
       bookings: company.bookings_count || 0,
-      revenue: formatPrice(company.total_revenue || 0)
-    }))
+      revenue: formatPrice(company.total_revenue || 0),
+    }));
 
   const statCards = [
     {
       label: "Tổng doanh thu",
-      value: stats?.total_revenue ? formatPrice(stats.total_revenue) : '0đ',
+      value: stats?.total_revenue ? formatPrice(stats.total_revenue) : "0đ",
       icon: DollarSign,
       color: "bg-green-500/10",
-      iconColor: "text-green-500"
+      iconColor: "text-green-500",
     },
     {
       label: "Số công ty",
@@ -42,23 +42,23 @@ export default function AdminDashboardPage() {
       change: `${stats?.approved_companies || 0} đã duyệt`,
       icon: Building2,
       color: "bg-primary/10",
-      iconColor: "text-primary"
+      iconColor: "text-primary",
     },
     {
       label: "Tổng khách hàng",
       value: (stats?.total_guests || 0).toString(),
       icon: Users,
       color: "bg-secondary/10",
-      iconColor: "text-secondary"
+      iconColor: "text-secondary",
     },
     {
       label: "Tổng tour",
       value: (stats?.total_tours || 0).toString(),
       icon: Globe,
       color: "bg-tertiary/10",
-      iconColor: "text-tertiary"
+      iconColor: "text-tertiary",
     },
-  ]
+  ];
 
   const subStats = [
     {
@@ -77,7 +77,7 @@ export default function AdminDashboardPage() {
       value: `${stats?.approved_companies || 0}/${stats?.total_companies || 0}`,
       icon: TrendingUp,
     },
-  ]
+  ];
 
   return (
     <AdminLayout>
@@ -105,25 +105,29 @@ export default function AdminDashboardPage() {
       {/* Sub Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {subStats.map((stat, index) => (
-          <div 
+          <div
             key={index}
             className={`p-4 rounded-xl border ${
-              stat.highlight 
-                ? 'bg-amber-50 border-amber-200' 
-                : 'bg-surface-container-lowest border-outline-variant'
+              stat.highlight
+                ? "bg-amber-50 border-amber-200"
+                : "bg-surface-container-lowest border-outline-variant"
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                stat.highlight 
-                  ? 'bg-amber-100 text-amber-600' 
-                  : 'bg-surface-container text-on-surface-variant'
-              }`}>
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  stat.highlight
+                    ? "bg-amber-100 text-amber-600"
+                    : "bg-surface-container text-on-surface-variant"
+                }`}
+              >
                 <stat.icon className="w-5 h-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-on-surface">{stat.value}</p>
-                <p className={`text-sm ${stat.highlight ? 'text-amber-600' : 'text-on-surface-variant'}`}>
+                <p
+                  className={`text-sm ${stat.highlight ? "text-amber-600" : "text-on-surface-variant"}`}
+                >
                   {stat.label}
                 </p>
               </div>
@@ -142,7 +146,10 @@ export default function AdminDashboardPage() {
             {topCompanies.length > 0 ? (
               <div className="space-y-4">
                 {topCompanies.map((company, index) => (
-                  <div key={index} className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0"
+                  >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
                         {index + 1}
@@ -213,5 +220,5 @@ export default function AdminDashboardPage() {
         </div>
       </div>
     </AdminLayout>
-  )
+  );
 }

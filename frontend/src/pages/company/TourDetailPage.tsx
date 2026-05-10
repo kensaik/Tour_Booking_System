@@ -1,134 +1,148 @@
-import CompanyLayout from '@/components/company/CompanyLayout'
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Save, Image as ImageIcon, Plus, X, CheckCircle } from 'lucide-react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CompanyService } from '@/services/company.service'
-import { PublicService } from '@/services/public.service'
-import { UploadService } from '@/services/upload.service'
-import LoadingState from '@/components/ui/LoadingState'
-import ErrorState from '@/components/ui/ErrorState'
-import ConfirmModal from '@/components/ui/ConfirmModal'
-import Toast, { ToastType } from '@/components/ui/Toast'
+import CompanyLayout from "@/components/company/CompanyLayout";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Save, Image as ImageIcon, Plus, X, CheckCircle } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CompanyService } from "@/services/company.service";
+import { PublicService } from "@/services/public.service";
+import { UploadService } from "@/services/upload.service";
+import LoadingState from "@/components/ui/LoadingState";
+import ErrorState from "@/components/ui/ErrorState";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import Toast, { ToastType } from "@/components/ui/Toast";
 
 export default function CompanyTourDetailPage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const [formData, setFormData] = useState<any>(null)
-  const [isUploading, setIsUploading] = useState(false)
-  const [destSearch, setDestSearch] = useState('')
-  const [showDestDropdown, setShowDestDropdown] = useState(false)
-  const [showPublishConfirm, setShowPublishConfirm] = useState(false)
-  const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [formData, setFormData] = useState<any>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [destSearch, setDestSearch] = useState("");
+  const [showDestDropdown, setShowDestDropdown] = useState(false);
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    setIsUploading(true)
+    setIsUploading(true);
     try {
-      const result = await UploadService.uploadImage(file)
-      setFormData({ ...formData, image_url: result.url })
+      const result = await UploadService.uploadImage(file);
+      setFormData({ ...formData, image_url: result.url });
     } catch (error) {
-      console.error('Upload failed:', error)
-      setToast({ message: 'Tải ảnh lên thất bại!', type: 'error' })
+      console.error("Upload failed:", error);
+      setToast({ message: "Tải ảnh lên thất bại!", type: "error" });
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
-  }
+  };
 
-  const { data: tour, isLoading, error } = useQuery({
-    queryKey: ['company-tour', id],
+  const {
+    data: tour,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["company-tour", id],
     queryFn: () => CompanyService.getTourDetail(id as string),
-    enabled: !!id
-  })
+    enabled: !!id,
+  });
 
   const { data: destResponse } = useQuery({
-    queryKey: ['destinations'],
-    queryFn: () => PublicService.getDestinations()
-  })
-  const destinations = destResponse?.destinations || []
+    queryKey: ["destinations"],
+    queryFn: () => PublicService.getDestinations(),
+  });
+  const destinations = destResponse?.destinations || [];
 
   useEffect(() => {
     if (tour?.tour) {
-      const t = tour.tour
+      const t = tour.tour;
       setFormData({
         name: t.name,
         description: t.description,
         price: t.price,
         destination_id: t.destination_id,
         image_url: t.image_url,
-        itineraries: t.itineraries || []
-      })
-      const dest = destinations.find((d: any) => d.id === t.destination_id)
-      if (dest) setDestSearch(dest.name)
+        itineraries: t.itineraries || [],
+      });
+      const dest = destinations.find((d: any) => d.id === t.destination_id);
+      if (dest) setDestSearch(dest.name);
     }
-  }, [tour, destinations])
+  }, [tour, destinations]);
 
   const updateMutation = useMutation({
     mutationFn: (data: any) => CompanyService.updateTour(id as string, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['company-tour', id] })
-      queryClient.invalidateQueries({ queryKey: ['company-tours'] })
-      setToast({ message: 'Cập nhật tour thành công!', type: 'success' })
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["company-tour", id] });
+      queryClient.invalidateQueries({ queryKey: ["company-tours"] });
+      setToast({ message: "Cập nhật tour thành công!", type: "success" });
+    },
+  });
 
   const publishMutation = useMutation({
-    mutationFn: () => CompanyService.updateTour(id as string, { status: 'active' }),
+    mutationFn: () => CompanyService.updateTour(id as string, { status: "active" }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['company-tour', id] })
-      queryClient.invalidateQueries({ queryKey: ['company-tours'] })
-      setToast({ message: 'Tour đã được duyệt và chính thức hoạt động!', type: 'success' })
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["company-tour", id] });
+      queryClient.invalidateQueries({ queryKey: ["company-tours"] });
+      setToast({ message: "Tour đã được duyệt và chính thức hoạt động!", type: "success" });
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Auto calculate total days from itineraries length
-    const total_days = formData.itineraries.length
+    const total_days = formData.itineraries.length;
 
     updateMutation.mutate({
       ...formData,
       price: parseFloat(formData.price),
       destination_id: parseInt(formData.destination_id),
-      total_days: total_days
-    })
-  }
+      total_days: total_days,
+    });
+  };
 
   const addDay = () => {
     setFormData({
       ...formData,
       itineraries: [
         ...formData.itineraries,
-        { day_number: formData.itineraries.length + 1, title: '', description: '' }
-      ]
-    })
-  }
+        { day_number: formData.itineraries.length + 1, title: "", description: "" },
+      ],
+    });
+  };
 
   const updateItinerary = (index: number, field: string, value: string) => {
-    const newItineraries = [...formData.itineraries]
-    newItineraries[index] = { ...newItineraries[index], [field]: value }
-    setFormData({ ...formData, itineraries: newItineraries })
-  }
+    const newItineraries = [...formData.itineraries];
+    newItineraries[index] = { ...newItineraries[index], [field]: value };
+    setFormData({ ...formData, itineraries: newItineraries });
+  };
 
   const removeDay = (index: number) => {
-    const newItineraries = formData.itineraries.filter((_: any, i: number) => i !== index)
-    const reindexed = newItineraries.map((day: any, i: number) => ({ ...day, day_number: i + 1 }))
-    setFormData({ ...formData, itineraries: reindexed })
-  }
+    const newItineraries = formData.itineraries.filter((_: any, i: number) => i !== index);
+    const reindexed = newItineraries.map((day: any, i: number) => ({ ...day, day_number: i + 1 }));
+    setFormData({ ...formData, itineraries: reindexed });
+  };
 
-  if (isLoading) return <CompanyLayout><LoadingState message="Đang tải thông tin tour..." /></CompanyLayout>
-  if (error || !tour) return <CompanyLayout><ErrorState message="Không tìm thấy thông tin tour hoặc có lỗi xảy ra." /></CompanyLayout>
-  if (!formData) return null
+  if (isLoading)
+    return (
+      <CompanyLayout>
+        <LoadingState message="Đang tải thông tin tour..." />
+      </CompanyLayout>
+    );
+  if (error || !tour)
+    return (
+      <CompanyLayout>
+        <ErrorState message="Không tìm thấy thông tin tour hoặc có lỗi xảy ra." />
+      </CompanyLayout>
+    );
+  if (!formData) return null;
 
   return (
     <CompanyLayout>
       <div className="max-w-4xl mx-auto">
         <button
-          onClick={() => navigate('/company/tours')}
+          onClick={() => navigate("/company/tours")}
           className="flex items-center gap-2 text-on-surface-variant hover:text-primary mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -138,10 +152,13 @@ export default function CompanyTourDetailPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-on-surface">Chi tiết Tour</h1>
-            <p className="text-on-surface-variant">ID: #{id} • Trạng thái: {tour.tour.status?.toLowerCase() === 'active' ? 'Đang hoạt động' : 'Nháp'}</p>
+            <p className="text-on-surface-variant">
+              ID: #{id} • Trạng thái:{" "}
+              {tour.tour.status?.toLowerCase() === "active" ? "Đang hoạt động" : "Nháp"}
+            </p>
           </div>
           <div className="flex items-center gap-3">
-            {tour.tour.status?.toLowerCase() === 'draft' && (
+            {tour.tour.status?.toLowerCase() === "draft" && (
               <button
                 type="button"
                 onClick={() => setShowPublishConfirm(true)}
@@ -149,7 +166,7 @@ export default function CompanyTourDetailPage() {
                 className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-6 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
               >
                 <CheckCircle className="w-4 h-4" />
-                {publishMutation.isPending ? 'Đang duyệt...' : 'Duyệt Tour'}
+                {publishMutation.isPending ? "Đang duyệt..." : "Duyệt Tour"}
               </button>
             )}
             <button
@@ -159,11 +176,10 @@ export default function CompanyTourDetailPage() {
               className="flex items-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-2 rounded-lg font-medium shadow-md transition-all disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              {updateMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
+              {updateMutation.isPending ? "Đang lưu..." : "Lưu thay đổi"}
             </button>
           </div>
         </div>
-
 
         <form id="edit-tour-form" onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Info Card */}
@@ -179,8 +195,8 @@ export default function CompanyTourDetailPage() {
                   required
                   type="text"
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
-                  value={formData.name || ''}
-                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  value={formData.name || ""}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div>
@@ -195,14 +211,16 @@ export default function CompanyTourDetailPage() {
                     onFocus={() => setShowDestDropdown(true)}
                     onBlur={() => {
                       // Small delay to allow clicking the dropdown items
-                      setTimeout(() => setShowDestDropdown(false), 200)
+                      setTimeout(() => setShowDestDropdown(false), 200);
                     }}
-                    onChange={e => {
-                      setDestSearch(e.target.value)
-                      setShowDestDropdown(true)
-                      const match = destinations.find((d: any) => d.name.toLowerCase() === e.target.value.toLowerCase())
+                    onChange={(e) => {
+                      setDestSearch(e.target.value);
+                      setShowDestDropdown(true);
+                      const match = destinations.find(
+                        (d: any) => d.name.toLowerCase() === e.target.value.toLowerCase(),
+                      );
                       if (match) {
-                        setFormData({ ...formData, destination_id: match.id })
+                        setFormData({ ...formData, destination_id: match.id });
                       }
                     }}
                   />
@@ -215,18 +233,22 @@ export default function CompanyTourDetailPage() {
                             key={d.id}
                             className="px-4 py-2.5 hover:bg-primary/10 cursor-pointer transition-colors flex items-center justify-between group"
                             onClick={() => {
-                              setDestSearch(d.name)
-                              setFormData({ ...formData, destination_id: d.id })
-                              setShowDestDropdown(false)
+                              setDestSearch(d.name);
+                              setFormData({ ...formData, destination_id: d.id });
+                              setShowDestDropdown(false);
                             }}
                           >
-                            <span className="text-on-surface group-hover:text-primary font-medium">{d.name}</span>
+                            <span className="text-on-surface group-hover:text-primary font-medium">
+                              {d.name}
+                            </span>
                             {formData.destination_id === d.id && (
                               <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
                             )}
                           </div>
                         ))}
-                      {destinations.filter((d: any) => d.name.toLowerCase().includes(destSearch.toLowerCase())).length === 0 && (
+                      {destinations.filter((d: any) =>
+                        d.name.toLowerCase().includes(destSearch.toLowerCase()),
+                      ).length === 0 && (
                         <div className="px-4 py-3 text-sm text-on-surface-variant italic">
                           Không tìm thấy điểm đến nào...
                         </div>
@@ -242,11 +264,11 @@ export default function CompanyTourDetailPage() {
                   type="text"
                   placeholder="Ví dụ: 1.500.000"
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
-                  value={formData.price ? Number(formData.price).toLocaleString('vi-VN') : ''}
-                  onChange={e => {
+                  value={formData.price ? Number(formData.price).toLocaleString("vi-VN") : ""}
+                  onChange={(e) => {
                     // Remove all non-digits
-                    const value = e.target.value.replace(/\D/g, '')
-                    setFormData({ ...formData, price: value })
+                    const value = e.target.value.replace(/\D/g, "");
+                    setFormData({ ...formData, price: value });
                   }}
                 />
               </div>
@@ -256,8 +278,8 @@ export default function CompanyTourDetailPage() {
                   required
                   rows={4}
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none resize-none"
-                  value={formData.description || ''}
-                  onChange={e => setFormData({ ...formData, description: e.target.value })}
+                  value={formData.description || ""}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
               <div className="md:col-span-2">
@@ -266,7 +288,11 @@ export default function CompanyTourDetailPage() {
                   <div className="relative group w-full sm:w-48 h-32 bg-surface-container rounded-xl border-2 border-dashed border-outline-variant hover:border-primary transition-all overflow-hidden flex flex-col items-center justify-center cursor-pointer">
                     {formData.image_url ? (
                       <>
-                        <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
+                        <img
+                          src={formData.image_url}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <p className="text-white text-xs font-bold">Thay đổi ảnh</p>
                         </div>
@@ -275,7 +301,7 @@ export default function CompanyTourDetailPage() {
                       <>
                         <ImageIcon className="w-8 h-8 text-on-surface-variant mb-2" />
                         <p className="text-xs text-on-surface-variant px-4 text-center">
-                          {isUploading ? 'Đang tải lên...' : 'Bấm để tải ảnh lên'}
+                          {isUploading ? "Đang tải lên..." : "Bấm để tải ảnh lên"}
                         </p>
                       </>
                     )}
@@ -319,9 +345,14 @@ export default function CompanyTourDetailPage() {
 
             <div className="space-y-6">
               {formData.itineraries.map((day: any, index: number) => (
-                <div key={index} className="relative p-4 rounded-xl border border-outline-variant bg-surface-container-low group">
+                <div
+                  key={index}
+                  className="relative p-4 rounded-xl border border-outline-variant bg-surface-container-low group"
+                >
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-bold text-primary uppercase tracking-wider">Ngày {day.day_number}</span>
+                    <span className="text-sm font-bold text-primary uppercase tracking-wider">
+                      Ngày {day.day_number}
+                    </span>
                     {formData.itineraries.length > 1 && (
                       <button
                         type="button"
@@ -338,19 +369,19 @@ export default function CompanyTourDetailPage() {
                       type="text"
                       placeholder="Tiêu đề ngày"
                       className="w-full px-3 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
-                      value={day.title || ''}
-                      onChange={e => updateItinerary(index, 'title', e.target.value)}
+                      value={day.title || ""}
+                      onChange={(e) => updateItinerary(index, "title", e.target.value)}
                     />
                     <textarea
                       required
                       rows={3}
                       placeholder="Những hoạt động chính trong ngày..."
                       className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
-                      value={day.description || ''}
-                      onChange={e => {
-                        const newItineraries = [...formData.itineraries]
-                        newItineraries[index].description = e.target.value
-                        setFormData({ ...formData, itineraries: newItineraries })
+                      value={day.description || ""}
+                      onChange={(e) => {
+                        const newItineraries = [...formData.itineraries];
+                        newItineraries[index].description = e.target.value;
+                        setFormData({ ...formData, itineraries: newItineraries });
                       }}
                     />
                   </div>
@@ -366,8 +397,8 @@ export default function CompanyTourDetailPage() {
           onClose={() => setShowPublishConfirm(false)}
           onConfirm={() => {
             publishMutation.mutate(undefined, {
-              onSuccess: () => setShowPublishConfirm(false)
-            })
+              onSuccess: () => setShowPublishConfirm(false),
+            });
           }}
           type="success"
           title="Duyệt Tour"
@@ -377,13 +408,9 @@ export default function CompanyTourDetailPage() {
         />
 
         {toast && (
-          <Toast 
-            message={toast.message} 
-            type={toast.type} 
-            onClose={() => setToast(null)} 
-          />
+          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
         )}
       </div>
     </CompanyLayout>
-  )
+  );
 }

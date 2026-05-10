@@ -1,29 +1,29 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { AuthService } from '../services/auth.service'
-import { queryClient } from '../lib/queryClient'
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { AuthService } from "../services/auth.service";
+import { queryClient } from "../lib/queryClient";
 
 interface User {
-  id: number
-  email: string
-  full_name: string
-  role: string
-  is_active: boolean
-  company_profile?: Record<string, unknown>
-  guest_profile?: Record<string, unknown>
+  id: number;
+  email: string;
+  full_name: string;
+  role: string;
+  is_active: boolean;
+  company_profile?: Record<string, unknown>;
+  guest_profile?: Record<string, unknown>;
 }
 
 interface AuthState {
-  user: User | null
-  token: string | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  error: string | null
-  
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+
   // Actions
-  login: (token: string, user: User) => void
-  logout: () => void
-  fetchUser: () => Promise<void>
+  login: (token: string, user: User) => void;
+  logout: () => void;
+  fetchUser: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -36,41 +36,41 @@ export const useAuthStore = create<AuthState>()(
       error: null,
 
       login: (token, user) => {
-        localStorage.setItem('access_token', token)
-        set({ user, token, isAuthenticated: true, error: null })
+        localStorage.setItem("access_token", token);
+        set({ user, token, isAuthenticated: true, error: null });
       },
 
-  logout: () => {
-    localStorage.removeItem('access_token')
-    queryClient.clear()
-    set({ user: null, token: null, isAuthenticated: false })
-  },
+      logout: () => {
+        localStorage.removeItem("access_token");
+        queryClient.clear();
+        set({ user: null, token: null, isAuthenticated: false });
+      },
 
-  fetchUser: async () => {
-    const { token } = get()
-    if (!token) return
+      fetchUser: async () => {
+        const { token } = get();
+        if (!token) return;
 
-    set({ isLoading: true, error: null })
-    try {
-      const data = await AuthService.getMe()
-      set({ user: data.user, isAuthenticated: true, isLoading: false })
-    } catch (error: unknown) {
-      localStorage.removeItem('access_token')
-      queryClient.clear()
-      const axiosErr = error as { response?: { data?: { message?: string } } }
-      set({
-        user: null,
-        token: null,
-        isAuthenticated: false,
-        isLoading: false,
-        error: axiosErr.response?.data?.message || 'Failed to fetch user'
-      })
-    }
-  }
+        set({ isLoading: true, error: null });
+        try {
+          const data = await AuthService.getMe();
+          set({ user: data.user, isAuthenticated: true, isLoading: false });
+        } catch (error: unknown) {
+          localStorage.removeItem("access_token");
+          queryClient.clear();
+          const axiosErr = error as { response?: { data?: { message?: string } } };
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: axiosErr.response?.data?.message || "Failed to fetch user",
+          });
+        }
+      },
     }),
     {
-      name: 'auth-storage', // name of the item in the storage (must be unique)
+      name: "auth-storage", // name of the item in the storage (must be unique)
       partialize: (state) => ({ token: state.token }), // only save the token
-    }
-  )
-)
+    },
+  ),
+);

@@ -1,95 +1,95 @@
-import CompanyLayout from '@/components/company/CompanyLayout'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Save, Image as ImageIcon, Plus, X } from 'lucide-react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { CompanyService } from '@/services/company.service'
-import { PublicService } from '@/services/public.service'
-import { UploadService } from '@/services/upload.service'
+import CompanyLayout from "@/components/company/CompanyLayout";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Save, Image as ImageIcon, Plus, X } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { CompanyService } from "@/services/company.service";
+import { PublicService } from "@/services/public.service";
+import { UploadService } from "@/services/upload.service";
 
 export default function CompanyAddTourPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    destination_id: '',
-    image_url: '',
-    itineraries: [{ day_number: 1, title: '', description: '' }]
-  })
-  const [isUploading, setIsUploading] = useState(false)
+    name: "",
+    description: "",
+    price: "",
+    destination_id: "",
+    image_url: "",
+    itineraries: [{ day_number: 1, title: "", description: "" }],
+  });
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    setIsUploading(true)
+    setIsUploading(true);
     try {
-      const result = await UploadService.uploadImage(file)
-      setFormData({ ...formData, image_url: result.url })
+      const result = await UploadService.uploadImage(file);
+      setFormData({ ...formData, image_url: result.url });
     } catch (error) {
-      console.error('Upload failed:', error)
-      alert('Tải ảnh lên thất bại!')
+      console.error("Upload failed:", error);
+      alert("Tải ảnh lên thất bại!");
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
-  }
+  };
 
   // Fetch destinations for selection
   const { data: destResponse } = useQuery({
-    queryKey: ['destinations'],
-    queryFn: () => PublicService.getDestinations()
-  })
-  const destinations = destResponse?.destinations || []
+    queryKey: ["destinations"],
+    queryFn: () => PublicService.getDestinations(),
+  });
+  const destinations = destResponse?.destinations || [];
 
   const mutation = useMutation({
     mutationFn: (data: any) => CompanyService.createTour(data),
     onSuccess: () => {
-      navigate('/company/tours')
-    }
-  })
+      navigate("/company/tours");
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     // Auto calculate total days from itineraries length
-    const total_days = formData.itineraries.length
-    
+    const total_days = formData.itineraries.length;
+
     mutation.mutate({
       ...formData,
       price: parseFloat(formData.price),
       destination_id: parseInt(formData.destination_id),
-      total_days: total_days
-    })
-  }
+      total_days: total_days,
+    });
+  };
 
   const addDay = () => {
     setFormData({
       ...formData,
       itineraries: [
         ...formData.itineraries,
-        { day_number: formData.itineraries.length + 1, title: '', description: '' }
-      ]
-    })
-  }
+        { day_number: formData.itineraries.length + 1, title: "", description: "" },
+      ],
+    });
+  };
 
   const updateItinerary = (index: number, field: string, value: string) => {
-    const newItineraries = [...formData.itineraries]
-    newItineraries[index] = { ...newItineraries[index], [field]: value }
-    setFormData({ ...formData, itineraries: newItineraries })
-  }
+    const newItineraries = [...formData.itineraries];
+    newItineraries[index] = { ...newItineraries[index], [field]: value };
+    setFormData({ ...formData, itineraries: newItineraries });
+  };
 
   const removeDay = (index: number) => {
-    const newItineraries = formData.itineraries.filter((_, i) => i !== index)
+    const newItineraries = formData.itineraries.filter((_, i) => i !== index);
     // Re-index days
-    const reindexed = newItineraries.map((day, i) => ({ ...day, day_number: i + 1 }))
-    setFormData({ ...formData, itineraries: reindexed })
-  }
+    const reindexed = newItineraries.map((day, i) => ({ ...day, day_number: i + 1 }));
+    setFormData({ ...formData, itineraries: reindexed });
+  };
 
   return (
     <CompanyLayout>
       <div className="max-w-4xl mx-auto">
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-on-surface-variant hover:text-primary mb-6 transition-colors"
         >
@@ -99,14 +99,14 @@ export default function CompanyAddTourPage() {
 
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-on-surface">Thêm Tour mới</h1>
-          <button 
+          <button
             form="add-tour-form"
             type="submit"
             disabled={mutation.isPending}
             className="flex items-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-2 rounded-lg font-medium shadow-md transition-all disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            {mutation.isPending ? 'Đang lưu...' : 'Lưu và Đăng tour'}
+            {mutation.isPending ? "Đang lưu..." : "Lưu và Đăng tour"}
           </button>
         </div>
 
@@ -126,7 +126,7 @@ export default function CompanyAddTourPage() {
                   placeholder="Ví dụ: Tour Đà Lạt 3 ngày 2 đêm - Khám phá Langbiang"
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
                   value={formData.name}
-                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div>
@@ -135,11 +135,13 @@ export default function CompanyAddTourPage() {
                   required
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
                   value={formData.destination_id}
-                  onChange={e => setFormData({ ...formData, destination_id: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, destination_id: e.target.value })}
                 >
                   <option value="">Chọn điểm đến</option>
                   {destinations.map((d: any) => (
-                    <option key={d.id} value={d.id}>{d.name}</option>
+                    <option key={d.id} value={d.id}>
+                      {d.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -150,10 +152,10 @@ export default function CompanyAddTourPage() {
                   type="text"
                   placeholder="Ví dụ: 1.500.000"
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
-                  value={formData.price ? Number(formData.price).toLocaleString('vi-VN') : ''}
-                  onChange={e => {
-                    const value = e.target.value.replace(/\D/g, '')
-                    setFormData({ ...formData, price: value })
+                  value={formData.price ? Number(formData.price).toLocaleString("vi-VN") : ""}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    setFormData({ ...formData, price: value });
                   }}
                 />
               </div>
@@ -165,7 +167,7 @@ export default function CompanyAddTourPage() {
                   placeholder="Giới thiệu sơ lược về tour của bạn..."
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none resize-none"
                   value={formData.description}
-                  onChange={e => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
               <div className="md:col-span-2">
@@ -174,7 +176,11 @@ export default function CompanyAddTourPage() {
                   <div className="relative group w-full sm:w-48 h-32 bg-surface-container rounded-xl border-2 border-dashed border-outline-variant hover:border-primary transition-all overflow-hidden flex flex-col items-center justify-center cursor-pointer">
                     {formData.image_url ? (
                       <>
-                        <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
+                        <img
+                          src={formData.image_url}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <p className="text-white text-xs font-bold">Thay đổi ảnh</p>
                         </div>
@@ -183,7 +189,7 @@ export default function CompanyAddTourPage() {
                       <>
                         <ImageIcon className="w-8 h-8 text-on-surface-variant mb-2" />
                         <p className="text-xs text-on-surface-variant px-4 text-center">
-                          {isUploading ? 'Đang tải lên...' : 'Bấm để tải ảnh lên'}
+                          {isUploading ? "Đang tải lên..." : "Bấm để tải ảnh lên"}
                         </p>
                       </>
                     )}
@@ -215,7 +221,7 @@ export default function CompanyAddTourPage() {
                 <span className="w-1.5 h-6 bg-secondary rounded-full"></span>
                 Lịch trình chi tiết
               </h2>
-              <button 
+              <button
                 type="button"
                 onClick={addDay}
                 className="text-primary hover:text-primary-container font-medium flex items-center gap-1"
@@ -227,12 +233,17 @@ export default function CompanyAddTourPage() {
 
             <div className="space-y-6">
               {formData.itineraries.map((day, index) => (
-                <div key={index} className="relative p-4 rounded-xl border border-outline-variant bg-surface-container-low group">
+                <div
+                  key={index}
+                  className="relative p-4 rounded-xl border border-outline-variant bg-surface-container-low group"
+                >
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-bold text-primary uppercase tracking-wider">Ngày {day.day_number}</span>
+                    <span className="text-sm font-bold text-primary uppercase tracking-wider">
+                      Ngày {day.day_number}
+                    </span>
                     {formData.itineraries.length > 1 && (
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => removeDay(index)}
                         className="text-error hover:bg-error-container p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                       >
@@ -247,7 +258,7 @@ export default function CompanyAddTourPage() {
                       placeholder="Tiêu đề ngày (ví dụ: Khởi hành từ TP.HCM)"
                       className="w-full px-3 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
                       value={day.title}
-                      onChange={e => updateItinerary(index, 'title', e.target.value)}
+                      onChange={(e) => updateItinerary(index, "title", e.target.value)}
                     />
                     <textarea
                       required
@@ -255,10 +266,10 @@ export default function CompanyAddTourPage() {
                       placeholder="Những hoạt động chính trong ngày..."
                       className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
                       value={day.description}
-                      onChange={e => {
-                        const newItineraries = [...formData.itineraries]
-                        newItineraries[index].description = e.target.value
-                        setFormData({ ...formData, itineraries: newItineraries })
+                      onChange={(e) => {
+                        const newItineraries = [...formData.itineraries];
+                        newItineraries[index].description = e.target.value;
+                        setFormData({ ...formData, itineraries: newItineraries });
                       }}
                     />
                   </div>
@@ -269,5 +280,5 @@ export default function CompanyAddTourPage() {
         </form>
       </div>
     </CompanyLayout>
-  )
+  );
 }

@@ -1,113 +1,124 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { CreditCard, Building2, Truck, ShieldCheck, ArrowLeft, CheckCircle } from 'lucide-react'
-import { useState } from 'react'
-import { GuestService } from '@/services/guest.service'
-import { formatPrice, formatDate } from '@/lib/format'
-import Modal from '@/components/ui/Modal'
-import { AlertCircle } from 'lucide-react'
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { CreditCard, Building2, Truck, ShieldCheck, ArrowLeft, CheckCircle } from "lucide-react";
+import { useState } from "react";
+import { GuestService } from "@/services/guest.service";
+import { formatPrice, formatDate } from "@/lib/format";
+import Modal from "@/components/ui/Modal";
+import { AlertCircle } from "lucide-react";
 
 interface BookingState {
   tour: {
-    id: number | string
-    name: string
-    image: string
-    duration: string
-  }
+    id: number | string;
+    name: string;
+    image: string;
+    duration: string;
+  };
   departure: {
-    id: number | string
-    start_date: string
-  }
-  guests: number
-  pricePerPerson: number
+    id: number | string;
+    start_date: string;
+  };
+  guests: number;
+  pricePerPerson: number;
 }
 
 export default function CheckoutPage() {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const bookingState = location.state as BookingState | null
+  const location = useLocation();
+  const navigate = useNavigate();
+  const bookingState = location.state as BookingState | null;
 
-  const [step, setStep] = useState(1)
-  const [paymentMethod, setPaymentMethod] = useState('vnpay')
-  const [bookingId, setBookingId] = useState<number | null>(null)
+  const [step, setStep] = useState(1);
+  const [paymentMethod, setPaymentMethod] = useState("vnpay");
+  const [bookingId, setBookingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    note: '',
-  })
-  const [modalConfig, setModalConfig] = useState<{ isOpen: boolean; title: string; message: string }>({
+    name: "",
+    email: "",
+    phone: "",
+    note: "",
+  });
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+  }>({
     isOpen: false,
-    title: '',
-    message: '',
-  })
-  const [showInstructions, setShowInstructions] = useState(false)
+    title: "",
+    message: "",
+  });
+  const [showInstructions, setShowInstructions] = useState(false);
 
   if (!bookingState) {
     return (
       <div className="min-h-screen pt-20 pb-16 flex items-center justify-center">
         <div className="text-center">
           <p className="mb-4">Không tìm thấy thông tin đặt tour.</p>
-          <button onClick={() => navigate(-1)} className="text-primary hover:underline">Quay lại trang trước</button>
+          <button onClick={() => navigate(-1)} className="text-primary hover:underline">
+            Quay lại trang trước
+          </button>
         </div>
       </div>
-    )
+    );
   }
 
-  const { tour, departure, guests, pricePerPerson } = bookingState
-  const totalAmount = guests * pricePerPerson
+  const { tour, departure, guests, pricePerPerson } = bookingState;
+  const totalAmount = guests * pricePerPerson;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleStep1 = async () => {
-    const { name, email, phone, note } = formData
+    const { name, email, phone, note } = formData;
     if (!name || !email || !phone) {
       setModalConfig({
         isOpen: true,
-        title: 'Thông báo',
-        message: 'Vui lòng điền đầy đủ thông tin bắt buộc (Họ tên, Email, Số điện thoại).'
-      })
-      return
+        title: "Thông báo",
+        message: "Vui lòng điền đầy đủ thông tin bắt buộc (Họ tên, Email, Số điện thoại).",
+      });
+      return;
     }
 
     try {
-      const res = await GuestService.bookDeparture(departure.id, guests, { name, email, phone, note })
-      setBookingId(res.booking_id)
-      setStep(2)
+      const res = await GuestService.bookDeparture(departure.id, guests, {
+        name,
+        email,
+        phone,
+        note,
+      });
+      setBookingId(res.booking_id);
+      setStep(2);
     } catch (err: any) {
       setModalConfig({
         isOpen: true,
-        title: 'Lỗi đặt tour',
-        message: err.response?.data?.message || 'Có lỗi xảy ra khi đặt tour. Vui lòng thử lại sau.'
-      })
+        title: "Lỗi đặt tour",
+        message: err.response?.data?.message || "Có lỗi xảy ra khi đặt tour. Vui lòng thử lại sau.",
+      });
     }
-  }
+  };
 
   const handleStep2 = () => {
-    if (!bookingId) return
-    setShowInstructions(true)
-  }
+    if (!bookingId) return;
+    setShowInstructions(true);
+  };
 
   const confirmPayment = async () => {
     try {
-      await GuestService.createPayment(bookingId!, totalAmount, paymentMethod)
-      setShowInstructions(false)
-      setStep(3)
+      await GuestService.createPayment(bookingId!, totalAmount, paymentMethod);
+      setShowInstructions(false);
+      setStep(3);
     } catch (err: any) {
       setModalConfig({
         isOpen: true,
-        title: 'Lỗi thanh toán',
-        message: err.response?.data?.message || 'Có lỗi xảy ra khi xác nhận thanh toán.'
-      })
+        title: "Lỗi thanh toán",
+        message: err.response?.data?.message || "Có lỗi xảy ra khi xác nhận thanh toán.",
+      });
     }
-  }
+  };
 
   const handleNext = () => {
-    if (step === 1) return handleStep1()
-    if (step === 2) return handleStep2()
-  }
+    if (step === 1) return handleStep1();
+    if (step === 2) return handleStep2();
+  };
 
   return (
     <div className="min-h-screen pt-20 pb-16 bg-surface-container-low">
@@ -127,14 +138,16 @@ export default function CheckoutPage() {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
                   step >= s
-                    ? 'bg-primary text-white'
-                    : 'bg-surface-container-high text-on-surface-variant'
+                    ? "bg-primary text-white"
+                    : "bg-surface-container-high text-on-surface-variant"
                 }`}
               >
                 {step > s ? <CheckCircle className="w-5 h-5" /> : s}
               </div>
-              <span className={`ml-2 text-sm ${step >= s ? 'text-primary font-medium' : 'text-on-surface-variant'}`}>
-                {s === 1 ? 'Thông tin' : s === 2 ? 'Thanh toán' : 'Hoàn tất'}
+              <span
+                className={`ml-2 text-sm ${step >= s ? "text-primary font-medium" : "text-on-surface-variant"}`}
+              >
+                {s === 1 ? "Thông tin" : s === 2 ? "Thanh toán" : "Hoàn tất"}
               </span>
               {s < 3 && <div className="w-16 h-0.5 bg-surface-container-high mx-4" />}
             </div>
@@ -208,7 +221,14 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-bold text-on-surface mb-6">Phương thức thanh toán</h2>
                 <div className="space-y-3">
                   <label className="flex items-center gap-4 p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-colors">
-                    <input type="radio" name="payment" value="vnpay" checked={paymentMethod === 'vnpay'} onChange={() => setPaymentMethod('vnpay')} className="w-5 h-5 accent-primary" />
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="vnpay"
+                      checked={paymentMethod === "vnpay"}
+                      onChange={() => setPaymentMethod("vnpay")}
+                      className="w-5 h-5 accent-primary"
+                    />
                     <Building2 className="w-6 h-6 text-primary" />
                     <div>
                       <p className="font-medium">VNPay</p>
@@ -216,7 +236,14 @@ export default function CheckoutPage() {
                     </div>
                   </label>
                   <label className="flex items-center gap-4 p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-colors">
-                    <input type="radio" name="payment" value="momo" checked={paymentMethod === 'momo'} onChange={() => setPaymentMethod('momo')} className="w-5 h-5 accent-primary" />
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="momo"
+                      checked={paymentMethod === "momo"}
+                      onChange={() => setPaymentMethod("momo")}
+                      className="w-5 h-5 accent-primary"
+                    />
                     <Truck className="w-6 h-6 text-pink-500" />
                     <div>
                       <p className="font-medium">MoMo</p>
@@ -224,11 +251,20 @@ export default function CheckoutPage() {
                     </div>
                   </label>
                   <label className="flex items-center gap-4 p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-colors">
-                    <input type="radio" name="payment" value="banking" checked={paymentMethod === 'banking'} onChange={() => setPaymentMethod('banking')} className="w-5 h-5 accent-primary" />
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="banking"
+                      checked={paymentMethod === "banking"}
+                      onChange={() => setPaymentMethod("banking")}
+                      className="w-5 h-5 accent-primary"
+                    />
                     <CreditCard className="w-6 h-6 text-secondary" />
                     <div>
                       <p className="font-medium">Chuyển khoản ngân hàng</p>
-                      <p className="text-sm text-on-surface-variant">Chuyển khoản trực tiếp vào tài khoản</p>
+                      <p className="text-sm text-on-surface-variant">
+                        Chuyển khoản trực tiếp vào tài khoản
+                      </p>
                     </div>
                   </label>
                 </div>
@@ -260,7 +296,9 @@ export default function CheckoutPage() {
                 </p>
                 <div className="bg-surface-container-low p-4 rounded-lg mb-6 text-left">
                   <p className="text-sm text-on-surface-variant mb-1">Mã đặt tour:</p>
-                  <p className="text-xl font-bold text-primary">#TG-{new Date().getFullYear()}-{bookingId}</p>
+                  <p className="text-xl font-bold text-primary">
+                    #TG-{new Date().getFullYear()}-{bookingId}
+                  </p>
                 </div>
                 <Link
                   to="/my-trips"
@@ -331,7 +369,7 @@ export default function CheckoutPage() {
             <p className="text-3xl font-bold text-primary">{formatPrice(totalAmount)}</p>
           </div>
 
-          {paymentMethod === 'banking' ? (
+          {paymentMethod === "banking" ? (
             <div className="bg-surface-container-low p-6 rounded-xl space-y-4">
               <div className="flex justify-between border-b border-outline-variant pb-2">
                 <span className="text-on-surface-variant">Ngân hàng</span>
@@ -356,9 +394,9 @@ export default function CheckoutPage() {
           ) : (
             <div className="text-center space-y-4">
               <div className="w-48 h-48 mx-auto bg-white p-2 border-2 border-primary rounded-xl overflow-hidden">
-                <img 
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TOURGO_PAYMENT_${bookingId}`} 
-                  alt="QR Code" 
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TOURGO_PAYMENT_${bookingId}`}
+                  alt="QR Code"
                   className="w-full h-full"
                 />
               </div>
@@ -387,18 +425,16 @@ export default function CheckoutPage() {
 
       <Modal
         isOpen={modalConfig.isOpen}
-        onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+        onClose={() => setModalConfig((prev) => ({ ...prev, isOpen: false }))}
         title={modalConfig.title}
       >
         <div className="text-center py-4">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-8 h-8 text-red-600" />
           </div>
-          <p className="text-on-surface-variant mb-6">
-            {modalConfig.message}
-          </p>
+          <p className="text-on-surface-variant mb-6">{modalConfig.message}</p>
           <button
-            onClick={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+            onClick={() => setModalConfig((prev) => ({ ...prev, isOpen: false }))}
             className="w-full bg-primary text-white font-semibold py-3 rounded-xl hover:bg-primary-container transition-colors"
           >
             Đã hiểu
@@ -406,6 +442,5 @@ export default function CheckoutPage() {
         </div>
       </Modal>
     </div>
-  )
+  );
 }
-

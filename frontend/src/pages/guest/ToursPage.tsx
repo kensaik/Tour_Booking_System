@@ -1,71 +1,72 @@
-import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import { MapPin, Star, Clock, Filter, Grid, List } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { PublicService } from '@/services/public.service'
-import { formatPrice } from '@/lib/format'
-import LoadingState from '@/components/ui/LoadingState'
-import EmptyState from '@/components/ui/EmptyState'
+import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { MapPin, Star, Clock, Filter, Grid, List } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { PublicService } from "@/services/public.service";
+import { formatPrice } from "@/lib/format";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 
 interface Tour {
-  id: number
-  name: string
-  price: number
-  total_days: number
-  destination?: string
-  image_url?: string
+  id: number;
+  name: string;
+  price: number;
+  total_days: number;
+  destination?: string;
+  image_url?: string;
 }
 
 export default function GuestToursPage() {
-  const [searchParams] = useSearchParams()
-  const destinationId = searchParams.get('destination_id') || undefined
-  const keyword = searchParams.get('keyword') || undefined
-  const date = searchParams.get('date') || undefined
-  const guests = searchParams.get('guests') || undefined
+  const [searchParams] = useSearchParams();
+  const destinationId = searchParams.get("destination_id") || undefined;
+  const keyword = searchParams.get("keyword") || undefined;
+  const date = searchParams.get("date") || undefined;
+  const guests = searchParams.get("guests") || undefined;
 
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [sortBy, setSortBy] = useState('popular')
-  const [filterOpen, setFilterOpen] = useState(false)
-  
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sortBy, setSortBy] = useState("popular");
+  const [filterOpen, setFilterOpen] = useState(false);
+
   // Filter states
-  const [priceRange, setPriceRange] = useState('all')
-  const [duration, setDuration] = useState('all')
+  const [priceRange, setPriceRange] = useState("all");
+  const [duration, setDuration] = useState("all");
 
   const { data: toursData, isLoading } = useQuery({
-    queryKey: ['tours', { destinationId, keyword, date, guests }],
-    queryFn: () => PublicService.getTours({ 
-      destination_id: destinationId, 
-      keyword,
-      date,
-      guests
-    })
-  })
+    queryKey: ["tours", { destinationId, keyword, date, guests }],
+    queryFn: () =>
+      PublicService.getTours({
+        destination_id: destinationId,
+        keyword,
+        date,
+        guests,
+      }),
+  });
 
-  const rawTours: Tour[] = toursData?.tours || []
+  const rawTours: Tour[] = toursData?.tours || [];
 
   // Filter and Sort tours locally
   const tours = [...rawTours]
-    .filter(tour => {
+    .filter((tour) => {
       // Price filter
-      if (priceRange === 'under-2m') return tour.price < 2000000
-      if (priceRange === '2m-5m') return tour.price >= 2000000 && tour.price <= 5000000
-      if (priceRange === 'over-5m') return tour.price > 5000000
-      return true
+      if (priceRange === "under-2m") return tour.price < 2000000;
+      if (priceRange === "2m-5m") return tour.price >= 2000000 && tour.price <= 5000000;
+      if (priceRange === "over-5m") return tour.price > 5000000;
+      return true;
     })
-    .filter(tour => {
+    .filter((tour) => {
       // Duration filter
-      if (duration === '1-day') return tour.total_days === 1
-      if (duration === '2-3-days') return tour.total_days >= 2 && tour.total_days <= 3
-      if (duration === '4-plus-days') return tour.total_days >= 4
-      return true
+      if (duration === "1-day") return tour.total_days === 1;
+      if (duration === "2-3-days") return tour.total_days >= 2 && tour.total_days <= 3;
+      if (duration === "4-plus-days") return tour.total_days >= 4;
+      return true;
     })
     .sort((a, b) => {
-      if (sortBy === 'price-asc') return a.price - b.price
-      if (sortBy === 'price-desc') return b.price - a.price
-      return 0
-    })
+      if (sortBy === "price-asc") return a.price - b.price;
+      if (sortBy === "price-desc") return b.price - a.price;
+      return 0;
+    });
 
-  if (isLoading) return <LoadingState message="Đang tải danh sách tour..." />
+  if (isLoading) return <LoadingState message="Đang tải danh sách tour..." />;
 
   return (
     <div className="min-h-screen pt-20 pb-16">
@@ -103,16 +104,16 @@ export default function GuestToursPage() {
           {/* View Mode */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setViewMode('grid')}
+              onClick={() => setViewMode("grid")}
               aria-label="Chế độ lưới"
-              className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-primary text-white' : 'bg-surface-container-low'}`}
+              className={`p-2 rounded-lg ${viewMode === "grid" ? "bg-primary text-white" : "bg-surface-container-low"}`}
             >
               <Grid className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setViewMode('list')}
+              onClick={() => setViewMode("list")}
               aria-label="Chế độ danh sách"
-              className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-primary text-white' : 'bg-surface-container-low'}`}
+              className={`p-2 rounded-lg ${viewMode === "list" ? "bg-primary text-white" : "bg-surface-container-low"}`}
             >
               <List className="w-4 h-4" />
             </button>
@@ -124,9 +125,14 @@ export default function GuestToursPage() {
           <div className="bg-surface-container-low p-6 rounded-xl mb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="filter-price" className="block text-sm font-medium mb-2 text-on-surface">Khoảng giá</label>
-                <select 
-                  id="filter-price" 
+                <label
+                  htmlFor="filter-price"
+                  className="block text-sm font-medium mb-2 text-on-surface"
+                >
+                  Khoảng giá
+                </label>
+                <select
+                  id="filter-price"
                   value={priceRange}
                   onChange={(e) => setPriceRange(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white text-on-surface focus:ring-2 focus:ring-primary"
@@ -138,9 +144,14 @@ export default function GuestToursPage() {
                 </select>
               </div>
               <div>
-                <label htmlFor="filter-duration" className="block text-sm font-medium mb-2 text-on-surface">Thời gian</label>
-                <select 
-                  id="filter-duration" 
+                <label
+                  htmlFor="filter-duration"
+                  className="block text-sm font-medium mb-2 text-on-surface"
+                >
+                  Thời gian
+                </label>
+                <select
+                  id="filter-duration"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-outline-variant bg-white text-on-surface focus:ring-2 focus:ring-primary"
@@ -152,10 +163,10 @@ export default function GuestToursPage() {
                 </select>
               </div>
               <div className="flex items-end pb-1">
-                <button 
+                <button
                   onClick={() => {
-                    setPriceRange('all')
-                    setDuration('all')
+                    setPriceRange("all");
+                    setDuration("all");
                   }}
                   className="text-sm text-primary font-bold hover:text-primary-container transition-colors flex items-center gap-1"
                 >
@@ -176,7 +187,7 @@ export default function GuestToursPage() {
               // Reset params logic here if needed
             }}
           />
-        ) : viewMode === 'grid' ? (
+        ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {tours.map((tour) => (
               <article
@@ -186,7 +197,10 @@ export default function GuestToursPage() {
                 <div className="relative h-48 bg-slate-200">
                   <img
                     alt={tour.name}
-                    src={tour.image_url || 'https://images.unsplash.com/photo-1528127269322-539801943592?w=600&h=400&fit=crop'}
+                    src={
+                      tour.image_url ||
+                      "https://images.unsplash.com/photo-1528127269322-539801943592?w=600&h=400&fit=crop"
+                    }
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-3 left-3">
@@ -198,7 +212,7 @@ export default function GuestToursPage() {
                 <div className="p-5">
                   <div className="flex items-center gap-1 text-on-surface-variant mb-2">
                     <MapPin className="text-primary w-3 h-3" />
-                    <span className="text-xs">{tour.destination || 'Việt Nam'}</span>
+                    <span className="text-xs">{tour.destination || "Việt Nam"}</span>
                   </div>
                   <h3 className="text-base font-semibold text-on-surface mb-2 line-clamp-1">
                     {tour.name}
@@ -217,7 +231,9 @@ export default function GuestToursPage() {
                   <div className="flex justify-between items-center pt-3 border-t border-outline-variant">
                     <div>
                       <p className="text-on-surface-variant text-[11px]">Giá từ</p>
-                      <p className="text-lg font-semibold text-primary">{formatPrice(tour.price)}</p>
+                      <p className="text-lg font-semibold text-primary">
+                        {formatPrice(tour.price)}
+                      </p>
                     </div>
                     <Link
                       to={`/tours/${tour.id}`}
@@ -240,7 +256,10 @@ export default function GuestToursPage() {
                 <div className="relative w-64 h-48 flex-shrink-0 bg-slate-200">
                   <img
                     alt={tour.name}
-                    src={tour.image_url || 'https://images.unsplash.com/photo-1528127269322-539801943592?w=600&h=400&fit=crop'}
+                    src={
+                      tour.image_url ||
+                      "https://images.unsplash.com/photo-1528127269322-539801943592?w=600&h=400&fit=crop"
+                    }
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -252,7 +271,7 @@ export default function GuestToursPage() {
                       </span>
                       <div className="flex items-center gap-1 text-on-surface-variant">
                         <MapPin className="text-primary w-3 h-3" />
-                        <span className="text-xs">{tour.destination || 'Việt Nam'}</span>
+                        <span className="text-xs">{tour.destination || "Việt Nam"}</span>
                       </div>
                     </div>
                     <h3 className="text-lg font-semibold text-on-surface mb-2">{tour.name}</h3>
@@ -271,7 +290,9 @@ export default function GuestToursPage() {
                   <div className="flex justify-between items-center mt-4">
                     <div>
                       <p className="text-on-surface-variant text-xs">Giá từ</p>
-                      <p className="text-xl font-semibold text-primary">{formatPrice(tour.price)}</p>
+                      <p className="text-xl font-semibold text-primary">
+                        {formatPrice(tour.price)}
+                      </p>
                     </div>
                     <Link
                       to={`/tours/${tour.id}`}
@@ -287,6 +308,5 @@ export default function GuestToursPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
-

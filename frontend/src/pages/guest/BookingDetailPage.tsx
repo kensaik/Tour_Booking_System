@@ -1,26 +1,39 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, MapPin, Calendar, Users, CreditCard, ShieldCheck, Printer, Download } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { GuestService } from '@/services/guest.service'
-import { formatPrice, formatDate } from '@/lib/format'
-import StatusBadge from '@/components/ui/StatusBadge'
-import LoadingState from '@/components/ui/LoadingState'
-import ErrorState from '@/components/ui/ErrorState'
+import { useParams, Link, useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  MapPin,
+  Calendar,
+  Users,
+  CreditCard,
+  ShieldCheck,
+  Printer,
+  Download,
+} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { GuestService } from "@/services/guest.service";
+import { formatPrice, formatDate } from "@/lib/format";
+import StatusBadge from "@/components/ui/StatusBadge";
+import LoadingState from "@/components/ui/LoadingState";
+import ErrorState from "@/components/ui/ErrorState";
 
 export default function BookingDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-  const { data: response, isLoading, error } = useQuery({
-    queryKey: ['booking', id],
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["booking", id],
     queryFn: () => GuestService.getBookingDetail(id as string),
-    enabled: !!id
-  })
+    enabled: !!id,
+  });
 
-  if (isLoading) return <LoadingState message="Đang tải chi tiết đơn hàng..." />
-  if (error || !response?.booking) return <ErrorState message="Không tìm thấy đơn hàng này." />
+  if (isLoading) return <LoadingState message="Đang tải chi tiết đơn hàng..." />;
+  if (error || !response?.booking) return <ErrorState message="Không tìm thấy đơn hàng này." />;
 
-  const booking = response.booking
+  const booking = response.booking;
 
   return (
     <div className="min-h-screen pt-20 pb-16 bg-surface-container-low">
@@ -85,7 +98,7 @@ export default function BookingDetailPage() {
                   <p className="text-xs text-on-surface-variant mb-1 flex items-center gap-1">
                     <MapPin className="w-3 h-3" /> Điểm đến
                   </p>
-                  <p className="font-semibold">{booking.tour?.destination || 'N/A'}</p>
+                  <p className="font-semibold">{booking.tour?.destination || "N/A"}</p>
                 </div>
               </div>
             </div>
@@ -109,7 +122,9 @@ export default function BookingDetailPage() {
                 {booking.notes && (
                   <div className="pt-2">
                     <p className="text-xs text-on-surface-variant mb-1">Ghi chú:</p>
-                    <p className="text-sm p-3 bg-surface-container-low rounded-lg italic">"{booking.notes}"</p>
+                    <p className="text-sm p-3 bg-surface-container-low rounded-lg italic">
+                      "{booking.notes}"
+                    </p>
                   </div>
                 )}
               </div>
@@ -131,9 +146,13 @@ export default function BookingDetailPage() {
                 </div>
               </div>
 
-              {booking.payment_status === 'pending' && (
+              {booking.payment_status === "pending" && (
                 <button
-                  onClick={() => navigate('/checkout', { state: { bookingId: booking.id, totalAmount: booking.total_price } })}
+                  onClick={() =>
+                    navigate("/checkout", {
+                      state: { bookingId: booking.id, totalAmount: booking.total_price },
+                    })
+                  }
                   className="w-full bg-primary hover:bg-primary-container text-white font-semibold py-3 rounded-lg transition-colors mb-4"
                 >
                   Thanh toán ngay
@@ -161,5 +180,5 @@ export default function BookingDetailPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

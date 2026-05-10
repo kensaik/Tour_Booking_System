@@ -1,55 +1,65 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Globe, Calendar, BookOpen, ChevronDown, LogOut, Menu, X, Settings } from 'lucide-react'
-import { useAuthStore } from '@/stores/authStore'
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Globe,
+  Calendar,
+  BookOpen,
+  ChevronDown,
+  LogOut,
+  Menu,
+  X,
+  Settings,
+} from "lucide-react";
+import { useAuthStore } from "@/stores/authStore";
 
 // Force Vite reload - Auth system updated
 
 // Admin Layout for Company Dashboard
 export default function CompanyLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { user, logout, token } = useAuthStore()
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout, token } = useAuthStore();
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    const storedToken = localStorage.getItem('access_token') || token
+    const storedToken = localStorage.getItem("access_token") || token;
     if (!storedToken) {
-      navigate('/login')
+      navigate("/login");
     }
-  }, [token, navigate])
+  }, [token, navigate]);
 
   if (token && !user) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
-    )
+    );
   }
 
-  if (!token) return null
+  if (!token) return null;
 
   const menuItems = [
-    { path: '/company', icon: LayoutDashboard, label: 'Dashboard', exact: true },
-    { path: '/company/tours', icon: Globe, label: 'Quản lý Tour' },
-    { path: '/company/departures', icon: Calendar, label: 'Quản lý Lịch khởi hành' },
-    { path: '/company/bookings', icon: BookOpen, label: 'Quản lý Đặt tour' },
-  ]
+    { path: "/company", icon: LayoutDashboard, label: "Dashboard", exact: true },
+    { path: "/company/tours", icon: Globe, label: "Quản lý Tour" },
+    { path: "/company/departures", icon: Calendar, label: "Quản lý Lịch khởi hành" },
+    { path: "/company/bookings", icon: BookOpen, label: "Quản lý Đặt tour" },
+  ];
 
   const isActive = (path: string, exact?: boolean) => {
-    if (exact) return location.pathname === path
-    return location.pathname.startsWith(path)
-  }
+    if (exact) return location.pathname === path;
+    return location.pathname.startsWith(path);
+  };
 
   const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+    logout();
+    navigate("/login");
+  };
 
   // Check for approval status
-  const isApproved = user?.role === 'COMPANY' ? user?.company_profile?.is_approved === true : true
+  const isApproved = user?.role === "COMPANY" ? user?.company_profile?.is_approved === true : true;
 
   // For debugging - remove in production
   // console.log('Auth Check:', { role: user?.role, isApproved, profile: user?.company_profile })
@@ -63,10 +73,11 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
           </div>
           <h1 className="text-2xl font-bold text-on-surface mb-2">Tài khoản chờ duyệt</h1>
           <p className="text-on-surface-variant mb-8">
-            Chào <strong>{user.full_name}</strong>, tài khoản công ty của bạn đang trong quá trình chờ quản trị viên phê duyệt. 
-            Bạn sẽ có thể truy cập hệ thống quản lý ngay sau khi được chấp thuận.
+            Chào <strong>{user.full_name}</strong>, tài khoản công ty của bạn đang trong quá trình
+            chờ quản trị viên phê duyệt. Bạn sẽ có thể truy cập hệ thống quản lý ngay sau khi được
+            chấp thuận.
           </p>
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full bg-primary text-on-primary font-bold py-3 rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
           >
@@ -75,7 +86,7 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -88,8 +99,12 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
               <Globe className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-on-surface line-clamp-1 leading-tight">{user?.full_name || 'Công ty'}</h1>
-              <p className="text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Quản lý công ty</p>
+              <h1 className="text-lg font-bold text-on-surface line-clamp-1 leading-tight">
+                {user?.full_name || "Công ty"}
+              </h1>
+              <p className="text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">
+                Quản lý công ty
+              </p>
             </div>
           </div>
         </div>
@@ -101,8 +116,8 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
               to={item.path}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive(item.path, item.exact)
-                  ? 'bg-primary-container text-on-primary-container font-medium'
-                  : 'text-on-surface-variant hover:bg-surface-container-low'
+                  ? "bg-primary-container text-on-primary-container font-medium"
+                  : "text-on-surface-variant hover:bg-surface-container-low"
               }`}
             >
               <item.icon className="w-5 h-5" />
@@ -118,18 +133,22 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
               className="w-full flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-surface-container-low transition-colors"
             >
               <div className="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center text-sm font-bold shadow-sm">
-                {user?.full_name?.charAt(0) || 'C'}
+                {user?.full_name?.charAt(0) || "C"}
               </div>
               <div className="flex-1 text-left min-w-0">
-                <p className="text-sm font-bold text-on-surface truncate">{user?.full_name || 'Công ty'}</p>
+                <p className="text-sm font-bold text-on-surface truncate">
+                  {user?.full_name || "Công ty"}
+                </p>
                 <p className="text-[11px] text-on-surface-variant truncate">{user?.email}</p>
               </div>
-              <ChevronDown className={`w-4 h-4 text-on-surface-variant transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`w-4 h-4 text-on-surface-variant transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
             {userMenuOpen && (
               <div className="absolute bottom-full left-0 w-full mb-2 bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden border border-outline-variant py-1">
-                <Link 
+                <Link
                   to="/company/settings"
                   onClick={() => setUserMenuOpen(false)}
                   className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors text-sm text-on-surface"
@@ -138,7 +157,7 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
                   Cài đặt
                 </Link>
                 <div className="h-px bg-outline-variant mx-2 my-1" />
-                <button 
+                <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-error-container/10 transition-colors text-sm text-error font-medium"
                 >
@@ -161,14 +180,20 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
           <h1 className="text-base font-bold text-on-surface line-clamp-1">{user?.full_name}</h1>
         </div>
         <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold">
-          {user?.full_name?.charAt(0) || 'C'}
+          {user?.full_name?.charAt(0) || "C"}
         </div>
       </div>
 
       {/* Mobile Sidebar */}
       {sidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setSidebarOpen(false)}>
-          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-surface-container text-on-surface" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="md:hidden fixed inset-0 z-50 bg-black/50"
+          onClick={() => setSidebarOpen(false)}
+        >
+          <aside
+            className="absolute left-0 top-0 bottom-0 w-64 bg-surface-container text-on-surface"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6 border-b border-outline-variant flex justify-between items-center">
               <div className="flex items-center gap-2 text-primary">
                 <Globe className="w-6 h-6" />
@@ -186,8 +211,8 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     isActive(item.path, item.exact)
-                      ? 'bg-primary-container text-on-primary-container font-medium'
-                      : 'text-on-surface-variant hover:bg-surface-container-low'
+                      ? "bg-primary-container text-on-primary-container font-medium"
+                      : "text-on-surface-variant hover:bg-surface-container-low"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -202,5 +227,5 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8 pt-20 md:pt-8 bg-surface overflow-y-auto">{children}</main>
     </div>
-  )
+  );
 }

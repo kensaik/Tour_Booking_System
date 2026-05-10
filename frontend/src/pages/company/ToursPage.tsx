@@ -1,70 +1,86 @@
-import { useState } from 'react'
-import CompanyLayout from '@/components/company/CompanyLayout'
-import { Link, useNavigate } from 'react-router-dom'
-import { Plus, Search, MapPin, Edit, Trash2, Eye, CheckCircle } from 'lucide-react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { CompanyService } from '@/services/company.service'
-import { formatPrice } from '@/lib/format'
-import StatusBadge from '@/components/ui/StatusBadge'
-import EmptyState from '@/components/ui/EmptyState'
-import ConfirmModal from '@/components/ui/ConfirmModal'
-import Toast, { ToastType } from '@/components/ui/Toast'
+import { useState } from "react";
+import CompanyLayout from "@/components/company/CompanyLayout";
+import { Link, useNavigate } from "react-router-dom";
+import { Plus, Search, MapPin, Edit, Trash2, Eye, CheckCircle } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { CompanyService } from "@/services/company.service";
+import { formatPrice } from "@/lib/format";
+import StatusBadge from "@/components/ui/StatusBadge";
+import EmptyState from "@/components/ui/EmptyState";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import Toast, { ToastType } from "@/components/ui/Toast";
 
 export default function CompanyToursPage() {
-  const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-  
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
   // Modal states
-  const [deleteId, setDeleteId] = useState<string | number | null>(null)
-  const [publishId, setPublishId] = useState<string | number | null>(null)
+  const [deleteId, setDeleteId] = useState<string | number | null>(null);
+  const [publishId, setPublishId] = useState<string | number | null>(null);
 
   // Toast state
-  const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null)
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
-  const { data: response, isLoading, error } = useQuery({
-    queryKey: ['company-tours'],
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["company-tours"],
     queryFn: () => CompanyService.getMyTours(),
-  })
+  });
 
-  const tours = response?.tours || []
+  const tours = response?.tours || [];
 
   const filteredTours = tours.filter((tour: any) => {
-    const matchesSearch = tour.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         tour.destination.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'active' && tour.status !== 'draft') ||
-                         (statusFilter === 'draft' && tour.status === 'draft')
-    return matchesSearch && matchesStatus
-  })
+    const matchesSearch =
+      tour.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tour.destination.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "active" && tour.status !== "draft") ||
+      (statusFilter === "draft" && tour.status === "draft");
+    return matchesSearch && matchesStatus;
+  });
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: (id: string | number) => CompanyService.deleteTour(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['company-tours'] })
-      setToast({ message: 'Xóa tour thành công!', type: 'success' })
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["company-tours"] });
+      setToast({ message: "Xóa tour thành công!", type: "success" });
+    },
+  });
 
   const publishMutation = useMutation({
-    mutationFn: (id: string | number) => CompanyService.updateTour(id, { status: 'active' }),
+    mutationFn: (id: string | number) => CompanyService.updateTour(id, { status: "active" }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['company-tours'] })
-      setToast({ message: 'Tour đã được duyệt và chính thức hoạt động!', type: 'success' })
-    }
-  })
+      queryClient.invalidateQueries({ queryKey: ["company-tours"] });
+      setToast({ message: "Tour đã được duyệt và chính thức hoạt động!", type: "success" });
+    },
+  });
 
   const handleDelete = (id: string | number) => {
-    setDeleteId(id)
-  }
+    setDeleteId(id);
+  };
 
   const handlePublish = (id: string | number) => {
-    setPublishId(id)
-  }
+    setPublishId(id);
+  };
 
-  if (isLoading) return <CompanyLayout><div className="text-center py-20">Đang tải danh sách tour...</div></CompanyLayout>
-  if (error) return <CompanyLayout><div className="text-center py-20 text-red-500">Lỗi tải danh sách tour.</div></CompanyLayout>
+  if (isLoading)
+    return (
+      <CompanyLayout>
+        <div className="text-center py-20">Đang tải danh sách tour...</div>
+      </CompanyLayout>
+    );
+  if (error)
+    return (
+      <CompanyLayout>
+        <div className="text-center py-20 text-red-500">Lỗi tải danh sách tour.</div>
+      </CompanyLayout>
+    );
 
   return (
     <CompanyLayout>
@@ -96,7 +112,7 @@ export default function CompanyToursPage() {
             />
           </div>
           <div>
-            <select 
+            <select
               className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -128,10 +144,13 @@ export default function CompanyToursPage() {
                   <tr key={tour.id} className="hover:bg-surface-container-low transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <img 
-                          src={tour.image_url || 'https://images.unsplash.com/photo-1528127269322-539801943592?w=400&h=300&fit=crop'} 
-                          alt="" 
-                          className="w-12 h-12 rounded-lg object-cover bg-surface-container" 
+                        <img
+                          src={
+                            tour.image_url ||
+                            "https://images.unsplash.com/photo-1528127269322-539801943592?w=400&h=300&fit=crop"
+                          }
+                          alt=""
+                          className="w-12 h-12 rounded-lg object-cover bg-surface-container"
                         />
                         <div className="font-bold text-on-surface line-clamp-1">{tour.name}</div>
                       </div>
@@ -142,34 +161,40 @@ export default function CompanyToursPage() {
                         {tour.destination}
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-bold text-primary">
-                      {formatPrice(tour.price)}
-                    </td>
+                    <td className="px-6 py-4 font-bold text-primary">{formatPrice(tour.price)}</td>
                     <td className="px-6 py-4">
                       <StatusBadge status={tour.status} type="tour" />
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-1">
-                        {tour.status?.toLowerCase() === 'draft' && (
-                          <button 
+                        {tour.status?.toLowerCase() === "draft" && (
+                          <button
                             onClick={() => handlePublish(tour.id)}
                             disabled={publishMutation.isPending}
-                            className="p-2 hover:bg-primary/10 rounded-lg text-primary hover:text-primary-container disabled:opacity-50 transition-colors" 
+                            className="p-2 hover:bg-primary/10 rounded-lg text-primary hover:text-primary-container disabled:opacity-50 transition-colors"
                             title="Duyệt tour"
                           >
                             <CheckCircle className="w-4 h-4" />
                           </button>
                         )}
-                        <Link to={`/company/tours/${tour.id}`} className="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant hover:text-on-surface" title="Xem chi tiết">
+                        <Link
+                          to={`/company/tours/${tour.id}`}
+                          className="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant hover:text-on-surface"
+                          title="Xem chi tiết"
+                        >
                           <Eye className="w-4 h-4" />
                         </Link>
-                        <Link to={`/company/tours/${tour.id}`} className="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant hover:text-on-surface" title="Sửa tour">
+                        <Link
+                          to={`/company/tours/${tour.id}`}
+                          className="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant hover:text-on-surface"
+                          title="Sửa tour"
+                        >
                           <Edit className="w-4 h-4" />
                         </Link>
-                        <button 
+                        <button
                           onClick={() => handleDelete(tour.id)}
                           disabled={deleteMutation.isPending}
-                          className="p-2 hover:bg-error-container rounded-lg text-on-surface-variant hover:text-error disabled:opacity-50 transition-colors" 
+                          className="p-2 hover:bg-error-container rounded-lg text-on-surface-variant hover:text-error disabled:opacity-50 transition-colors"
                           title="Xóa tour"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -183,16 +208,20 @@ export default function CompanyToursPage() {
           </div>
         </div>
       ) : (
-        <EmptyState 
-          title="Không tìm thấy tour nào" 
-          description={searchQuery ? `Không có tour nào khớp với từ khóa "${searchQuery}"` : "Bạn chưa có tour nào. Hãy bắt đầu tạo tour đầu tiên!"}
+        <EmptyState
+          title="Không tìm thấy tour nào"
+          description={
+            searchQuery
+              ? `Không có tour nào khớp với từ khóa "${searchQuery}"`
+              : "Bạn chưa có tour nào. Hãy bắt đầu tạo tour đầu tiên!"
+          }
           actionLabel={searchQuery ? "Xóa bộ lọc" : "Thêm Tour mới"}
           onAction={() => {
             if (searchQuery) {
-              setSearchQuery('')
-              setStatusFilter('all')
+              setSearchQuery("");
+              setStatusFilter("all");
             } else {
-              navigate('/company/tours/new')
+              navigate("/company/tours/new");
             }
           }}
         />
@@ -204,8 +233,8 @@ export default function CompanyToursPage() {
         onConfirm={() => {
           if (deleteId) {
             deleteMutation.mutate(deleteId, {
-              onSuccess: () => setDeleteId(null)
-            })
+              onSuccess: () => setDeleteId(null),
+            });
           }
         }}
         type="danger"
@@ -221,8 +250,8 @@ export default function CompanyToursPage() {
         onConfirm={() => {
           if (publishId) {
             publishMutation.mutate(publishId, {
-              onSuccess: () => setPublishId(null)
-            })
+              onSuccess: () => setPublishId(null),
+            });
           }
         }}
         type="success"
@@ -232,13 +261,7 @@ export default function CompanyToursPage() {
         isLoading={publishMutation.isPending}
       />
 
-      {toast && (
-        <Toast 
-          message={toast.message} 
-          type={toast.type} 
-          onClose={() => setToast(null)} 
-        />
-      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </CompanyLayout>
-  )
+  );
 }

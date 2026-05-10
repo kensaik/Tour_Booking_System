@@ -1,56 +1,58 @@
-import CompanyLayout from '@/components/company/CompanyLayout'
-import { Users, Globe, DollarSign, BookOpen } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { CompanyService } from '@/services/company.service'
-import { formatPrice, formatDate } from '@/lib/format'
-import StatsCard from '@/components/ui/StatsCard'
-import StatusBadge from '@/components/ui/StatusBadge'
-import { useAuthStore } from '@/stores/authStore'
+import CompanyLayout from "@/components/company/CompanyLayout";
+import { Users, Globe, DollarSign, BookOpen } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { CompanyService } from "@/services/company.service";
+import { formatPrice, formatDate } from "@/lib/format";
+import StatsCard from "@/components/ui/StatsCard";
+import StatusBadge from "@/components/ui/StatusBadge";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function CompanyDashboardPage() {
-  const { user } = useAuthStore()
-  const isApproved = user?.company_profile?.is_approved
+  const { user } = useAuthStore();
+  const isApproved = user?.company_profile?.is_approved;
 
   const { data: bookingsData } = useQuery({
-    queryKey: ['company-bookings'],
+    queryKey: ["company-bookings"],
     queryFn: () => CompanyService.getCompanyBookings(),
     enabled: !!user && !!isApproved,
-  })
+  });
 
   const { data: toursData } = useQuery({
-    queryKey: ['company-tours'],
+    queryKey: ["company-tours"],
     queryFn: () => CompanyService.getMyTours(),
     enabled: !!user && !!isApproved,
-  })
+  });
 
   const { data: departuresData } = useQuery({
-    queryKey: ['company-departures'],
+    queryKey: ["company-departures"],
     queryFn: () => CompanyService.getCompanyDepartures(),
     enabled: !!user && !!isApproved,
-  })
+  });
 
-  const bookings = bookingsData?.bookings || []
-  const tours = toursData?.tours || []
-  const departures = departuresData?.departures || []
+  const bookings = bookingsData?.bookings || [];
+  const tours = toursData?.tours || [];
+  const departures = departuresData?.departures || [];
 
   const totalRevenue = bookings
     .filter((booking: any) => {
-      const pStatus = booking.payment_status?.toLowerCase()
-      const bStatus = booking.booking_status?.toLowerCase()
-      return (pStatus === 'fully_paid' || pStatus === 'deposit_paid') && bStatus === 'confirmed'
+      const pStatus = booking.payment_status?.toLowerCase();
+      const bStatus = booking.booking_status?.toLowerCase();
+      return (pStatus === "fully_paid" || pStatus === "deposit_paid") && bStatus === "confirmed";
     })
-    .reduce((sum: number, booking: any) => sum + booking.total_price, 0)
-  const totalBookings = bookings.length
-  const totalCustomers = new Set(bookings.map((booking: any) => booking.user_id)).size
-  const activeTours = tours.filter((tour: any) => tour.status === 'active' || tour.status === 'approved').length
+    .reduce((sum: number, booking: any) => sum + booking.total_price, 0);
+  const totalBookings = bookings.length;
+  const totalCustomers = new Set(bookings.map((booking: any) => booking.user_id)).size;
+  const activeTours = tours.filter(
+    (tour: any) => tour.status === "active" || tour.status === "approved",
+  ).length;
 
   const recentBookings = [...bookings]
     .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
-    .slice(0, 5)
+    .slice(0, 5);
   const upcomingDepartures = [...departures]
     .filter((departure: any) => new Date(departure.start_date) > new Date())
     .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
-    .slice(0, 5)
+    .slice(0, 5);
 
   return (
     <CompanyLayout>
@@ -103,13 +105,20 @@ export default function CompanyDashboardPage() {
                 <p className="text-on-surface-variant">Chưa có đơn đặt tour nào.</p>
               ) : (
                 recentBookings.map((booking: any) => (
-                  <div key={booking.id} className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0">
+                  <div
+                    key={booking.id}
+                    className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0"
+                  >
                     <div>
-                      <p className="font-medium text-on-surface">{booking.tour?.name || `Tour #${booking.tour_id}`}</p>
+                      <p className="font-medium text-on-surface">
+                        {booking.tour?.name || `Tour #${booking.tour_id}`}
+                      </p>
                       <p className="text-sm text-on-surface-variant">{booking.guest_name}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-on-surface">{formatPrice(booking.total_price)}</p>
+                      <p className="font-semibold text-on-surface">
+                        {formatPrice(booking.total_price)}
+                      </p>
                       <div className="mt-1">
                         <StatusBadge status={booking.booking_status} type="booking" />
                       </div>
@@ -132,29 +141,36 @@ export default function CompanyDashboardPage() {
                 <p className="text-on-surface-variant">Chưa có lịch khởi hành sắp tới.</p>
               ) : (
                 upcomingDepartures.map((departure: any) => {
-                  const booked = departure.total_seats - departure.available_seats
+                  const booked = departure.total_seats - departure.available_seats;
                   return (
-                    <div key={departure.id} className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0">
+                    <div
+                      key={departure.id}
+                      className="flex items-center justify-between py-3 border-b border-outline-variant last:border-0"
+                    >
                       <div>
-                        <p className="font-medium text-on-surface">{departure.tour?.name || `Tour #${departure.tour_id}`}</p>
+                        <p className="font-medium text-on-surface">
+                          {departure.tour?.name || `Tour #${departure.tour_id}`}
+                        </p>
                         <p className="text-sm text-on-surface-variant">
                           {formatDate(departure.start_date)}
                         </p>
                       </div>
                       <div className="text-right">
                         <div className="flex items-center gap-2 mb-1 justify-end">
-                          <span className="text-sm font-medium text-on-surface">{booked}/{departure.total_seats}</span>
+                          <span className="text-sm font-medium text-on-surface">
+                            {booked}/{departure.total_seats}
+                          </span>
                           <span className="text-xs text-on-surface-variant">chỗ</span>
                         </div>
                         <div className="w-20 h-2 bg-surface-container rounded-full overflow-hidden ml-auto">
                           <div
-                            className={`h-full rounded-full ${booked >= departure.total_seats * 0.8 ? 'bg-secondary' : 'bg-primary'}`}
+                            className={`h-full rounded-full ${booked >= departure.total_seats * 0.8 ? "bg-secondary" : "bg-primary"}`}
                             style={{ width: `${(booked / departure.total_seats) * 100}%` }}
                           />
                         </div>
                       </div>
                     </div>
-                  )
+                  );
                 })
               )}
             </div>
@@ -162,5 +178,5 @@ export default function CompanyDashboardPage() {
         </div>
       </div>
     </CompanyLayout>
-  )
+  );
 }

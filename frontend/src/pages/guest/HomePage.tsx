@@ -1,63 +1,71 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { MapPin, Calendar, Users, Search, Star, Clock, CheckCircle, CreditCard, Headphones } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { PublicService } from '../../services/public.service'
-import { formatPrice } from '@/lib/format'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  MapPin,
+  Calendar,
+  Users,
+  Search,
+  Star,
+  Clock,
+  CheckCircle,
+  CreditCard,
+  Headphones,
+} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { PublicService } from "../../services/public.service";
+import { formatPrice } from "@/lib/format";
 
 const WHY_CHOOSE_US = [
   {
     icon: CheckCircle,
-    color: 'bg-primary/10',
-    iconColor: 'text-primary',
-    title: 'Độ tin cậy tuyệt đối',
-    description: 'Mọi hành trình đều được kiểm định chất lượng nghiêm ngặt.',
+    color: "bg-primary/10",
+    iconColor: "text-primary",
+    title: "Độ tin cậy tuyệt đối",
+    description: "Mọi hành trình đều được kiểm định chất lượng nghiêm ngặt.",
   },
   {
     icon: CreditCard,
-    color: 'bg-secondary/10',
-    iconColor: 'text-secondary',
-    title: 'Giá cả minh bạch',
-    description: 'Cam kết giá tốt nhất, không phí ẩn trong suốt hành trình.',
+    color: "bg-secondary/10",
+    iconColor: "text-secondary",
+    title: "Giá cả minh bạch",
+    description: "Cam kết giá tốt nhất, không phí ẩn trong suốt hành trình.",
   },
   {
     icon: Headphones,
-    color: 'bg-tertiary/10',
-    iconColor: 'text-tertiary',
-    title: 'Hỗ trợ 24/7',
-    description: 'Đội ngũ chuyên nghiệp luôn sẵn sàng đồng hành cùng bạn.',
+    color: "bg-tertiary/10",
+    iconColor: "text-tertiary",
+    title: "Hỗ trợ 24/7",
+    description: "Đội ngũ chuyên nghiệp luôn sẵn sàng đồng hành cùng bạn.",
   },
-]
-
-
+];
 
 export default function HomePage() {
-  const [destination, setDestination] = useState('')
-  const [departureDate, setDepartureDate] = useState('')
-  const [guests, setGuests] = useState(1)
-  const navigate = useNavigate()
+  const [destination, setDestination] = useState("");
+  const [departureDate, setDepartureDate] = useState("");
+  const [guests, setGuests] = useState(1);
+  const navigate = useNavigate();
 
   // Fetch destinations
   const { data: destinationsData } = useQuery({
-    queryKey: ['destinations'],
-    queryFn: PublicService.getDestinations
-  })
-  const destinations = destinationsData?.destinations || []
+    queryKey: ["destinations"],
+    queryFn: PublicService.getDestinations,
+  });
+  const destinations = destinationsData?.destinations || [];
 
   // Fetch featured tours (we just get all tours for now and take first 3)
   const { data: toursData, isLoading: isLoadingTours } = useQuery({
-    queryKey: ['tours', 'featured'],
-    queryFn: () => PublicService.getTours()
-  })
-  const featuredTours = toursData?.tours?.slice(0, 3) || []
+    queryKey: ["tours", "featured"],
+    queryFn: () => PublicService.getTours(),
+  });
+  const featuredTours = toursData?.tours?.slice(0, 3) || [];
 
   const handleSearch = () => {
-    const params = new URLSearchParams()
-    if (destination) params.set('destination_id', destination)
-    if (departureDate) params.set('date', departureDate)
-    if (guests) params.set('guests', guests.toString())
-    navigate(`/tours?${params.toString()}`)
-  }
+    const params = new URLSearchParams();
+    if (destination) params.set("destination_id", destination);
+    if (departureDate) params.set("date", departureDate);
+    if (guests) params.set("guests", guests.toString());
+    navigate(`/tours?${params.toString()}`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,7 +90,10 @@ export default function HomePage() {
           <div className="bg-surface/95 backdrop-blur-md p-6 rounded-xl shadow-xl max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-end">
             {/* Destination */}
             <div className="w-full text-left">
-              <label htmlFor="destination" className="block text-xs font-medium text-on-surface-variant mb-1 ml-1">
+              <label
+                htmlFor="destination"
+                className="block text-xs font-medium text-on-surface-variant mb-1 ml-1"
+              >
                 Điểm đến
               </label>
               <div className="relative">
@@ -105,7 +116,10 @@ export default function HomePage() {
 
             {/* Date */}
             <div className="w-full text-left">
-              <label htmlFor="departureDate" className="block text-xs font-medium text-on-surface-variant mb-1 ml-1">
+              <label
+                htmlFor="departureDate"
+                className="block text-xs font-medium text-on-surface-variant mb-1 ml-1"
+              >
                 Ngày đi
               </label>
               <div className="relative">
@@ -122,7 +136,10 @@ export default function HomePage() {
 
             {/* Guests */}
             <div className="w-full text-left">
-              <label htmlFor="guests" className="block text-xs font-medium text-on-surface-variant mb-1 ml-1">
+              <label
+                htmlFor="guests"
+                className="block text-xs font-medium text-on-surface-variant mb-1 ml-1"
+              >
                 Số khách
               </label>
               <div className="relative">
@@ -170,7 +187,9 @@ export default function HomePage() {
         </div>
 
         {isLoadingTours ? (
-          <div className="text-center py-10 text-on-surface-variant">Đang tải danh sách tour...</div>
+          <div className="text-center py-10 text-on-surface-variant">
+            Đang tải danh sách tour...
+          </div>
         ) : featuredTours.length === 0 ? (
           <div className="text-center py-10 text-on-surface-variant">Chưa có tour nổi bật nào.</div>
         ) : (
@@ -184,7 +203,10 @@ export default function HomePage() {
                 <div className="relative h-64 bg-slate-200">
                   <img
                     alt={tour.name}
-                    src={tour.image_url || 'https://images.unsplash.com/photo-1528127269322-539801943592?w=600&h=400&fit=crop'}
+                    src={
+                      tour.image_url ||
+                      "https://images.unsplash.com/photo-1528127269322-539801943592?w=600&h=400&fit=crop"
+                    }
                     className="w-full h-full object-cover"
                   />
                   {/* Badge fallback if no specific logic for badge yet */}
@@ -199,7 +221,7 @@ export default function HomePage() {
                 <div className="p-6">
                   <div className="flex items-center gap-1 text-on-surface-variant mb-2">
                     <MapPin className="text-primary w-4 h-4" />
-                    <span className="text-xs font-medium">{tour.destination || 'Việt Nam'}</span>
+                    <span className="text-xs font-medium">{tour.destination || "Việt Nam"}</span>
                   </div>
 
                   <h3 className="text-lg font-semibold text-on-surface mb-2 line-clamp-1">
@@ -221,9 +243,7 @@ export default function HomePage() {
                   <div className="flex justify-between items-center pt-4 border-t border-outline-variant">
                     <div>
                       <p className="text-on-surface-variant text-xs">Giá từ</p>
-                      <p className="text-primary font-bold text-lg">
-                        {formatPrice(tour.price)}
-                      </p>
+                      <p className="text-primary font-bold text-lg">{formatPrice(tour.price)}</p>
                     </div>
                     <Link
                       to={`/tours/${tour.id}`}
@@ -275,9 +295,7 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="bg-primary py-16">
         <div className="max-w-[1200px] mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Sẵn sàng cho chuyến đi của bạn?
-          </h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Sẵn sàng cho chuyến đi của bạn?</h2>
           <p className="text-white/80 mb-8 max-w-2xl mx-auto">
             Đăng ký ngay hôm nay và nhận ưu đãi 10% cho lần đặt tour đầu tiên
           </p>
@@ -298,5 +316,5 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

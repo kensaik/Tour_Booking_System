@@ -1,92 +1,101 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { MapPin, Star, Clock, CheckCircle, Heart, Share2, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { PublicService } from '@/services/public.service'
-import { formatPrice, formatDate } from '@/lib/format'
-import Modal from '@/components/ui/Modal'
-import { Info } from 'lucide-react'
+import { useParams, Link, useNavigate } from "react-router-dom";
+import {
+  MapPin,
+  Star,
+  Clock,
+  CheckCircle,
+  Heart,
+  Share2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { PublicService } from "@/services/public.service";
+import { formatPrice, formatDate } from "@/lib/format";
+import Modal from "@/components/ui/Modal";
+import { Info } from "lucide-react";
 
 interface Departure {
-  id: number
-  start_date: string
-  available_seats: number
+  id: number;
+  start_date: string;
+  available_seats: number;
 }
 
 interface Itinerary {
-  id: number
-  day_number: number
-  title: string
-  description: string
+  id: number;
+  day_number: number;
+  title: string;
+  description: string;
 }
 
 interface TourDetail {
-  id: number
-  name: string
-  description: string
-  price: number
-  total_days: number
-  destination: string
-  image_url?: string
-  itineraries: Itinerary[]
-  departures: Departure[]
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  total_days: number;
+  destination: string;
+  image_url?: string;
+  itineraries: Itinerary[];
+  departures: Departure[];
 }
 
 export default function TourDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-  const [selectedImage, setSelectedImage] = useState(0)
-  const [selectedDepartureId, setSelectedDepartureId] = useState<number | null>(null)
-  const [guests, setGuests] = useState(2)
-  const [showWarningModal, setShowWarningModal] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedDepartureId, setSelectedDepartureId] = useState<number | null>(null);
+  const [guests, setGuests] = useState(2);
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
-  const { data: response, isLoading, error } = useQuery({
-    queryKey: ['tour', id],
-    queryFn: () => PublicService.getTourDetail(id as string)
-  })
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["tour", id],
+    queryFn: () => PublicService.getTourDetail(id as string),
+  });
 
-  if (isLoading) return <div className="text-center py-20">Đang tải dữ liệu...</div>
-  if (error || !response?.tour) return <div className="text-center py-20 text-red-500">Lỗi khi tải tour</div>
+  if (isLoading) return <div className="text-center py-20">Đang tải dữ liệu...</div>;
+  if (error || !response?.tour)
+    return <div className="text-center py-20 text-red-500">Lỗi khi tải tour</div>;
 
-  const tour: TourDetail = response.tour
-  const images = [tour.image_url || 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&h=600&fit=crop']
+  const tour: TourDetail = response.tour;
+  const images = [
+    tour.image_url ||
+      "https://images.unsplash.com/photo-1528127269322-539801943592?w=800&h=600&fit=crop",
+  ];
   const includes = [
-    'Xe limousine đưa đón',
-    'Lưu trú trên du thuyền',
-    'Bữa ăn theo chương trình',
-    'Vé tham quan',
-    'Hướng dẫn viên chuyên nghiệp',
-    'Bảo hiểm du lịch',
-  ]
-  const excludes = [
-    'Chi tiêu cá nhân',
-    'Đồ uống có cồn',
-    'Tip cho hướng dẫn viên',
-  ]
-  const highlights = [
-    'Tham quan các địa điểm nổi bật',
-    'Dịch vụ chuyên nghiệp',
-    'Giá cả hợp lý',
-  ]
+    "Xe limousine đưa đón",
+    "Lưu trú trên du thuyền",
+    "Bữa ăn theo chương trình",
+    "Vé tham quan",
+    "Hướng dẫn viên chuyên nghiệp",
+    "Bảo hiểm du lịch",
+  ];
+  const excludes = ["Chi tiêu cá nhân", "Đồ uống có cồn", "Tip cho hướng dẫn viên"];
+  const highlights = ["Tham quan các địa điểm nổi bật", "Dịch vụ chuyên nghiệp", "Giá cả hợp lý"];
 
   const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % images.length)
-  }
+    setSelectedImage((prev) => (prev + 1) % images.length);
+  };
 
   const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + images.length) % images.length)
-  }
+    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+  };
 
   const handleBookNow = () => {
     if (!selectedDepartureId) {
-      setShowWarningModal(true)
-      return
+      setShowWarningModal(true);
+      return;
     }
 
-    const departure = tour.departures.find((d) => d.id === selectedDepartureId)
+    const departure = tour.departures.find((d) => d.id === selectedDepartureId);
 
-    navigate('/checkout', {
+    navigate("/checkout", {
       state: {
         tour: {
           id: tour.id,
@@ -97,18 +106,22 @@ export default function TourDetailPage() {
         departure,
         guests,
         pricePerPerson: tour.price,
-      }
-    })
-  }
+      },
+    });
+  };
 
   return (
     <div className="min-h-screen pt-20 pb-16">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         {/* Breadcrumb */}
         <nav className="text-sm text-on-surface-variant mb-4">
-          <Link to="/" className="hover:text-primary">Trang chủ</Link>
+          <Link to="/" className="hover:text-primary">
+            Trang chủ
+          </Link>
           <span className="mx-2">/</span>
-          <Link to="/tours" className="hover:text-primary">Tour</Link>
+          <Link to="/tours" className="hover:text-primary">
+            Tour
+          </Link>
           <span className="mx-2">/</span>
           <span className="text-on-surface">{tour.name}</span>
         </nav>
@@ -141,7 +154,7 @@ export default function TourDetailPage() {
                 aria-label={`Xem ảnh ${index + 1}`}
                 onClick={() => setSelectedImage(index)}
                 className={`w-2 h-2 rounded-full transition-colors ${
-                  index === selectedImage ? 'bg-white' : 'bg-white/50'
+                  index === selectedImage ? "bg-white" : "bg-white/50"
                 }`}
               />
             ))}
@@ -156,7 +169,7 @@ export default function TourDetailPage() {
               aria-label={`Xem ảnh ${index + 1}`}
               onClick={() => setSelectedImage(index)}
               className={`flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
-                index === selectedImage ? 'border-primary' : 'border-transparent'
+                index === selectedImage ? "border-primary" : "border-transparent"
               }`}
             >
               <img src={img} alt="" className="w-full h-full object-cover bg-slate-200" />
@@ -185,18 +198,18 @@ export default function TourDetailPage() {
                   <span>{tour.total_days} ngày</span>
                 </div>
                 <div className="flex gap-2 ml-auto">
-                <button
-                  aria-label="Yêu thích"
-                  className="p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors"
-                >
-                  <Heart className="w-5 h-5" />
-                </button>
-                <button
-                  aria-label="Chia sẻ"
-                  className="p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors"
-                >
-                  <Share2 className="w-5 h-5" />
-                </button>
+                  <button
+                    aria-label="Yêu thích"
+                    className="p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors"
+                  >
+                    <Heart className="w-5 h-5" />
+                  </button>
+                  <button
+                    aria-label="Chia sẻ"
+                    className="p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors"
+                  >
+                    <Share2 className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -204,7 +217,9 @@ export default function TourDetailPage() {
             {/* Description */}
             <div>
               <h2 className="text-xl font-bold text-on-surface mb-4">Giới thiệu</h2>
-              <p className="text-on-surface-variant whitespace-pre-line">{tour.description || 'Chưa có thông tin mô tả.'}</p>
+              <p className="text-on-surface-variant whitespace-pre-line">
+                {tour.description || "Chưa có thông tin mô tả."}
+              </p>
             </div>
 
             {/* Highlights */}
@@ -227,8 +242,12 @@ export default function TourDetailPage() {
                 {tour.itineraries && tour.itineraries.length > 0 ? (
                   tour.itineraries.map((day) => (
                     <div key={day.id} className="border border-outline-variant rounded-xl p-6">
-                      <h3 className="text-lg font-semibold text-on-surface mb-4">Ngày {day.day_number}: {day.title}</h3>
-                      <p className="text-on-surface-variant whitespace-pre-line">{day.description}</p>
+                      <h3 className="text-lg font-semibold text-on-surface mb-4">
+                        Ngày {day.day_number}: {day.title}
+                      </h3>
+                      <p className="text-on-surface-variant whitespace-pre-line">
+                        {day.description}
+                      </p>
                     </div>
                   ))
                 ) : (
@@ -286,12 +305,14 @@ export default function TourDetailPage() {
                         onClick={() => setSelectedDepartureId(departure.id)}
                         className={`p-3 rounded-lg border text-sm transition-colors ${
                           selectedDepartureId === departure.id
-                            ? 'border-primary bg-primary/10 text-primary'
-                            : 'border-outline-variant hover:border-primary'
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-outline-variant hover:border-primary"
                         }`}
                       >
                         <div className="font-medium">{formatDate(departure.start_date)}</div>
-                        <div className="text-xs text-on-surface-variant">{departure.available_seats} chỗ</div>
+                        <div className="text-xs text-on-surface-variant">
+                          {departure.available_seats} chỗ
+                        </div>
                       </button>
                     ))
                   ) : (
@@ -352,11 +373,7 @@ export default function TourDetailPage() {
         </div>
       </div>
 
-      <Modal
-        isOpen={showWarningModal}
-        onClose={() => setShowWarningModal(false)}
-        title="Thông báo"
-      >
+      <Modal isOpen={showWarningModal} onClose={() => setShowWarningModal(false)} title="Thông báo">
         <div className="text-center py-4">
           <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Info className="w-8 h-8 text-amber-600" />
@@ -373,6 +390,5 @@ export default function TourDetailPage() {
         </div>
       </Modal>
     </div>
-  )
+  );
 }
-

@@ -1,47 +1,51 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { Calendar, Users, Eye } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { GuestService } from '@/services/guest.service'
-import { formatPrice, formatDate } from '@/lib/format'
-import StatusBadge from '@/components/ui/StatusBadge'
-import { useAuthStore } from '@/stores/authStore'
-import LoadingState from '@/components/ui/LoadingState'
-import ErrorState from '@/components/ui/ErrorState'
-import EmptyState from '@/components/ui/EmptyState'
+import { Link, useNavigate } from "react-router-dom";
+import { Calendar, Users, Eye } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { GuestService } from "@/services/guest.service";
+import { formatPrice, formatDate } from "@/lib/format";
+import StatusBadge from "@/components/ui/StatusBadge";
+import { useAuthStore } from "@/stores/authStore";
+import LoadingState from "@/components/ui/LoadingState";
+import ErrorState from "@/components/ui/ErrorState";
+import EmptyState from "@/components/ui/EmptyState";
 
 interface Booking {
-  id: number
-  booking_status: string
-  payment_status: string
-  num_people: number
-  total_price: number
+  id: number;
+  booking_status: string;
+  payment_status: string;
+  num_people: number;
+  total_price: number;
   tour?: {
-    name: string
-    image_url?: string
-  }
+    name: string;
+    image_url?: string;
+  };
   departure?: {
-    start_date: string
-  }
+    start_date: string;
+  };
 }
 
 export default function MyTripsPage() {
-  const navigate = useNavigate()
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  
-  const { data: response, isLoading, error } = useQuery({
-    queryKey: ['my-bookings'],
+  const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  const {
+    data: response,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["my-bookings"],
     queryFn: () => GuestService.getMyBookings(),
     enabled: isAuthenticated,
-  })
+  });
 
-  const bookings: Booking[] = response?.bookings || []
+  const bookings: Booking[] = response?.bookings || [];
 
-  const activeTrips = bookings.filter((booking) =>
-    booking.booking_status !== 'completed' && booking.booking_status !== 'cancelled'
-  )
-  const pastTrips = bookings.filter((booking) =>
-    booking.booking_status === 'completed' || booking.booking_status === 'cancelled'
-  )
+  const activeTrips = bookings.filter(
+    (booking) => booking.booking_status !== "completed" && booking.booking_status !== "cancelled",
+  );
+  const pastTrips = bookings.filter(
+    (booking) => booking.booking_status === "completed" || booking.booking_status === "cancelled",
+  );
 
   if (!isAuthenticated) {
     return (
@@ -51,15 +55,15 @@ export default function MyTripsPage() {
             title="Vui lòng đăng nhập"
             description="Bạn cần đăng nhập để xem chuyến đi của mình."
             actionLabel="Đăng nhập ngay"
-            onAction={() => navigate('/login')}
+            onAction={() => navigate("/login")}
           />
         </div>
       </div>
-    )
+    );
   }
 
-  if (isLoading) return <LoadingState message="Đang tải danh sách chuyến đi..." />
-  if (error) return <ErrorState message="Lỗi khi tải danh sách chuyến đi." />
+  if (isLoading) return <LoadingState message="Đang tải danh sách chuyến đi..." />;
+  if (error) return <ErrorState message="Lỗi khi tải danh sách chuyến đi." />;
 
   return (
     <div className="min-h-screen pt-20 pb-16">
@@ -79,12 +83,19 @@ export default function MyTripsPage() {
                   <div className="flex flex-col md:flex-row">
                     <div className="relative w-full md:w-64 h-48 md:h-auto flex-shrink-0 bg-slate-200">
                       <img
-                        src={booking.tour?.image_url || 'https://images.unsplash.com/photo-1528127269322-539801943592?w=400&h=300&fit=crop'}
+                        src={
+                          booking.tour?.image_url ||
+                          "https://images.unsplash.com/photo-1528127269322-539801943592?w=400&h=300&fit=crop"
+                        }
                         alt={booking.tour?.name}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute top-3 left-3">
-                        <StatusBadge status={booking.booking_status} type="booking" showIcon={false} />
+                        <StatusBadge
+                          status={booking.booking_status}
+                          type="booking"
+                          showIcon={false}
+                        />
                       </div>
                     </div>
                     <div className="p-5 flex-1">
@@ -97,7 +108,7 @@ export default function MyTripsPage() {
                           <p className="text-xs text-on-surface-variant mb-1">Ngày khởi hành</p>
                           <p className="font-medium flex items-center gap-1">
                             <Calendar className="w-4 h-4 text-secondary" />
-                            {booking.departure ? formatDate(booking.departure.start_date) : 'N/A'}
+                            {booking.departure ? formatDate(booking.departure.start_date) : "N/A"}
                           </p>
                         </div>
                         <div>
@@ -109,19 +120,23 @@ export default function MyTripsPage() {
                         </div>
                         <div>
                           <p className="text-xs text-on-surface-variant mb-1">Tổng thanh toán</p>
-                          <p className="text-xl font-bold text-primary">{formatPrice(booking.total_price)}</p>
+                          <p className="text-xl font-bold text-primary">
+                            {formatPrice(booking.total_price)}
+                          </p>
                         </div>
                       </div>
-                      <h3 className="text-lg font-semibold text-on-surface mb-2">{booking.tour?.name}</h3>
+                      <h3 className="text-lg font-semibold text-on-surface mb-2">
+                        {booking.tour?.name}
+                      </h3>
                       <div className="flex gap-3">
-                        <button 
+                        <button
                           onClick={() => navigate(`/bookings/${booking.id}`)}
                           className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-container transition-colors text-sm font-medium"
                         >
                           <Eye className="w-4 h-4" />
                           Chi tiết
                         </button>
-                        {booking.payment_status === 'pending' && (
+                        {booking.payment_status === "pending" && (
                           <Link
                             to="/checkout"
                             className="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors text-sm font-medium"
@@ -140,7 +155,7 @@ export default function MyTripsPage() {
               title="Bạn chưa có chuyến đi nào sắp tới"
               description="Hãy khám phá các tour hấp dẫn và bắt đầu hành trình của bạn ngay."
               actionLabel="Khám phá tour ngay"
-              onAction={() => navigate('/tours')}
+              onAction={() => navigate("/tours")}
             />
           )}
         </section>
@@ -157,20 +172,29 @@ export default function MyTripsPage() {
                 >
                   <div className="relative h-40 bg-slate-200">
                     <img
-                      src={booking.tour?.image_url || 'https://images.unsplash.com/photo-1528127269322-539801943592?w=400&h=300&fit=crop'}
+                      src={
+                        booking.tour?.image_url ||
+                        "https://images.unsplash.com/photo-1528127269322-539801943592?w=400&h=300&fit=crop"
+                      }
                       alt={booking.tour?.name}
                       className="w-full h-full object-cover grayscale"
                     />
                     <div className="absolute top-3 left-3">
-                      <StatusBadge status={booking.booking_status} type="booking" showIcon={false} />
+                      <StatusBadge
+                        status={booking.booking_status}
+                        type="booking"
+                        showIcon={false}
+                      />
                     </div>
                   </div>
                   <div className="p-4">
                     <p className="text-xs text-on-surface-variant mb-1">#{booking.id}</p>
-                    <h3 className="font-medium text-on-surface line-clamp-1 mb-2">{booking.tour?.name}</h3>
+                    <h3 className="font-medium text-on-surface line-clamp-1 mb-2">
+                      {booking.tour?.name}
+                    </h3>
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-on-surface-variant">
-                        {booking.departure ? formatDate(booking.departure.start_date) : 'N/A'}
+                        {booking.departure ? formatDate(booking.departure.start_date) : "N/A"}
                       </span>
                       <span className="font-medium">{formatPrice(booking.total_price)}</span>
                     </div>
@@ -184,6 +208,5 @@ export default function MyTripsPage() {
         </section>
       </div>
     </div>
-  )
+  );
 }
-

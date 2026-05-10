@@ -1,83 +1,83 @@
-import CompanyLayout from '@/components/company/CompanyLayout'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { CompanyService } from '@/services/company.service'
-import PageHeader from '@/components/ui/PageHeader'
-import LoadingState from '@/components/ui/LoadingState'
-import Toast, { ToastType } from '@/components/ui/Toast'
+import CompanyLayout from "@/components/company/CompanyLayout";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { CompanyService } from "@/services/company.service";
+import PageHeader from "@/components/ui/PageHeader";
+import LoadingState from "@/components/ui/LoadingState";
+import Toast, { ToastType } from "@/components/ui/Toast";
 
 export default function CompanyEditDeparturePage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const { data: departureData, isLoading: isLoadingDeparture } = useQuery({
-    queryKey: ['company-departure', id],
+    queryKey: ["company-departure", id],
     queryFn: () => CompanyService.getDeparture(id!),
-  })
+  });
 
   const { data: toursData } = useQuery({
-    queryKey: ['company-tours'],
+    queryKey: ["company-tours"],
     queryFn: () => CompanyService.getMyTours(),
-  })
+  });
 
-  const tours = toursData?.tours || []
-  const departure = departureData?.departure
+  const tours = toursData?.tours || [];
+  const departure = departureData?.departure;
 
-  const [selectedTour, setSelectedTour] = useState('')
-  const [tourSearch, setTourSearch] = useState('')
-  const [showTourDropdown, setShowTourDropdown] = useState(false)
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const [totalSeats, setTotalSeats] = useState(20)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null)
+  const [selectedTour, setSelectedTour] = useState("");
+  const [tourSearch, setTourSearch] = useState("");
+  const [showTourDropdown, setShowTourDropdown] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [totalSeats, setTotalSeats] = useState(20);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   useEffect(() => {
     if (departure) {
-      setSelectedTour(departure.tour_id?.toString() || '')
-      setTourSearch(departure.tour?.name || '')
-      setStartDate(departure.start_date?.slice(0, 16) || '')
-      setEndDate(departure.end_date?.slice(0, 16) || '')
-      setTotalSeats(departure.total_seats || 20)
+      setSelectedTour(departure.tour_id?.toString() || "");
+      setTourSearch(departure.tour?.name || "");
+      setStartDate(departure.start_date?.slice(0, 16) || "");
+      setEndDate(departure.end_date?.slice(0, 16) || "");
+      setTotalSeats(departure.total_seats || 20);
     }
-  }, [departure])
+  }, [departure]);
 
   const handleSave = async () => {
     if (!selectedTour) {
-      setToast({ message: 'Vui lòng chọn tour', type: 'error' })
-      return
+      setToast({ message: "Vui lòng chọn tour", type: "error" });
+      return;
     }
 
     if (!startDate || !endDate) {
-      setToast({ message: 'Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc', type: 'error' })
-      return
+      setToast({ message: "Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc", type: "error" });
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
       await CompanyService.updateDeparture(id!, {
         tour_id: selectedTour,
         start_date: startDate,
         end_date: endDate,
         total_seats: totalSeats,
-      })
-      setToast({ message: 'Cập nhật lịch trình thành công', type: 'success' })
-      setTimeout(() => navigate('/company/departures'), 1500)
+      });
+      setToast({ message: "Cập nhật lịch trình thành công", type: "success" });
+      setTimeout(() => navigate("/company/departures"), 1500);
     } catch (error: any) {
-      setToast({ message: error.response?.data?.message || 'Có lỗi xảy ra', type: 'error' })
+      setToast({ message: error.response?.data?.message || "Có lỗi xảy ra", type: "error" });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   if (isLoadingDeparture) {
     return (
       <CompanyLayout>
         <LoadingState />
       </CompanyLayout>
-    )
+    );
   }
 
   return (
@@ -110,10 +110,12 @@ export default function CompanyEditDeparturePage() {
               onFocus={() => setShowTourDropdown(true)}
               onBlur={() => setTimeout(() => setShowTourDropdown(false), 200)}
               onChange={(e) => {
-                setTourSearch(e.target.value)
-                setShowTourDropdown(true)
-                const match = tours.find((t: any) => t.name.toLowerCase() === e.target.value.toLowerCase())
-                if (match) setSelectedTour(match.id)
+                setTourSearch(e.target.value);
+                setShowTourDropdown(true);
+                const match = tours.find(
+                  (t: any) => t.name.toLowerCase() === e.target.value.toLowerCase(),
+                );
+                if (match) setSelectedTour(match.id);
               }}
             />
             {showTourDropdown && (
@@ -125,12 +127,14 @@ export default function CompanyEditDeparturePage() {
                       key={t.id}
                       className="px-4 py-3 hover:bg-primary/10 cursor-pointer transition-colors flex items-center justify-between group"
                       onClick={() => {
-                        setSelectedTour(t.id)
-                        setTourSearch(t.name)
-                        setShowTourDropdown(false)
+                        setSelectedTour(t.id);
+                        setTourSearch(t.name);
+                        setShowTourDropdown(false);
                       }}
                     >
-                      <span className="text-on-surface group-hover:text-primary font-medium">{t.name}</span>
+                      <span className="text-on-surface group-hover:text-primary font-medium">
+                        {t.name}
+                      </span>
                       {selectedTour === t.id && (
                         <div className="w-2 h-2 bg-primary rounded-full"></div>
                       )}
@@ -144,7 +148,12 @@ export default function CompanyEditDeparturePage() {
         {/* Departure Details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div>
-            <label htmlFor="start-date" className="block text-xs font-medium text-on-surface-variant mb-1">Ngày bắt đầu</label>
+            <label
+              htmlFor="start-date"
+              className="block text-xs font-medium text-on-surface-variant mb-1"
+            >
+              Ngày bắt đầu
+            </label>
             <input
               id="start-date"
               type="datetime-local"
@@ -154,7 +163,12 @@ export default function CompanyEditDeparturePage() {
             />
           </div>
           <div>
-            <label htmlFor="end-date" className="block text-xs font-medium text-on-surface-variant mb-1">Ngày kết thúc</label>
+            <label
+              htmlFor="end-date"
+              className="block text-xs font-medium text-on-surface-variant mb-1"
+            >
+              Ngày kết thúc
+            </label>
             <input
               id="end-date"
               type="datetime-local"
@@ -164,7 +178,12 @@ export default function CompanyEditDeparturePage() {
             />
           </div>
           <div>
-            <label htmlFor="total-seats" className="block text-xs font-medium text-on-surface-variant mb-1">Số chỗ</label>
+            <label
+              htmlFor="total-seats"
+              className="block text-xs font-medium text-on-surface-variant mb-1"
+            >
+              Số chỗ
+            </label>
             <input
               id="total-seats"
               type="number"
@@ -183,7 +202,7 @@ export default function CompanyEditDeparturePage() {
             disabled={isSubmitting}
             className="flex-1 bg-primary hover:bg-primary-container text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
           >
-            {isSubmitting ? 'Đang lưu...' : 'Lưu lại'}
+            {isSubmitting ? "Đang lưu..." : "Lưu lại"}
           </button>
           <Link
             to="/company/departures"
@@ -194,13 +213,7 @@ export default function CompanyEditDeparturePage() {
         </div>
       </div>
 
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </CompanyLayout>
-  )
+  );
 }

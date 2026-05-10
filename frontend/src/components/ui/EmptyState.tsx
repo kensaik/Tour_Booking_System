@@ -1,19 +1,19 @@
-import { LucideIcon } from 'lucide-react'
+import { LucideIcon } from "lucide-react";
 
 interface EmptyStateProps {
-  title: string
-  description?: string
-  icon?: LucideIcon
-  actionLabel?: string
-  onAction?: () => void
+  title: string;
+  description?: string;
+  icon?: LucideIcon;
+  actionLabel?: string;
+  onAction?: () => void;
 }
 
-export default function EmptyState({ 
-  title, 
-  description, 
-  icon: Icon, 
-  actionLabel, 
-  onAction 
+export default function EmptyState({
+  title,
+  description,
+  icon: Icon,
+  actionLabel,
+  onAction,
 }: EmptyStateProps) {
   return (
     <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-12 text-center shadow-sm">
@@ -37,5 +37,5 @@ export default function EmptyState({
         </button>
       )}
     </div>
-  )
+  );
 }
