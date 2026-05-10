@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import {
   BOOKING_STATUS,
   PAYMENT_STATUS,
@@ -16,7 +17,7 @@ interface StatusBadgeProps {
 
 const STATUS_MAP: Record<
   StatusType,
-  Record<string, { label: string; colorClass: string; icon?: any }>
+  Record<string, { label: string; colorClass: string; icon?: ComponentType<{ className?: string }> }>
 > = {
   booking: BOOKING_STATUS,
   payment: PAYMENT_STATUS,

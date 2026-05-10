@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CheckCircle, XCircle, Info, X } from "lucide-react";
 
 export type ToastType = "success" | "error" | "info";
@@ -13,18 +13,15 @@ interface ToastProps {
 export default function Toast({ message, type, onClose, duration = 3000 }: ToastProps) {
   const [isExiting, setIsExiting] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleClose();
-    }, duration);
-
-    return () => clearTimeout(timer);
-  }, [duration]);
-
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsExiting(true);
-    setTimeout(onClose, 300); // Match animation duration
-  };
+    setTimeout(onClose, 300);
+  }, [onClose]);
+
+  useEffect(() => {
+    const timer = setTimeout(handleClose, duration);
+    return () => clearTimeout(timer);
+  }, [duration, handleClose]);
 
   const getIcon = () => {
     switch (type) {
