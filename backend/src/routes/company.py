@@ -144,6 +144,46 @@ def get_company_departures():
     return jsonify(departures=DepartureSchema(many=True).dump(departures)), 200
 
 
+@company_bp.route("/departures/<int:id>", methods=["GET"])
+@company_required()
+def get_departure_detail(id):
+    company_id = get_current_company_id()
+    departure = CompanyService.get_departure(company_id, id)
+
+    if not departure:
+        return jsonify(
+            error="Not Found", message="Departure not found or access denied"
+        ), 404
+
+    from src.serializers.tour_schema import DepartureSchema
+    return jsonify(departure=DepartureSchema().dump(departure)), 200
+
+
+@company_bp.route("/departures/<int:id>", methods=["PUT"])
+@company_required()
+def update_departure(id):
+    company_id = get_current_company_id()
+    data = request.get_json()
+
+    result = CompanyService.update_departure(company_id, id, data)
+    if "error" in result:
+        return jsonify(error="Bad Request", message=result["error"]), result["status"]
+
+    return jsonify(message="Departure updated successfully"), 200
+
+
+@company_bp.route("/departures/<int:id>", methods=["DELETE"])
+@company_required()
+def delete_departure(id):
+    company_id = get_current_company_id()
+    result = CompanyService.delete_departure(company_id, id)
+
+    if "error" in result:
+        return jsonify(error="Bad Request", message=result["error"]), result["status"]
+
+    return jsonify(message="Departure deleted successfully"), 200
+
+
 # BOOKING MANAGEMENT
 @company_bp.route("/bookings", methods=["GET"])
 @company_required()

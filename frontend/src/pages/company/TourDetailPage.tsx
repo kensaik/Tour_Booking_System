@@ -1,13 +1,15 @@
 import CompanyLayout from '@/components/company/CompanyLayout'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Save, Image as ImageIcon, Plus, X, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, Save, Image as ImageIcon, Plus, X, AlertTriangle, CheckCircle } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CompanyService } from '@/services/company.service'
 import { PublicService } from '@/services/public.service'
 import { UploadService } from '@/services/upload.service'
 import LoadingState from '@/components/ui/LoadingState'
 import ErrorState from '@/components/ui/ErrorState'
+import ConfirmModal from '@/components/ui/ConfirmModal'
+import Toast, { ToastType } from '@/components/ui/Toast'
 
 export default function CompanyTourDetailPage() {
   const { id } = useParams()
@@ -17,6 +19,8 @@ export default function CompanyTourDetailPage() {
   const [isUploading, setIsUploading] = useState(false)
   const [destSearch, setDestSearch] = useState('')
   const [showDestDropdown, setShowDestDropdown] = useState(false)
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false)
+  const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null)
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -28,7 +32,7 @@ export default function CompanyTourDetailPage() {
       setFormData({ ...formData, image_url: result.url })
     } catch (error) {
       console.error('Upload failed:', error)
-      alert('Tải ảnh lên thất bại!')
+      setToast({ message: 'Tải ảnh lên thất bại!', type: 'error' })
     } finally {
       setIsUploading(false)
     }
@@ -67,7 +71,7 @@ export default function CompanyTourDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['company-tour', id] })
       queryClient.invalidateQueries({ queryKey: ['company-tours'] })
-      alert('Cập nhật tour thành công!')
+      setToast({ message: 'Cập nhật tour thành công!', type: 'success' })
     }
   })
 
@@ -76,7 +80,7 @@ export default function CompanyTourDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['company-tour', id] })
       queryClient.invalidateQueries({ queryKey: ['company-tours'] })
-      alert('Tour đã được duyệt và chính thức hoạt động!')
+      setToast({ message: 'Tour đã được duyệt và chính thức hoạt động!', type: 'success' })
     }
   })
 
@@ -136,44 +140,30 @@ export default function CompanyTourDetailPage() {
             <h1 className="text-3xl font-bold text-on-surface">Chi tiết Tour</h1>
             <p className="text-on-surface-variant">ID: #{id} • Trạng thái: {tour.tour.status?.toLowerCase() === 'active' ? 'Đang hoạt động' : 'Nháp'}</p>
           </div>
-          <button
-            form="edit-tour-form"
-            type="submit"
-            disabled={updateMutation.isPending}
-            className="flex items-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-2 rounded-lg font-medium shadow-md transition-all disabled:opacity-50"
-          >
-            <Save className="w-4 h-4" />
-            {updateMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
-          </button>
-        </div>
-
-        {tour.tour.status?.toLowerCase() === 'draft' && (
-          <div className="mb-6 p-6 bg-primary/5 text-on-surface rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 border border-primary/20 shadow-sm">
-            <div className="flex items-center gap-5 flex-1">
-              <div className="p-3 bg-primary/10 rounded-xl text-primary shrink-0">
-                <AlertTriangle className="w-8 h-8" />
-              </div>
-              <div className="flex-1">
-                <p className="font-bold text-xl mb-1">Tour này đang chờ duyệt</p>
-                <p className="text-on-surface-variant leading-relaxed">
-                  Vui lòng kiểm tra lại toàn bộ thông tin, ảnh và lịch trình chi tiết. 
-                  Sau khi chắc chắn, hãy nhấn nút <strong>Duyệt Tour</strong> để khách hàng có thể tìm thấy và đặt chỗ.
-                </p>
-              </div>
-            </div>
+          <div className="flex items-center gap-3">
+            {tour.tour.status?.toLowerCase() === 'draft' && (
+              <button
+                type="button"
+                onClick={() => setShowPublishConfirm(true)}
+                disabled={publishMutation.isPending}
+                className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-6 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+              >
+                <CheckCircle className="w-4 h-4" />
+                {publishMutation.isPending ? 'Đang duyệt...' : 'Duyệt Tour'}
+              </button>
+            )}
             <button
-              onClick={() => {
-                if(confirm('Bạn có chắc chắn muốn duyệt tour này không?')) {
-                  publishMutation.mutate()
-                }
-              }}
-              disabled={publishMutation.isPending}
-              className="whitespace-nowrap bg-primary hover:bg-primary-container text-white px-10 py-4 rounded-2xl font-bold shadow-lg hover:shadow-primary/20 transition-all transform hover:-translate-y-1 active:translate-y-0 disabled:opacity-50"
+              form="edit-tour-form"
+              type="submit"
+              disabled={updateMutation.isPending}
+              className="flex items-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-2 rounded-lg font-medium shadow-md transition-all disabled:opacity-50"
             >
-              {publishMutation.isPending ? 'Đang xử lý...' : 'DUYỆT TOUR NGAY'}
+              <Save className="w-4 h-4" />
+              {updateMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
             </button>
           </div>
-        )}
+        </div>
+
 
         <form id="edit-tour-form" onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Info Card */}
@@ -249,10 +239,15 @@ export default function CompanyTourDetailPage() {
                 <label className="block text-sm font-medium mb-1.5">Giá tour (VNĐ) *</label>
                 <input
                   required
-                  type="number"
+                  type="text"
+                  placeholder="Ví dụ: 1.500.000"
                   className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
-                  value={formData.price || ''}
-                  onChange={e => setFormData({ ...formData, price: e.target.value })}
+                  value={formData.price ? Number(formData.price).toLocaleString('vi-VN') : ''}
+                  onChange={e => {
+                    // Remove all non-digits
+                    const value = e.target.value.replace(/\D/g, '')
+                    setFormData({ ...formData, price: value })
+                  }}
                 />
               </div>
               <div className="md:col-span-2">
@@ -364,6 +359,30 @@ export default function CompanyTourDetailPage() {
             </div>
           </div>
         </form>
+
+        {/* Modals */}
+        <ConfirmModal
+          isOpen={showPublishConfirm}
+          onClose={() => setShowPublishConfirm(false)}
+          onConfirm={() => {
+            publishMutation.mutate(undefined, {
+              onSuccess: () => setShowPublishConfirm(false)
+            })
+          }}
+          type="success"
+          title="Duyệt Tour"
+          message="Duyệt tour này sẽ giúp khách hàng có thể nhìn thấy và bắt đầu đặt chỗ. Bạn đã kiểm tra kỹ thông tin chưa?"
+          confirmLabel="Duyệt ngay"
+          isLoading={publishMutation.isPending}
+        />
+
+        {toast && (
+          <Toast 
+            message={toast.message} 
+            type={toast.type} 
+            onClose={() => setToast(null)} 
+          />
+        )}
       </div>
     </CompanyLayout>
   )

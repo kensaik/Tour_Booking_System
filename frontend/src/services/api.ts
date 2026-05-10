@@ -29,14 +29,16 @@ api.interceptors.response.use(
     return response
   },
   (error) => {
-    // If unauthorized, you could potentially trigger a logout action here
+    // If unauthorized (401), trigger logout
     if (error.response && error.response.status === 401) {
-      // Avoid redirecting if the endpoint itself is auth/login or me to prevent infinite loops
       if (!error.config.url.includes('/auth/login')) {
-        console.error('Unauthorized access - please log in again.')
-        // localStorage.removeItem('access_token');
-        // window.location.href = '/login';
+        localStorage.removeItem('access_token')
+        window.location.href = '/login'
       }
+    }
+    // If forbidden (403) - just let the component handle it
+    if (error.response && error.response.status === 403) {
+      console.warn('Forbidden access:', error.response.data?.message)
     }
     return Promise.reject(error)
   }

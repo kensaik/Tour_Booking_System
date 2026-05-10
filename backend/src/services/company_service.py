@@ -202,6 +202,69 @@ class CompanyService:
         return Departure.query.join(Tour).filter(Tour.company_id == company_id).all()
 
     @staticmethod
+    def get_departure(company_id, departure_id):
+        dep = db.session.get(Departure, departure_id)
+        if not dep or dep.tour.company_id != company_id:
+            return None
+        return dep
+
+    @staticmethod
+    def update_departure(company_id, departure_id, data):
+        dep = db.session.get(Departure, departure_id)
+        if not dep or dep.tour.company_id != company_id:
+            return {"error": "Departure not found or access denied", "status": 404}
+
+        if "start_date" in data:
+            try:
+                dep.start_date = datetime.fromisoformat(data["start_date"])
+            except ValueError:
+                return {"error": "Invalid start_date format", "status": 400}
+
+        if "end_date" in data:
+            try:
+                dep.end_date = datetime.fromisoformat(data["end_date"])
+            except ValueError:
+                return {"error": "Invalid end_date format", "status": 400}
+
+        if "total_seats" in data:
+            new_total = int(data["total_seats"])
+            if new_total <= 0:
+                return {"error": "total_seats must be positive", "status": 400}
+            booked = dep.total_seats - dep.available_seats
+            if new_total < booked:
+                return {
+                    "error": f"Cannot reduce seats below {booked} (already booked)",
+                    "status": 400,
+                }
+            dep.total_seats = new_total
+            dep.available_seats = new_total - booked
+
+        if "tour_id" in data:
+            new_tour = db.session.get(Tour, data["tour_id"])
+            if not new_tour or new_tour.company_id != company_id:
+                return {"error": "Invalid tour_id or access denied", "status": 400}
+            dep.tour_id = new_tour.id
+
+        db.session.commit()
+        return {"departure": dep, "status": 200}
+
+    @staticmethod
+    def delete_departure(company_id, departure_id):
+        dep = db.session.get(Departure, departure_id)
+        if not dep or dep.tour.company_id != company_id:
+            return {"error": "Departure not found or access denied", "status": 404}
+
+        if dep.bookings.count() > 0:
+            return {
+                "error": "Cannot delete departure because there are bookings for it.",
+                "status": 400,
+            }
+
+        db.session.delete(dep)
+        db.session.commit()
+        return {"status": 200}
+
+    @staticmethod
     def get_company_bookings(company_id, status_filter=None, departure_id=None):
         query = (
             Booking.query.join(Departure)
@@ -267,4 +330,17 @@ class CompanyService:
 
         booking.booking_status = new_status
         db.session.commit()
+
+        # Gửi email thông báo cho khách khi trạng thái thay đổi
+        try:
+            from src.services.notification_service import NotificationService
+            if booking.contact_email:
+                NotificationService.send_booking_status_update(
+                    booking, 
+                    booking.contact_email, 
+                    new_status
+                )
+        except Exception as e:
+            print(f"Status update notification error: {e}")
+
         return {"booking": booking, "status": 200}

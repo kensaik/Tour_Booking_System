@@ -48,5 +48,11 @@ export const AdminService = {
     // We reuse auth register but with company role
     const response = await api.post('/auth/register', { ...data, role: 'company' });
     return response.data;
+  },
+
+  // Stats
+  getStats: async () => {
+    const response = await api.get('/admin/stats');
+    return response.data;
   }
 };

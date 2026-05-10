@@ -10,7 +10,7 @@ class Destination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.Text, nullable=True)
-    image_url = db.Column(db.String(500), nullable=True)
+    image_url = db.Column(db.Text, nullable=True)
 
     tours = db.relationship("Tour", backref="destination", lazy="dynamic")
 
@@ -33,7 +33,7 @@ class Tour(db.Model):
     price = db.Column(db.Float, nullable=False)
     total_days = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(20), default=TourStatus.DRAFT)
-    image_url = db.Column(db.String(500), nullable=True)
+    image_url = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow

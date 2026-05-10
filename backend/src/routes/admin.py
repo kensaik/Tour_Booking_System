@@ -104,3 +104,10 @@ def toggle_company_status(id):
         message=f"Company {status_str} successfully",
         is_active=result["is_active"]
     ), 200
+
+
+@admin_bp.route("/stats", methods=["GET"])
+@admin_required()
+def get_stats():
+    stats = AdminService.get_stats()
+    return jsonify(stats), 200

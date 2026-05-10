@@ -45,8 +45,23 @@ export const CompanyService = {
     return response.data;
   },
 
+  getDeparture: async (id: number | string) => {
+    const response = await api.get(`/company/departures/${id}`);
+    return response.data;
+  },
+
+  updateDeparture: async (id: number | string, data: any) => {
+    const response = await api.put(`/company/departures/${id}`, data);
+    return response.data;
+  },
+
   addDeparture: async (tourId: number | string, data: any) => {
     const response = await api.post(`/company/tours/${tourId}/departures`, data);
+    return response.data;
+  },
+
+  deleteDeparture: async (id: number | string) => {
+    const response = await api.delete(`/company/departures/${id}`);
     return response.data;
   },
 
@@ -62,7 +77,7 @@ export const CompanyService = {
   },
 
   updateBookingStatus: async (id: number | string, status: string) => {
-    const response = await api.put(`/company/bookings/${id}/status`, { booking_status: status });
+    const response = await api.put(`/company/bookings/${id}/status`, { booking_status: status.toUpperCase() });
     return response.data;
   }
 };

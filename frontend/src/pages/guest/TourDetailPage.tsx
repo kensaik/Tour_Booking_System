@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { PublicService } from '@/services/public.service'
 import { formatPrice, formatDate } from '@/lib/format'
+import Modal from '@/components/ui/Modal'
+import { Info } from 'lucide-react'
 
 interface Departure {
   id: number
@@ -37,6 +39,7 @@ export default function TourDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0)
   const [selectedDepartureId, setSelectedDepartureId] = useState<number | null>(null)
   const [guests, setGuests] = useState(2)
+  const [showWarningModal, setShowWarningModal] = useState(false)
 
   const { data: response, isLoading, error } = useQuery({
     queryKey: ['tour', id],
@@ -77,7 +80,7 @@ export default function TourDetailPage() {
 
   const handleBookNow = () => {
     if (!selectedDepartureId) {
-      alert('Vui lòng chọn ngày khởi hành!')
+      setShowWarningModal(true)
       return
     }
 
@@ -348,6 +351,27 @@ export default function TourDetailPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={showWarningModal}
+        onClose={() => setShowWarningModal(false)}
+        title="Thông báo"
+      >
+        <div className="text-center py-4">
+          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Info className="w-8 h-8 text-amber-600" />
+          </div>
+          <p className="text-on-surface-variant mb-6">
+            Quý khách vui lòng chọn ngày khởi hành để tiếp tục đặt tour.
+          </p>
+          <button
+            onClick={() => setShowWarningModal(false)}
+            className="w-full bg-primary text-white font-semibold py-3 rounded-xl hover:bg-primary-container transition-colors"
+          >
+            Đã hiểu
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }

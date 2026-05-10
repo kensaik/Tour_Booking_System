@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Building2, LogOut, ChevronDown, Menu, X, Settings } from 'lucide-react'
+import { LayoutDashboard, Building2, LogOut, ChevronDown, Menu, X, Settings, MapPin } from 'lucide-react'
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -13,6 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const menuItems = [
     { path: '/admin', icon: LayoutDashboard, label: 'Dashboard', exact: true },
     { path: '/admin/companies', icon: Building2, label: 'Quản lý Công ty' },
+    { path: '/admin/destinations', icon: MapPin, label: 'Quản lý Điểm đến' },
   ]
 
   const isActive = (path: string, exact?: boolean) => {

@@ -6,7 +6,12 @@ export const PublicService = {
     return response.data
   },
 
-  getTours: async (params?: { destination_id?: string | number; keyword?: string }) => {
+  getTours: async (params?: { 
+    destination_id?: string | number; 
+    keyword?: string;
+    date?: string;
+    guests?: string | number;
+  }) => {
     const response = await api.get('/public/tours', { params })
     return response.data
   },

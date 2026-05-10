@@ -14,6 +14,16 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const { login, user, isAuthenticated } = useAuthStore()
 
+  // Check for not_approved reason from redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('reason') === 'not_approved') {
+      setErrorMsg('Tài khoản của bạn chưa được phê duyệt. Vui lòng liên hệ quản trị viên.')
+      // Clean URL
+      window.history.replaceState({}, '', '/login')
+    }
+  }, [])
+
   useEffect(() => {
     if (isAuthenticated && user) {
       let targetPath = '/'
@@ -40,7 +50,11 @@ export default function LoginPage() {
       
       navigate(targetPath)
     } catch (error: any) {
-      setErrorMsg(error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.')
+      let msg = error.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.'
+      if (msg === 'Account is deactivated') {
+        msg = 'Tài khoản của bạn đã bị khóa'
+      }
+      setErrorMsg(msg)
     } finally {
       setIsLoading(false)
     }

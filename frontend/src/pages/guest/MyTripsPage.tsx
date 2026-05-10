@@ -114,7 +114,10 @@ export default function MyTripsPage() {
                       </div>
                       <h3 className="text-lg font-semibold text-on-surface mb-2">{booking.tour?.name}</h3>
                       <div className="flex gap-3">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-container transition-colors text-sm font-medium">
+                        <button 
+                          onClick={() => navigate(`/bookings/${booking.id}`)}
+                          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-container transition-colors text-sm font-medium"
+                        >
                           <Eye className="w-4 h-4" />
                           Chi tiết
                         </button>

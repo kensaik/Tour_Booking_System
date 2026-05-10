@@ -1,3 +1,4 @@
+from flask import current_app
 from src.extensions import db
 from src.models.tour import Destination
 from src.models.user import CompanyProfile
@@ -9,10 +10,28 @@ class AdminService:
         return Destination.query.all()
 
     @staticmethod
+    def _upload_image(image_data: str) -> str:
+        """Upload ảnh lên Cloudinary, trả về URL. Nếu lỗi hoặc chưa config thì trả về data gốc."""
+        if not image_data or not image_data.startswith('data:image'):
+            return image_data
+
+        if not current_app.config.get('CLOUDINARY_ENABLED'):
+            return image_data  # Fallback: lưu Base64 nếu chưa config Cloudinary
+
+        try:
+            from src.services.cloudinary_service import upload_image
+            result = upload_image(image_data, folder="tour_booking/destinations")
+            if result and "url" in result:
+                return result["url"]
+        except Exception as e:
+            print(f"Image upload error: {e}")
+        return image_data
+
+    @staticmethod
     def create_destination(data):
         name = data.get("name")
         description = data.get("description", "")
-        image_url = data.get("image_url")
+        image_url = AdminService._upload_image(data.get("image_url"))
 
         if not name:
             return {"error": "Destination name is required", "status": 400}
@@ -42,7 +61,7 @@ class AdminService:
             destination.description = data.get("description")
 
         if "image_url" in data:
-            destination.image_url = data.get("image_url")
+            destination.image_url = AdminService._upload_image(data.get("image_url"))
 
         db.session.commit()
         return {"destination": destination, "status": 200}
@@ -109,3 +128,44 @@ class AdminService:
         user.is_active = not user.is_active
         db.session.commit()
         return {"status": 200, "is_active": user.is_active}
+
+    @staticmethod
+    def get_stats():
+        from src.models.tour import Tour
+        from src.models.booking import Booking, Payment
+        from src.models.user import GuestProfile
+        from src.models.tour import Departure
+        
+        # Count companies
+        total_companies = CompanyProfile.query.count()
+        approved_companies = CompanyProfile.query.filter_by(is_approved=True).count()
+        
+        # Count tours (active)
+        total_tours = Tour.query.filter_by(status='active').count()
+        
+        # Count guests
+        total_guests = GuestProfile.query.count()
+        
+        # Calculate revenue: Only CONFIRMED bookings with SUCCESS payments
+        total_revenue = db.session.query(db.func.sum(Payment.amount))\
+            .join(Booking, Payment.booking_id == Booking.id)\
+            .join(Departure, Booking.departure_id == Departure.id)\
+            .join(Tour, Departure.tour_id == Tour.id)\
+            .filter(
+                Booking.booking_status == 'confirmed',
+                Payment.status == 'SUCCESS'
+            ).scalar() or 0
+        
+        # Count bookings
+        total_bookings = Booking.query.count()
+        pending_bookings = Booking.query.filter_by(booking_status='pending').count()
+        
+        return {
+            "total_companies": total_companies,
+            "approved_companies": approved_companies,
+            "total_tours": total_tours,
+            "total_guests": total_guests,
+            "total_revenue": float(total_revenue),
+            "total_bookings": total_bookings,
+            "pending_bookings": pending_bookings,
+        }

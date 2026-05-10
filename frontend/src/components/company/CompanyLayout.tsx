@@ -1,7 +1,9 @@
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, Globe, Calendar, BookOpen, ChevronDown, LogOut, Menu, X, Settings } from 'lucide-react'
-import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
+
+// Force Vite reload - Auth system updated
 
 // Admin Layout for Company Dashboard
 export default function CompanyLayout({ children }: { children: React.ReactNode }) {
@@ -9,7 +11,25 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, logout } = useAuthStore()
+  const { user, logout, token } = useAuthStore()
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    const storedToken = localStorage.getItem('access_token') || token
+    if (!storedToken) {
+      navigate('/login')
+    }
+  }, [token, navigate])
+
+  if (token && !user) {
+    return (
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
+  }
+
+  if (!token) return null
 
   const menuItems = [
     { path: '/company', icon: LayoutDashboard, label: 'Dashboard', exact: true },
@@ -26,6 +46,36 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  // Check for approval status
+  const isApproved = user?.role === 'COMPANY' ? user?.company_profile?.is_approved === true : true
+
+  // For debugging - remove in production
+  // console.log('Auth Check:', { role: user?.role, isApproved, profile: user?.company_profile })
+
+  if (user && !isApproved) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-surface flex items-center justify-center p-6 overflow-auto">
+        <div className="w-full max-w-[448px] min-w-[300px] bg-surface-container-lowest p-8 rounded-2xl shadow-2xl border border-outline-variant text-center">
+          <div className="w-20 h-20 bg-warning-container text-warning mx-auto rounded-full flex items-center justify-center mb-6">
+            <Calendar className="w-10 h-10" />
+          </div>
+          <h1 className="text-2xl font-bold text-on-surface mb-2">Tài khoản chờ duyệt</h1>
+          <p className="text-on-surface-variant mb-8">
+            Chào <strong>{user.full_name}</strong>, tài khoản công ty của bạn đang trong quá trình chờ quản trị viên phê duyệt. 
+            Bạn sẽ có thể truy cập hệ thống quản lý ngay sau khi được chấp thuận.
+          </p>
+          <button 
+            onClick={handleLogout}
+            className="w-full bg-primary text-on-primary font-bold py-3 rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2"
+          >
+            <LogOut className="w-5 h-5" />
+            Đăng xuất
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -79,10 +129,14 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
 
             {userMenuOpen && (
               <div className="absolute bottom-full left-0 w-full mb-2 bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden border border-outline-variant py-1">
-                <button className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors text-sm text-on-surface">
+                <Link 
+                  to="/company/settings"
+                  onClick={() => setUserMenuOpen(false)}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors text-sm text-on-surface"
+                >
                   <Settings className="w-4 h-4" />
                   Cài đặt
-                </button>
+                </Link>
                 <div className="h-px bg-outline-variant mx-2 my-1" />
                 <button 
                   onClick={handleLogout}

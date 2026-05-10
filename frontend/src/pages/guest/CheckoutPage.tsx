@@ -3,6 +3,8 @@ import { CreditCard, Building2, Truck, ShieldCheck, ArrowLeft, CheckCircle } fro
 import { useState } from 'react'
 import { GuestService } from '@/services/guest.service'
 import { formatPrice, formatDate } from '@/lib/format'
+import Modal from '@/components/ui/Modal'
+import { AlertCircle } from 'lucide-react'
 
 interface BookingState {
   tour: {
@@ -33,6 +35,12 @@ export default function CheckoutPage() {
     phone: '',
     note: '',
   })
+  const [modalConfig, setModalConfig] = useState<{ isOpen: boolean; title: string; message: string }>({
+    isOpen: false,
+    title: '',
+    message: '',
+  })
+  const [showInstructions, setShowInstructions] = useState(false)
 
   if (!bookingState) {
     return (
@@ -56,7 +64,11 @@ export default function CheckoutPage() {
   const handleStep1 = async () => {
     const { name, email, phone, note } = formData
     if (!name || !email || !phone) {
-      alert('Vui lòng điền đầy đủ thông tin bắt buộc.')
+      setModalConfig({
+        isOpen: true,
+        title: 'Thông báo',
+        message: 'Vui lòng điền đầy đủ thông tin bắt buộc (Họ tên, Email, Số điện thoại).'
+      })
       return
     }
 
@@ -65,18 +77,30 @@ export default function CheckoutPage() {
       setBookingId(res.booking_id)
       setStep(2)
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Có lỗi xảy ra khi đặt tour')
+      setModalConfig({
+        isOpen: true,
+        title: 'Lỗi đặt tour',
+        message: err.response?.data?.message || 'Có lỗi xảy ra khi đặt tour. Vui lòng thử lại sau.'
+      })
     }
   }
 
-  const handleStep2 = async () => {
+  const handleStep2 = () => {
     if (!bookingId) return
+    setShowInstructions(true)
+  }
 
+  const confirmPayment = async () => {
     try {
-      await GuestService.createPayment(bookingId, totalAmount, paymentMethod)
+      await GuestService.createPayment(bookingId!, totalAmount, paymentMethod)
+      setShowInstructions(false)
       setStep(3)
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Có lỗi xảy ra khi thanh toán')
+      setModalConfig({
+        isOpen: true,
+        title: 'Lỗi thanh toán',
+        message: err.response?.data?.message || 'Có lỗi xảy ra khi xác nhận thanh toán.'
+      })
     }
   }
 
@@ -294,6 +318,93 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={showInstructions}
+        onClose={() => setShowInstructions(false)}
+        title="Hướng dẫn thanh toán"
+        disableBackdropClose
+      >
+        <div className="space-y-6">
+          <div className="text-center">
+            <p className="text-sm text-on-surface-variant mb-2">Số tiền cần thanh toán</p>
+            <p className="text-3xl font-bold text-primary">{formatPrice(totalAmount)}</p>
+          </div>
+
+          {paymentMethod === 'banking' ? (
+            <div className="bg-surface-container-low p-6 rounded-xl space-y-4">
+              <div className="flex justify-between border-b border-outline-variant pb-2">
+                <span className="text-on-surface-variant">Ngân hàng</span>
+                <span className="font-bold">MB Bank (Quân Đội)</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant pb-2">
+                <span className="text-on-surface-variant">Số tài khoản</span>
+                <span className="font-bold text-primary">123456789999</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant pb-2">
+                <span className="text-on-surface-variant">Chủ tài khoản</span>
+                <span className="font-bold">CONG TY TOURGO VIETNAM</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-on-surface-variant">Nội dung</span>
+                <span className="font-bold text-amber-600">TG{bookingId}</span>
+              </div>
+              <p className="text-[10px] text-center text-on-surface-variant italic mt-2">
+                * Vui lòng chuyển đúng số tiền và nội dung để hệ thống tự động xác nhận.
+              </p>
+            </div>
+          ) : (
+            <div className="text-center space-y-4">
+              <div className="w-48 h-48 mx-auto bg-white p-2 border-2 border-primary rounded-xl overflow-hidden">
+                <img 
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TOURGO_PAYMENT_${bookingId}`} 
+                  alt="QR Code" 
+                  className="w-full h-full"
+                />
+              </div>
+              <p className="text-sm text-on-surface-variant">
+                Quét mã QR bằng ứng dụng {paymentMethod.toUpperCase()} để thanh toán
+              </p>
+            </div>
+          )}
+
+          <div className="pt-4 space-y-3">
+            <button
+              onClick={confirmPayment}
+              className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container transition-colors shadow-lg"
+            >
+              Tôi đã thanh toán thành công
+            </button>
+            <button
+              onClick={() => setShowInstructions(false)}
+              className="w-full text-on-surface-variant text-sm hover:underline"
+            >
+              Quay lại chọn phương thức khác
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={modalConfig.isOpen}
+        onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+        title={modalConfig.title}
+      >
+        <div className="text-center py-4">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-8 h-8 text-red-600" />
+          </div>
+          <p className="text-on-surface-variant mb-6">
+            {modalConfig.message}
+          </p>
+          <button
+            onClick={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+            className="w-full bg-primary text-white font-semibold py-3 rounded-xl hover:bg-primary-container transition-colors"
+          >
+            Đã hiểu
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }

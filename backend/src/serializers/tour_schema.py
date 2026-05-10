@@ -15,14 +15,21 @@ class TourItinerarySchema(Schema):
     description = fields.Str()
 
 
+class MinimalTourSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+    price = fields.Float()
+
 class DepartureSchema(Schema):
     id = fields.Int(dump_only=True)
+    tour_id = fields.Int(dump_only=True)
     start_date = fields.DateTime(required=True)
     end_date = fields.DateTime(required=True)
     total_seats = fields.Int(required=True)
     available_seats = fields.Int(dump_only=True)
     guide_name = fields.Str()
     status = fields.Str()
+    tour = fields.Nested(MinimalTourSchema, dump_only=True)
 
 
 class TourSchema(Schema):
