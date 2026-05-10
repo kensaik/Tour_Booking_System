@@ -26,7 +26,7 @@ test.describe("Guest booking — happy path", () => {
     });
     // Departure cards are clickable divs that render formatDate(start_date) text;
     // pick the first one available.
-    const firstDeparture = page.locator('[class*="cursor-pointer"]').first();
+    const firstDeparture = page.locator('button:has-text("chỗ")').first();
     if (await firstDeparture.count()) {
       await firstDeparture.click();
     }
@@ -67,7 +67,7 @@ test.describe("Guest booking — failure path", () => {
     await page.waitForURL(/\/tours\/\d+/);
     await expect(page.getByRole("button", { name: /^đặt ngay$/i })).toBeVisible();
 
-    const firstDeparture = page.locator('[class*="cursor-pointer"]').first();
+    const firstDeparture = page.locator('button:has-text("chỗ")').first();
     if (await firstDeparture.count()) await firstDeparture.click();
 
     await page.getByRole("button", { name: /^đặt ngay$/i }).click();

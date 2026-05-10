@@ -22,7 +22,7 @@ test.describe("Company tour CRUD", () => {
     await destinationSelect.selectOption({ index: 1 });
 
     // Giá tour
-    await page.getByPlaceholder(/1500000/).fill("2000000");
+    await page.getByPlaceholder(/1\.?500\.?000/).fill("2000000");
 
     // Mô tả tổng quát
     await page.getByPlaceholder(/giới thiệu sơ lược về tour/i).fill("Mô tả E2E test");
