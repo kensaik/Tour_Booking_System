@@ -1,0 +1,187 @@
+{
+    "root_group": {
+        "groups": {},
+        "checks": {
+                "login(abc@travel.com): status 200": {
+                    "name": "login(abc@travel.com): status 200",
+                    "path": "::login(abc@travel.com): status 200",
+                    "id": "82f7fedd3bf648f9a16cbe21b3fcbda4",
+                    "passes": 50,
+                    "fails": 0
+                },
+                "login(abc@travel.com): body has 'access_token'": {
+                    "name": "login(abc@travel.com): body has 'access_token'",
+                    "path": "::login(abc@travel.com): body has 'access_token'",
+                    "id": "228879871826c391d04c45ad00ad6259",
+                    "passes": 50,
+                    "fails": 0
+                },
+                "company tours: status 200": {
+                    "path": "::company tours: status 200",
+                    "id": "e08de330551f90e99f578b3bbf5df80b",
+                    "passes": 48,
+                    "fails": 110,
+                    "name": "company tours: status 200"
+                },
+                "company tours: body has 'tours'": {
+                    "path": "::company tours: body has 'tours'",
+                    "id": "04269699bdb8fab548695326c801f213",
+                    "passes": 48,
+                    "fails": 110,
+                    "name": "company tours: body has 'tours'"
+                },
+                "company bookings: status 200": {
+                    "passes": 16,
+                    "fails": 132,
+                    "name": "company bookings: status 200",
+                    "path": "::company bookings: status 200",
+                    "id": "e32197f124ce0553506ea6df562ea526"
+                },
+                "company bookings: body has 'bookings'": {
+                    "passes": 16,
+                    "fails": 132,
+                    "name": "company bookings: body has 'bookings'",
+                    "path": "::company bookings: body has 'bookings'",
+                    "id": "a447d8e872361a1fab1bc5cc2a950370"
+                }
+            },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "metrics": {
+        "http_req_receiving": {
+            "min": 0,
+            "med": 0,
+            "max": 5043.0029,
+            "p(90)": 0.7043,
+            "p(95)": 1.6486,
+            "avg": 74.10831544943821
+        },
+        "http_req_sending": {
+            "p(90)": 0,
+            "p(95)": 0.3166,
+            "avg": 0.032701123595505616,
+            "min": 0,
+            "med": 0,
+            "max": 1.5082
+        },
+        "iteration_duration": {
+            "avg": 98995.88850135136,
+            "min": 14215.8418,
+            "med": 121000.7907,
+            "max": 122473.6717,
+            "p(90)": 121001.34198,
+            "p(95)": 121001.484455
+        },
+        "http_req_duration{expected_response:true}": {
+            "min": 145.0774,
+            "med": 838.1372,
+            "max": 50877.5837,
+            "p(90)": 23354.27676000001,
+            "p(95)": 38906.49617999997,
+            "avg": 5097.309052631577
+        },
+        "data_sent": {
+            "count": 172726,
+            "rate": 523.4098511994574
+        },
+        "http_req_waiting": {
+            "min": 144.3793,
+            "med": 60000.077699999994,
+            "max": 60000.7692,
+            "p(90)": 60000.4906,
+            "p(95)": 60000.564525,
+            "avg": 42344.7985014045
+        },
+        "http_req_duration": {
+            "max": 60000.7692,
+            "p(90)": 60000.4973,
+            "p(95)": 60000.57335,
+            "avg": 42418.939517977524,
+            "min": 145.0774,
+            "med": 60000.0928
+        },
+        "checks": {
+            "passes": 228,
+            "fails": 484,
+            "value": 0.3202247191011236
+        },
+        "http_req_duration{kind:write}": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "thresholds": {
+                "p(95)<1500": false
+            }
+        },
+        "http_reqs": {
+            "count": 356,
+            "rate": 1.0787832001378301
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "vus": {
+            "value": 18,
+            "min": 18,
+            "max": 50
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "iterations": {
+            "count": 148,
+            "rate": 0.44848290342808667
+        },
+        "http_req_duration{kind:read}": {
+            "avg": 49224.46255392156,
+            "min": 145.0774,
+            "med": 60000.128249999994,
+            "max": 60000.7692,
+            "p(90)": 60000.50874999999,
+            "p(95)": 60000.5779,
+            "thresholds": {
+                "p(95)<500": true
+            }
+        },
+        "data_received": {
+            "count": 205418426,
+            "rate": 622477.3791223485
+        },
+        "http_req_connecting": {
+            "avg": 0.3082794943820221,
+            "min": 0,
+            "med": 0,
+            "max": 1.882,
+            "p(90)": 1.5654,
+            "p(95)": 1.5654
+        },
+        "http_req_blocked": {
+            "med": 0,
+            "max": 1.882,
+            "p(90)": 1.5654,
+            "p(95)": 1.882,
+            "avg": 0.32036516853932545,
+            "min": 0
+        },
+        "http_req_failed": {
+            "passes": 242,
+            "fails": 114,
+            "thresholds": {
+                "rate<0.01": true
+            },
+            "value": 0.6797752808988764
+        }
+    }
+}

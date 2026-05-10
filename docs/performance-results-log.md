@@ -130,14 +130,6 @@ Gộp bằng: `python perf/analyze-results.py perf/results/20260510-1310 --out p
 - Stress points file ~1–7 GB, giữ local.
 - Chỉ một departure (`id=1`) → kết quả contention bị skew.
 
-### Liên kết
-
-- Plan: [`plans/260510-1235-performance-load-testing/plan.md`](../plans/260510-1235-performance-load-testing/plan.md)
-- Brainstorm: [`plans/reports/brainstorm-260510-1229-performance-load-testing.md`](../plans/reports/brainstorm-260510-1229-performance-load-testing.md)
-- Phase 3: [`plans/260510-1235-performance-load-testing/phase-03-run-smoke-load-stress-tests.md`](../plans/260510-1235-performance-load-testing/phase-03-run-smoke-load-stress-tests.md)
-- Phase 4: [`plans/260510-1235-performance-load-testing/phase-04-bottleneck-analysis-report.md`](../plans/260510-1235-performance-load-testing/phase-04-bottleneck-analysis-report.md)
-- Môi trường: [`perf/results/20260510-1310/environment.md`](../perf/results/20260510-1310/environment.md)
-
 ### Câu hỏi chưa giải quyết
 
 - `mysql.slow_log` chỉ ghi ~500 câu trong stress 03 dù k6 ghi ~1.800.000 request. Cần `pcap`/`tcpdump` để xác minh request có đến MySQL không.
