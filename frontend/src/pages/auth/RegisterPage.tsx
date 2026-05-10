@@ -27,19 +27,19 @@ export default function RegisterPage() {
     if (isLoading) return
 
     setErrorMsg('')
-    
+
     if (formData.password !== formData.confirmPassword) {
       setErrorMsg('Mật khẩu xác nhận không khớp')
       return
     }
-    
+
     if (!acceptTerms) {
       setErrorMsg('Vui lòng chấp nhận điều khoản sử dụng')
       return
     }
-    
+
     setIsLoading(true)
-    
+
     try {
       await AuthService.register({
         email: formData.email,
@@ -66,7 +66,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 py-8">
-      {/* Background */}
+
       <div className="fixed inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&h=1080&fit=crop"
@@ -75,9 +75,8 @@ export default function RegisterPage() {
         />
       </div>
 
-      {/* Register Card */}
       <div className="relative z-10 w-full max-w-lg min-w-[320px] sm:min-w-[480px]">
-        {/* Back Button */}
+
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
@@ -87,7 +86,7 @@ export default function RegisterPage() {
         </Link>
 
         <div className="bg-surface/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-outline-variant">
-          {/* Logo */}
+
           <div className="text-center mb-8">
             <span className="text-3xl font-bold text-primary">TourGo</span>
             <h1 className="text-2xl font-bold text-on-surface mt-4">Tạo tài khoản</h1>
@@ -96,15 +95,14 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             {errorMsg && (
               <div className="bg-error-container text-on-error-container p-3 rounded-lg text-sm">
                 {errorMsg}
               </div>
             )}
+
             
-            {/* Full Name */}
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-on-surface mb-2">
                 Họ và tên
@@ -124,7 +122,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
                 Email
@@ -144,7 +141,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-on-surface mb-2">
                 Số điện thoại
@@ -164,7 +160,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-on-surface mb-2">
                 Mật khẩu
@@ -189,8 +184,8 @@ export default function RegisterPage() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+
               
-              {/* Password Requirements */}
               <div className="mt-3 space-y-1">
                 {passwordRequirements.map((req, index) => (
                   <div key={index} className={`flex items-center gap-2 text-xs ${req.met ? 'text-green-600' : 'text-on-surface-variant'}`}>
