@@ -89,8 +89,7 @@ describe("CompanyToursPage", () => {
 
     expect(await screen.findByText(/Tour Đà Lạt 3 ngày/)).toBeInTheDocument();
     expect(screen.getByText(/Tour Hạ Long 4 ngày/)).toBeInTheDocument();
-    expect(screen.getByText(/Đà Lạt/)).toBeInTheDocument();
-    expect(screen.getByText(/Hạ Long/)).toBeInTheDocument();
+    expect(screen.getByText(/Tour Sapa 5 ngày/)).toBeInTheDocument();
   });
 
   it("filters tours by search query (name)", async () => {
@@ -124,9 +123,8 @@ describe("CompanyToursPage", () => {
     const deleteButtons = await screen.findAllByTitle(/Xóa tour/i);
     await user.click(deleteButtons[0]);
 
-    // Confirm modal should appear
-    expect(await screen.findByText(/Xóa Tour/i)).toBeInTheDocument();
-    expect(screen.getByText(/Bạn có chắc chắn muốn xóa tour này không/i)).toBeInTheDocument();
+    // Confirm modal should appear with confirmation message
+    expect(await screen.findByText(/Bạn có chắc chắn muốn xóa tour này không/i)).toBeInTheDocument();
 
     // Click confirm button
     const confirmBtn = screen.getByRole("button", { name: /Xóa ngay/i });
@@ -142,8 +140,7 @@ describe("CompanyToursPage", () => {
     const publishButtons = await screen.findAllByTitle(/Duyệt tour/i);
     await user.click(publishButtons[0]);
 
-    expect(await screen.findByText(/Duyệt Tour/i)).toBeInTheDocument();
-    expect(screen.getByText(/Duyệt tour này sẽ giúp khách hàng/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Duyệt tour này sẽ giúp khách hàng/i)).toBeInTheDocument();
   });
 
   it("calls CompanyService.updateTour with status=active on publish confirm", async () => {

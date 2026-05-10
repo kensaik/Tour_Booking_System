@@ -153,7 +153,6 @@ describe("CompanyAddTourPage", () => {
       },
     });
 
-    const user = userEvent.setup();
     renderWithProviders(<AddTourPage />);
 
     // Verify form is ready to submit

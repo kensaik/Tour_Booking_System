@@ -38,6 +38,9 @@ export default defineConfig({
         'src/pages/company/AddDeparturePage.tsx',
         'src/pages/company/BookingsPage.tsx',
         'src/pages/company/SettingsPage.tsx',
+        'src/pages/admin/DashboardPage.tsx',
+        'src/pages/admin/CompaniesPage.tsx',
+        'src/pages/admin/DestinationsPage.tsx',
       ],
       exclude: [
         'src/main.tsx',
