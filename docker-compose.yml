@@ -1,5 +1,4 @@
-# Development stack: MySQL + Flask backend with hot reload.
-# Frontend is not yet scaffolded and is intentionally omitted.
+# Development stack: MySQL + Flask backend + React/Vite frontend with hot reload.
 
 services:
   db:
@@ -46,6 +45,24 @@ services:
       - ./backend:/app
       # Persist the "seed already ran" marker across restarts.
       - backend-state:/var/lib/tour-booking
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tour-booking-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      API_URL: http://backend:5000
+    ports:
+      - "3000:3000"
+    volumes:
+      # Hot reload: edits on host immediately reflect in container.
+      - ./frontend:/app
+      # Prevent host node_modules from overwriting container's.
+      - /app/node_modules
 
 volumes:
   mysql-data:
