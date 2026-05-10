@@ -20,7 +20,7 @@ test.describe('Visual responsive smoke', () => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height })
         await page.goto(pageDef.path)
         await page.waitForLoadState('networkidle')
-        await page.evaluate(() => (document as any).fonts?.ready)
+        await page.evaluate(() => (document as unknown as { fonts?: { ready: Promise<void> } }).fonts?.ready)
 
         // No horizontal scroll smoke check — allow 1px rounding tolerance
         const overflow = await page.evaluate(

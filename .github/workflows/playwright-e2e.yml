@@ -1,0 +1,184 @@
+name: Playwright E2E
+
+# Frontend automation suite. Boots MySQL + Flask backend + Vite preview,
+# then runs Playwright against the seeded stack. Runs on PRs and pushes
+# to main. Separate from `ci.yml` so a flaky browser test doesn't block
+# unrelated lint/unit failures from surfacing.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: playwright-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: Playwright (Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: tour_booking_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      DATABASE_URL: mysql+pymysql://root:root@127.0.0.1:3306/tour_booking_test
+      FLASK_APP: src
+      SECRET_KEY: ci-flask-secret-not-for-prod
+      JWT_SECRET_KEY: ci-jwt-secret-not-for-prod
+      CLOUDINARY_ENABLED: "false"
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---- Backend ----------------------------------------------------------
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; then
+              echo "MySQL up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "MySQL did not become healthy in time" >&2
+          exit 1
+
+      - name: Create schema
+        working-directory: backend
+        run: |
+          python -c "from src import create_app; from src.extensions import db; \
+            app=create_app(); ctx=app.app_context(); ctx.push(); db.create_all()"
+
+      - name: Seed data
+        working-directory: backend
+        run: python -m database.seed
+
+      - name: Start Flask in background
+        working-directory: backend
+        run: |
+          nohup flask run --host=127.0.0.1 --port=5000 > flask.log 2>&1 &
+          echo $! > flask.pid
+
+      - name: Wait for /api/health
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://127.0.0.1:5000/api/health >/dev/null; then
+              echo "Flask up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "Flask did not respond in time" >&2
+          cat backend/flask.log || true
+          exit 1
+
+      # ---- Frontend ---------------------------------------------------------
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: pw-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS deps
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        working-directory: frontend
+        run: npx playwright install-deps chromium
+
+      - name: Start Vite dev server in background
+        working-directory: frontend
+        # Use `vite dev` (port 3000) — its `/api` and `/static` proxy to Flask
+        # is already configured in vite.config.ts. Avoids needing a separate
+        # preview-proxy setup.
+        run: |
+          nohup npx vite --host 127.0.0.1 --port 3000 > vite.log 2>&1 &
+          echo $! > vite.pid
+
+      - name: Wait for Vite dev server
+        run: |
+          for i in {1..60}; do
+            if curl -sf http://127.0.0.1:3000/ >/dev/null; then
+              echo "Vite up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "Vite did not respond in time" >&2
+          cat frontend/vite.log || true
+          exit 1
+
+      # ---- Run tests --------------------------------------------------------
+      - name: Run Playwright tests
+        working-directory: frontend
+        run: npx playwright test
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+          retention-days: 14
+
+      - name: Upload server logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-logs
+          path: |
+            backend/flask.log
+            frontend/vite.log
+
+      # ---- Cleanup ----------------------------------------------------------
+      - name: Stop background services
+        if: always()
+        run: |
+          for pidfile in backend/flask.pid frontend/vite.pid; do
+            if [ -f "$pidfile" ]; then
+              kill "$(cat "$pidfile")" 2>/dev/null || true
+            fi
+          done
