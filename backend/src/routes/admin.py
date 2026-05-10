@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from marshmallow import Schema, fields
 
 from src.serializers.tour_schema import DestinationSchema
 from src.serializers.user_schema import CompanyProfileSchema
@@ -6,6 +7,14 @@ from src.services.admin_service import AdminService
 from src.utils.auth import admin_required
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
+
+
+class _AdminUserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    email = fields.Email()
+    role = fields.Str()
+    is_active = fields.Bool()
+    created_at = fields.DateTime()
 
 
 @admin_bp.route("/destinations", methods=["GET"])
@@ -58,10 +67,23 @@ def delete_destination(id):
 @admin_bp.route("/companies", methods=["GET"])
 @admin_required()
 def get_companies():
-    status_filter = request.args.get("status")
-    companies = AdminService.get_companies(status_filter)
+    schema = CompanyProfileSchema(many=True)
+    try:
+        result = AdminService.list_companies(request.args, schema.dump)
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400
+    return jsonify(result), 200
 
-    return jsonify(companies=CompanyProfileSchema(many=True).dump(companies)), 200
+
+@admin_bp.route("/users", methods=["GET"])
+@admin_required()
+def get_users():
+    schema = _AdminUserSchema(many=True)
+    try:
+        result = AdminService.list_users(request.args, schema.dump)
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400
+    return jsonify(result), 200
 
 
 @admin_bp.route("/companies/<int:id>/approve", methods=["PUT"])

@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from src.serializers.tour_schema import DestinationSchema, TourSchema
 from src.services.public_service import PublicService
+from src.utils.rate_limit import limiter
 
 public_bp = Blueprint("public", __name__, url_prefix="/api/public")
 
@@ -13,6 +14,7 @@ def get_destinations():
 
 
 @public_bp.route("/tours", methods=["GET"])
+@limiter.limit("60/minute")
 def get_tours():
     destination_id = request.args.get("destination_id")
     keyword = request.args.get("keyword")

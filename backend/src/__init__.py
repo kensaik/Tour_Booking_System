@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 from .config import Config
 from .errors import register_error_handlers
@@ -21,6 +21,21 @@ def create_app(config_class=Config):
     migrate.init_app(app, db, directory=migrate_dir)
     cors.init_app(app)
     jwt.init_app(app)
+
+    from src.utils.rate_limit import limiter
+
+    app.config.setdefault("RATELIMIT_STORAGE_URI", "memory://")
+    app.config.setdefault("RATELIMIT_HEADERS_ENABLED", True)
+    limiter.init_app(app)
+
+    @app.errorhandler(429)
+    def _too_many_requests(e):
+        retry_after = getattr(e, "retry_after", None) or 60
+        message = getattr(e, "description", "Rate limit exceeded")
+        resp = jsonify(error="Too Many Requests", message=str(message))
+        resp.status_code = 429
+        resp.headers["Retry-After"] = str(retry_after)
+        return resp
 
     # Initialize Cloudinary
     from src.services.cloudinary_service import configure_cloudinary

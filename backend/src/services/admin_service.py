@@ -2,7 +2,8 @@ from flask import current_app
 
 from src.extensions import db
 from src.models.tour import Destination
-from src.models.user import CompanyProfile
+from src.models.user import CompanyProfile, User
+from src.utils.query_helpers import build_envelope_or_list, to_bool
 
 
 class AdminService:
@@ -90,6 +91,35 @@ class AdminService:
         if status_filter == "pending":
             query = query.filter_by(is_approved=False)
         return query.all()
+
+    @staticmethod
+    def list_companies(args, dump_fn):
+        query = CompanyProfile.query
+        status_filter = args.get("status")
+        if status_filter == "pending":
+            query = query.filter_by(is_approved=False)
+        keyword = args.get("keyword")
+        if keyword:
+            query = query.filter(CompanyProfile.company_name.ilike(f"%{keyword}%"))
+        query = query.order_by(CompanyProfile.id.asc())
+        return build_envelope_or_list(query, args, "companies", dump_fn)
+
+    @staticmethod
+    def list_users(args, dump_fn):
+        query = User.query
+        role = args.get("role")
+        if role:
+            query = query.filter(User.role == role)
+        email = args.get("email")
+        if email:
+            query = query.filter(User.email.ilike(f"%{email}%"))
+        is_active_raw = args.get("is_active")
+        if is_active_raw is not None:
+            flag = to_bool(is_active_raw)
+            if flag is not None:
+                query = query.filter(User.is_active.is_(flag))
+        query = query.order_by(User.id.asc())
+        return build_envelope_or_list(query, args, "users", dump_fn)
 
     @staticmethod
     def approve_company(company_id):

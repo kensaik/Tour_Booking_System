@@ -52,8 +52,12 @@ def get_my_bookings():
     if not guest_id:
         return jsonify(error="Forbidden", message="Guest profile not found"), 403
 
-    bookings = GuestService.get_my_bookings(guest_id)
-    return jsonify(bookings=BookingSchema(many=True).dump(bookings)), 200
+    schema = BookingSchema(many=True)
+    try:
+        result = GuestService.list_my_bookings(guest_id, request.args, schema.dump)
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400
+    return jsonify(result), 200
 
 
 @guest_bp.route("/bookings/<int:id>", methods=["GET"])

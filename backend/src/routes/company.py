@@ -191,13 +191,14 @@ def delete_departure(id):
 @company_required()
 def get_company_bookings():
     company_id = get_current_company_id()
-    status_filter = request.args.get("status")
-    departure_id = request.args.get("departure_id")
-
-    bookings = CompanyService.get_company_bookings(
-        company_id, status_filter, departure_id
-    )
-    return jsonify(bookings=BookingSchema(many=True).dump(bookings)), 200
+    schema = BookingSchema(many=True)
+    try:
+        result = CompanyService.list_company_bookings(
+            company_id, request.args, schema.dump
+        )
+    except ValueError as exc:
+        return jsonify(error="Bad Request", message=str(exc)), 400
+    return jsonify(result), 200
 
 
 @company_bp.route("/bookings/<int:id>", methods=["GET"])

@@ -280,6 +280,29 @@ class CompanyService:
         return query.all()
 
     @staticmethod
+    def list_company_bookings(company_id, args, dump_fn):
+        from src.utils.query_helpers import build_envelope_or_list
+
+        query = (
+            Booking.query.join(Departure)
+            .join(Tour)
+            .filter(Tour.company_id == company_id)
+        )
+
+        status_filter = args.get("status")
+        if status_filter:
+            query = query.filter(Booking.booking_status == status_filter)
+        departure_id = args.get("departure_id")
+        if departure_id:
+            query = query.filter(Booking.departure_id == int(departure_id))
+        payment_status = args.get("payment_status")
+        if payment_status:
+            query = query.filter(Booking.payment_status == payment_status)
+
+        query = query.order_by(Booking.id.asc())
+        return build_envelope_or_list(query, args, "bookings", dump_fn)
+
+    @staticmethod
     def get_booking_detail(company_id, booking_id):
         booking = db.session.get(Booking, booking_id)
         if (

@@ -67,6 +67,20 @@ class GuestService:
         return Booking.query.filter_by(guest_id=guest_id).all()
 
     @staticmethod
+    def list_my_bookings(guest_id, args, dump_fn):
+        from src.utils.query_helpers import build_envelope_or_list
+
+        query = Booking.query.filter_by(guest_id=guest_id)
+        status_filter = args.get("status")
+        if status_filter:
+            query = query.filter(Booking.booking_status == status_filter)
+        payment_status = args.get("payment_status")
+        if payment_status:
+            query = query.filter(Booking.payment_status == payment_status)
+        query = query.order_by(Booking.id.asc())
+        return build_envelope_or_list(query, args, "bookings", dump_fn)
+
+    @staticmethod
     def get_booking_detail(guest_id, booking_id):
         booking = db.session.get(Booking, booking_id)
         if not booking or booking.guest_id != guest_id:
