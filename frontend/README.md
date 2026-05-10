@@ -68,3 +68,64 @@ npm run format:check  # Prettier check (used in CI)
 - `.prettierrc.json` — Prettier rules (100-col, double quotes, trailing commas).
 - `.prettierignore` — paths Prettier should skip.
 - `.gitkeep` — placeholder until Vite scaffold lands.
+
+## Testing
+
+Two-layer regression suite — Vitest (unit/component) and Playwright (E2E). See `docs/test-plan.md §5.4.3` for the rationale and CI gates.
+
+### Unit + component tests (Vitest)
+
+```bash
+npm run test:unit              # one-shot run
+npm run test:unit:watch        # watch mode
+npm run test:unit:coverage     # coverage gate (≥70% lines/statements)
+```
+
+Scope: pure logic (`src/lib/**`, `src/stores/**`) and high-risk forms (`RegisterPage`, `CheckoutPage`). Uses jsdom + RTL — no backend needed.
+
+### E2E tests (Playwright)
+
+Requires backend + frontend running locally.
+
+```bash
+# 1. Start backend (separate terminal)
+cd ../backend
+python -m database.seed   # idempotent — creates schema + seed users/tours
+python run.py             # serves http://localhost:5000
+
+# 2. Start frontend (separate terminal)
+npm run dev               # serves http://localhost:5173 — or:
+npm run build && npm run preview -- --port 5173
+
+# 3. Install Playwright browsers (first time only)
+npm run test:e2e:install
+
+# 4. Run tests
+npm run test:e2e          # headless Chromium
+npm run test:e2e:ui       # Playwright UI mode
+npm run test:e2e:headed   # headed Chromium (debug)
+```
+
+Specs live in `e2e/`:
+
+- `auth.spec.ts` — login + role redirect
+- `guest-booking.spec.ts` — guest booking happy path + error path (mocked 500)
+- `company-crud.spec.ts` — company adds a tour
+- `admin.spec.ts` — admin approves pending company
+- `visual.spec.ts` — responsive screenshot smoke at 375 / 768 / 1280px
+
+### Updating Playwright visual baselines
+
+```bash
+npm run test:e2e -- --update-snapshots
+```
+
+Inspect generated `e2e/visual.spec.ts-snapshots/*.png` before committing. Baselines are platform-specific — regenerate on Linux (CI runner) when layout changes meaningfully.
+
+### CI
+
+- `frontend-unit` — Vitest + 70% coverage gate (blocks PR if below)
+- `frontend-e2e` — Playwright (5 specs) against real Flask + MySQL service container
+
+Both jobs are required for merge to `main`.
+
