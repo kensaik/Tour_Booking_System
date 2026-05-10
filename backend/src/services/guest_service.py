@@ -8,7 +8,7 @@ from src.models.tour import Departure
 
 class GuestService:
     @staticmethod
-    def book_departure(guest_id, departure_id, num_people):
+    def book_departure(guest_id, departure_id, num_people, contact_info=None):
         if not num_people or not isinstance(num_people, int) or num_people <= 0:
             return {"error": "num_people must be a positive integer", "status": 400}
 
@@ -48,11 +48,16 @@ class GuestService:
                 "status": 400,
             }
 
+        contact_info = contact_info or {}
         booking = Booking(
             guest_id=guest_id,
             departure_id=departure.id,
             num_people=num_people,
             total_price=total_price,
+            contact_name=contact_info.get("contact_name"),
+            contact_email=contact_info.get("contact_email"),
+            contact_phone=contact_info.get("contact_phone"),
+            notes=contact_info.get("notes"),
         )
         db.session.add(booking)
         db.session.commit()

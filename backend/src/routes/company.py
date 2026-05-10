@@ -4,7 +4,7 @@ from flask_jwt_extended import get_jwt_identity
 from src.extensions import db
 from src.models.user import User
 from src.serializers.booking_schema import BookingSchema
-from src.serializers.tour_schema import TourSchema
+from src.serializers.tour_schema import DepartureSchema, TourSchema
 from src.services.company_service import CompanyService
 from src.utils.auth import company_required
 from src.utils.query_helpers import build_envelope_or_list
@@ -22,6 +22,8 @@ def get_current_company_id():
 @company_required()
 def get_my_tours():
     company_id = get_current_company_id()
+    if not company_id:
+        return jsonify(error="Unauthorized", message="Company profile not found"), 401
     query = CompanyService.get_my_tours_query(company_id)
     tour_schema = TourSchema(many=True, exclude=("itineraries", "departures"))
     try:
@@ -49,6 +51,8 @@ def create_tour():
 @company_required()
 def get_tour_detail(id):
     company_id = get_current_company_id()
+    if not company_id:
+        return jsonify(error="Unauthorized", message="Company profile not found"), 401
     tour = CompanyService.get_tour_detail(company_id, id)
 
     if not tour:
@@ -130,6 +134,17 @@ def add_departure(tour_id):
     return jsonify(
         message="Departure added successfully", departure_id=result["departure"].id
     ), 201
+
+
+@company_bp.route("/departures", methods=["GET"])
+@company_required()
+def get_company_departures():
+    company_id = get_current_company_id()
+    if not company_id:
+        return jsonify(error="Unauthorized", message="Company profile not found"), 401
+
+    departures = CompanyService.get_company_departures(company_id)
+    return jsonify(departures=DepartureSchema(many=True).dump(departures)), 200
 
 
 @company_bp.route("/bookings", methods=["GET"])

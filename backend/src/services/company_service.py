@@ -40,6 +40,19 @@ class CompanyService:
             image_url=data.get("image_url"),
         )
         db.session.add(new_tour)
+        db.session.flush()  # assign tour.id without committing
+
+        for iti_data in data.get("itineraries", []) or []:
+            db.session.add(
+                TourItinerary(
+                    tour_id=new_tour.id,
+                    day_number=iti_data.get("day_number"),
+                    title=iti_data.get("title"),
+                    description=iti_data.get("content")
+                    or iti_data.get("description", ""),
+                )
+            )
+
         db.session.commit()
         return {"tour": new_tour, "status": 201}
 
@@ -68,6 +81,22 @@ class CompanyService:
             tour.status = data["status"]
         if "image_url" in data:
             tour.image_url = data["image_url"]
+        if "destination_id" in data:
+            tour.destination_id = int(data["destination_id"])
+
+        if "itineraries" in data:
+            # Replace itineraries wholesale when client sends a new list
+            TourItinerary.query.filter_by(tour_id=tour.id).delete()
+            for iti_data in data["itineraries"] or []:
+                db.session.add(
+                    TourItinerary(
+                        tour_id=tour.id,
+                        day_number=iti_data.get("day_number"),
+                        title=iti_data.get("title"),
+                        description=iti_data.get("content")
+                        or iti_data.get("description", ""),
+                    )
+                )
 
         db.session.commit()
         return {"tour": tour, "status": 200}
@@ -170,6 +199,15 @@ class CompanyService:
         db.session.add(dep)
         db.session.commit()
         return {"departure": dep, "status": 201}
+
+    @staticmethod
+    def get_company_departures(company_id):
+        return (
+            Departure.query.join(Tour)
+            .filter(Tour.company_id == company_id)
+            .order_by(Departure.start_date.asc())
+            .all()
+        )
 
     @staticmethod
     def get_company_bookings_query(

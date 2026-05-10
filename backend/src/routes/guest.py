@@ -27,7 +27,16 @@ def book_departure(id):
     data = request.get_json()
     num_people = data.get("num_people")
 
-    result = GuestService.book_departure(guest_id, id, num_people)
+    contact_info = {
+        "contact_name": data.get("contact_name"),
+        "contact_email": data.get("contact_email"),
+        "contact_phone": data.get("contact_phone"),
+        "notes": data.get("notes"),
+    }
+
+    result = GuestService.book_departure(
+        guest_id, id, num_people, contact_info=contact_info
+    )
     if "error" in result:
         return jsonify(error="Bad Request", message=result["error"]), result["status"]
 

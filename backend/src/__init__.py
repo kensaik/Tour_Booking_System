@@ -46,6 +46,7 @@ def create_app(config_class=Config):
     from src.routes.company import company_bp
     from src.routes.guest import guest_bp
     from src.routes.public import public_bp
+    from src.routes.upload import upload_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
@@ -53,5 +54,6 @@ def create_app(config_class=Config):
     app.register_blueprint(company_bp)
     app.register_blueprint(public_bp)
     app.register_blueprint(guest_bp)
+    app.register_blueprint(upload_bp)
 
     return app

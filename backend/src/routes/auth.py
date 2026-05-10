@@ -42,9 +42,15 @@ def login():
     user = result["user"]
     access_token = create_access_token(identity=str(user.id))
 
-    return jsonify(access_token=access_token, user=UserSchema().dump(user)), result[
-        "status"
-    ]
+    user_data = UserSchema().dump(user)
+    user_data["is_active"] = user.is_active
+
+    if user.company_profile:
+        user_data["full_name"] = user.company_profile.company_name
+    elif user.guest_profile:
+        user_data["full_name"] = user.guest_profile.full_name
+
+    return jsonify(access_token=access_token, user=user_data), result["status"]
 
 
 @auth_bp.route("/me", methods=["GET"])
@@ -60,8 +66,10 @@ def me():
     user_data["is_active"] = user.is_active
 
     if user.company_profile:
+        user_data["full_name"] = user.company_profile.company_name
         user_data["company_profile"] = CompanyProfileSchema().dump(user.company_profile)
     elif user.guest_profile:
+        user_data["full_name"] = user.guest_profile.full_name
         user_data["guest_profile"] = GuestProfileSchema().dump(user.guest_profile)
 
     return jsonify(user=user_data), 200

@@ -40,7 +40,7 @@ class TourSchema(Schema):
     created_at = fields.DateTime(dump_only=True)
 
     # Nested fields for detailed view
-    itineraries = fields.Nested(TourItinerarySchema, many=True, dump_only=True)
+    itineraries = fields.Method("get_itineraries")
     departures = fields.Method("get_valid_departures")
 
     def get_company_name(self, obj):
@@ -48,6 +48,12 @@ class TourSchema(Schema):
 
     def get_destination_name(self, obj):
         return obj.destination.name if obj.destination else None
+
+    def get_itineraries(self, obj):
+        if not hasattr(obj, "itineraries") or obj.itineraries is None:
+            return []
+        iti = obj.itineraries.all() if hasattr(obj.itineraries, "all") else obj.itineraries
+        return TourItinerarySchema(many=True).dump(iti)
 
     def get_valid_departures(self, obj):
         deps = getattr(

@@ -115,3 +115,17 @@ class AdminService:
         company.commission_rate = float(new_rate)
         db.session.commit()
         return {"company": company, "status": 200}
+
+    @staticmethod
+    def toggle_company_status(company_id):
+        company = db.session.get(CompanyProfile, company_id)
+        if not company:
+            return {"error": "Company not found", "status": 404}
+
+        user = company.user
+        if not user:
+            return {"error": "Company user not found", "status": 404}
+
+        user.is_active = not user.is_active
+        db.session.commit()
+        return {"status": 200, "is_active": user.is_active}

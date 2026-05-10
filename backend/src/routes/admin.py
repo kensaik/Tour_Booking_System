@@ -114,3 +114,18 @@ def update_commission(id):
         message="Commission rate updated successfully",
         commission_rate=result["company"].commission_rate,
     ), 200
+
+
+@admin_bp.route("/companies/<int:id>/toggle-status", methods=["PUT"])
+@admin_required()
+def toggle_company_status(id):
+    result = AdminService.toggle_company_status(id)
+
+    if "error" in result:
+        return jsonify(error="Bad Request", message=result["error"]), result["status"]
+
+    status_str = "activated" if result["is_active"] else "deactivated"
+    return jsonify(
+        message=f"Company {status_str} successfully",
+        is_active=result["is_active"],
+    ), 200

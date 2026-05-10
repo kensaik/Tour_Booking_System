@@ -25,9 +25,21 @@ class CompanyProfileSchema(Schema):
     commission_rate = fields.Float()
     is_approved = fields.Bool()
     email = fields.Method("get_email")
+    is_active = fields.Method("get_is_active")
+    created_at = fields.Method("get_created_at")
 
     def get_email(self, obj):
-        return obj.user.email if obj.user else None
+        return obj.user.email if obj and obj.user else None
+
+    def get_is_active(self, obj):
+        if not obj or not obj.user:
+            return True
+        return bool(obj.user.is_active)
+
+    def get_created_at(self, obj):
+        if not obj or not obj.user or not obj.user.created_at:
+            return None
+        return obj.user.created_at.isoformat()
 
 
 class GuestProfileSchema(Schema):
