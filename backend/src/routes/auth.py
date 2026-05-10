@@ -48,9 +48,7 @@ def login():
     elif user.guest_profile:
         user_data["full_name"] = user.guest_profile.full_name
 
-    return jsonify(access_token=access_token, user=user_data), result[
-        "status"
-    ]
+    return jsonify(access_token=access_token, user=user_data), result["status"]
 
 
 @auth_bp.route("/me", methods=["GET"])

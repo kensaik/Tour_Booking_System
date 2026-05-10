@@ -1,4 +1,5 @@
 """Unit tests for src.utils.rate_limit helpers."""
+
 from unittest.mock import patch
 
 from flask_jwt_extended import create_access_token
@@ -53,7 +54,10 @@ def test_is_admin_returns_false_without_token(app):
 
 
 def test_is_admin_returns_false_with_invalid_token(app):
-    with app.test_request_context(headers={"Authorization": "Bearer junk"}), app.app_context():
+    with (
+        app.test_request_context(headers={"Authorization": "Bearer junk"}),
+        app.app_context(),
+    ):
         assert rl._is_admin() is False
 
 
@@ -61,7 +65,10 @@ def test_is_admin_true_for_admin_user(app):
     with app.app_context():
         admin = make_admin()
         token = create_access_token(identity=str(admin.id))
-    with app.test_request_context(headers={"Authorization": f"Bearer {token}"}), app.app_context():
+    with (
+        app.test_request_context(headers={"Authorization": f"Bearer {token}"}),
+        app.app_context(),
+    ):
         assert rl._is_admin() is True
 
 
@@ -69,7 +76,10 @@ def test_is_admin_false_for_non_admin_user(app):
     with app.app_context():
         guest = make_guest()
         token = create_access_token(identity=str(guest.id))
-    with app.test_request_context(headers={"Authorization": f"Bearer {token}"}), app.app_context():
+    with (
+        app.test_request_context(headers={"Authorization": f"Bearer {token}"}),
+        app.app_context(),
+    ):
         assert rl._is_admin() is False
 
 
@@ -77,10 +87,14 @@ def test_is_admin_uses_request_cache_on_second_call(app):
     with app.app_context():
         admin = make_admin()
         token = create_access_token(identity=str(admin.id))
-    with app.test_request_context(headers={"Authorization": f"Bearer {token}"}), app.app_context():
+    with (
+        app.test_request_context(headers={"Authorization": f"Bearer {token}"}),
+        app.app_context(),
+    ):
         first = rl._is_admin()
         # Force a second call — should hit the cached attribute, not DB.
         from flask import request
+
         request._rate_limit_admin_cache = "CACHED"
         assert rl._is_admin() == "CACHED"
         assert first is True
@@ -94,5 +108,8 @@ def test_admin_exempt_short_circuits_when_perf_profiling_set(app, monkeypatch):
 
 def test_admin_exempt_delegates_to_is_admin(app, monkeypatch):
     monkeypatch.delenv("PERF_PROFILING", raising=False)
-    with patch("src.utils.rate_limit._is_admin", return_value=True), app.test_request_context():
+    with (
+        patch("src.utils.rate_limit._is_admin", return_value=True),
+        app.test_request_context(),
+    ):
         assert rl._admin_exempt() is True

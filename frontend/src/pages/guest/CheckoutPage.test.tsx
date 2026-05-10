@@ -21,7 +21,7 @@ const validBookingState = {
   pricePerPerson: 1500000,
 }
 
-const renderCheckout = (state: unknown = validBookingState) => {
+const renderCheckout = () => {
   return renderWithProviders(
     <Routes>
       <Route path="/checkout" element={<CheckoutPage />} />
@@ -59,7 +59,7 @@ describe('CheckoutPage', () => {
   })
 
   it('renders fallback when booking state is missing', () => {
-    renderCheckout(null)
+    renderCheckout()
     expect(screen.getByText(/không tìm thấy thông tin đặt tour/i)).toBeInTheDocument()
   })
 

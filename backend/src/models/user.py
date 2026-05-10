@@ -47,29 +47,37 @@ class CompanyProfile(db.Model):
     def total_revenue(self):
         from src.models.booking import Booking, Payment
         from src.models.tour import Departure, Tour
-        revenue = db.session.query(db.func.sum(Payment.amount))\
-            .join(Booking, Payment.booking_id == Booking.id)\
-            .join(Departure, Booking.departure_id == Departure.id)\
-            .join(Tour, Departure.tour_id == Tour.id)\
+
+        revenue = (
+            db.session.query(db.func.sum(Payment.amount))
+            .join(Booking, Payment.booking_id == Booking.id)
+            .join(Departure, Booking.departure_id == Departure.id)
+            .join(Tour, Departure.tour_id == Tour.id)
             .filter(
                 Tour.company_id == self.id,
-                Booking.booking_status == 'confirmed',
-                Payment.status == 'SUCCESS'
-            ).scalar() or 0
+                Booking.booking_status == "confirmed",
+                Payment.status == "SUCCESS",
+            )
+            .scalar()
+            or 0
+        )
         return float(revenue)
 
     @property
     def tours_count(self):
-        return self.tours.filter_by(status='active').count()
+        return self.tours.filter_by(status="active").count()
 
     @property
     def bookings_count(self):
         from src.models.booking import Booking
         from src.models.tour import Departure, Tour
-        return Booking.query\
-            .join(Departure, Booking.departure_id == Departure.id)\
-            .join(Tour, Departure.tour_id == Tour.id)\
-            .filter(Tour.company_id == self.id).count()
+
+        return (
+            Booking.query.join(Departure, Booking.departure_id == Departure.id)
+            .join(Tour, Departure.tour_id == Tour.id)
+            .filter(Tour.company_id == self.id)
+            .count()
+        )
 
     def __repr__(self):
         return f"<CompanyProfile {self.company_name}>"

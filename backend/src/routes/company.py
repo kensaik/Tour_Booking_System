@@ -141,6 +141,7 @@ def get_company_departures():
     company_id = get_current_company_id()
     departures = CompanyService.get_company_departures(company_id)
     from src.serializers.tour_schema import DepartureSchema
+
     return jsonify(departures=DepartureSchema(many=True).dump(departures)), 200
 
 
@@ -156,6 +157,7 @@ def get_departure_detail(id):
         ), 404
 
     from src.serializers.tour_schema import DepartureSchema
+
     return jsonify(departure=DepartureSchema().dump(departure)), 200
 
 

@@ -14,7 +14,9 @@ class PublicService:
         return Destination.query.all()
 
     @staticmethod
-    def search_active_tours(destination_id=None, keyword=None, start_date=None, min_guests=None):
+    def search_active_tours(
+        destination_id=None, keyword=None, start_date=None, min_guests=None
+    ):
         from src.constants import DepartureStatus
         from src.models.tour import Departure
 
@@ -40,7 +42,7 @@ class PublicService:
 
             if start_date:
                 try:
-                    dt = datetime.strptime(start_date, '%Y-%m-%d')
+                    dt = datetime.strptime(start_date, "%Y-%m-%d")
                     query = query.filter(Departure.start_date >= dt)
                 except (ValueError, TypeError):
                     pass

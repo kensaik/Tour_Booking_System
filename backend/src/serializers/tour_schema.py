@@ -20,6 +20,7 @@ class MinimalTourSchema(Schema):
     name = fields.Str()
     price = fields.Float()
 
+
 class DepartureSchema(Schema):
     id = fields.Int(dump_only=True)
     tour_id = fields.Int(dump_only=True)
@@ -57,7 +58,11 @@ class TourSchema(Schema):
         return obj.destination.name if obj.destination else None
 
     def get_itineraries(self, obj):
-        iti = obj.itineraries.all() if hasattr(obj.itineraries, "all") else obj.itineraries
+        iti = (
+            obj.itineraries.all()
+            if hasattr(obj.itineraries, "all")
+            else obj.itineraries
+        )
         return TourItinerarySchema(many=True).dump(iti)
 
     def get_valid_departures(self, obj):

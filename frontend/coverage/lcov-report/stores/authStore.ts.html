@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>42/42</span>
+                <span class='fraction'>45/45</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>42/42</span>
+                <span class='fraction'>45/45</span>
             </div>
         
             
@@ -136,7 +136,11 @@
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -177,6 +181,7 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -191,7 +196,8 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -212,6 +218,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { AuthService } from '../services/auth.service'
+import { queryClient } from '../lib/queryClient'
 &nbsp;
 interface User {
   id: number
@@ -219,8 +226,8 @@ interface User {
   full_name: string
   role: string
   is_active: boolean
-  company_profile?: any
-  guest_profile?: any
+  company_profile?: Record&lt;string, unknown&gt;
+  guest_profile?: Record&lt;string, unknown&gt;
 }
 &nbsp;
 interface AuthState {
@@ -229,8 +236,8 @@ interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null
-&nbsp;
   
+  // Actions
   login: (token: string, user: User) =&gt; void
   logout: () =&gt; void
   fetchUser: () =&gt; Promise&lt;void&gt;
@@ -250,35 +257,37 @@ export const useAuthStore = create&lt;AuthState&gt;()(
         set({ user, token, isAuthenticated: true, error: null })
       },
 &nbsp;
-      logout: () =&gt; {
-        localStorage.removeItem('access_token')
-        set({ user: null, token: null, isAuthenticated: false })
-      },
+  logout: () =&gt; {
+    localStorage.removeItem('access_token')
+    queryClient.clear()
+    set({ user: null, token: null, isAuthenticated: false })
+  },
 &nbsp;
-      fetchUser: async () =&gt; {
-        const { token } = get()
-        if (!token) return
+  fetchUser: async () =&gt; {
+    const { token } = get()
+    if (!token) return
 &nbsp;
-        set({ isLoading: true, error: null })
-        try {
-          const data = await AuthService.getMe()
-          set({ user: data.user, isAuthenticated: true, isLoading: false })
-        } catch (error: any) {
-&nbsp;
-          localStorage.removeItem('access_token')
-          set({ 
-            user: null, 
-            token: null, 
-            isAuthenticated: false, 
-            isLoading: false,
-            error: error.response?.data?.<span class="branch-0 cbranch-no" title="branch not covered" >message || 'Failed to fetch user'</span>
-          })
-        }
-      }
+    set({ isLoading: true, error: null })
+    try {
+      const data = await AuthService.getMe()
+      set({ user: data.user, isAuthenticated: true, isLoading: false })
+    } catch (error: unknown) {
+      localStorage.removeItem('access_token')
+      queryClient.clear()
+      const axiosErr = error as { response?: { data?: { message?: string } } }
+      set({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: axiosErr.response?.data?.<span class="branch-0 cbranch-no" title="branch not covered" >message || 'Failed to fetch user'</span>
+      })
+    }
+  }
     }),
     {
-      name: 'auth-storage', 
-      partialize: (state) =&gt; ({ token: state.token }), 
+      name: 'auth-storage', // name of the item in the storage (must be unique)
+      partialize: (state) =&gt; ({ token: state.token }), // only save the token
     }
   )
 )
@@ -289,7 +298,7 @@ export const useAuthStore = create&lt;AuthState&gt;()(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-10T10:46:10.668Z
+                at 2026-05-10T14:34:15.071Z
             </div>
         <script src="../prettify.js"></script>
         <script>

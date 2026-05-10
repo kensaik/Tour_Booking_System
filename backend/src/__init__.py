@@ -24,6 +24,7 @@ def create_app(config_class=Config):
 
     # Initialize Cloudinary
     from src.services.cloudinary_service import configure_cloudinary
+
     configure_cloudinary()
 
     # Import models to ensure SQLAlchemy knows about them before migrations

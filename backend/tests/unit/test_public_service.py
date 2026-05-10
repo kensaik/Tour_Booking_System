@@ -1,4 +1,5 @@
 """Unit tests for src.services.public_service.PublicService."""
+
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock
 
@@ -44,8 +45,10 @@ class TestSearchActiveToursIntegration:
         tour = make_tour(company, status=TourStatus.ACTIVE)
         # Departure 30 days from now with 5 seats
         make_departure(
-            tour, start_date=datetime.utcnow() + timedelta(days=30),
-            total_seats=5, available_seats=5,
+            tour,
+            start_date=datetime.utcnow() + timedelta(days=30),
+            total_seats=5,
+            available_seats=5,
         )
         results = PublicService.search_active_tours(
             start_date=(datetime.utcnow() + timedelta(days=10)).strftime("%Y-%m-%d"),
@@ -58,7 +61,9 @@ class TestSearchActiveToursIntegration:
         tour = make_tour(company, status=TourStatus.ACTIVE)
         make_departure(tour)
         # Invalid date is silently ignored.
-        results = PublicService.search_active_tours(start_date="not-a-date", min_guests=1)
+        results = PublicService.search_active_tours(
+            start_date="not-a-date", min_guests=1
+        )
         assert tour.id in [t.id for t in results]
 
     def test_invalid_min_guests_silently_ignored(self, app):
@@ -83,19 +88,25 @@ class TestGetTourDetail:
         company = make_company(approved=True)
         tour = make_tour(company, status=TourStatus.ACTIVE)
         future = make_departure(
-            tour, start_date=datetime.utcnow() + timedelta(days=10),
-            total_seats=5, available_seats=5,
+            tour,
+            start_date=datetime.utcnow() + timedelta(days=10),
+            total_seats=5,
+            available_seats=5,
         )
         # Past departure — should be filtered out.
         make_departure(
-            tour, start_date=datetime.utcnow() - timedelta(days=1),
+            tour,
+            start_date=datetime.utcnow() - timedelta(days=1),
             end_date=datetime.utcnow() + timedelta(days=1),
-            total_seats=5, available_seats=5,
+            total_seats=5,
+            available_seats=5,
         )
         # Sold-out future departure — should be filtered out.
         make_departure(
-            tour, start_date=datetime.utcnow() + timedelta(days=20),
-            total_seats=5, available_seats=0,
+            tour,
+            start_date=datetime.utcnow() + timedelta(days=20),
+            total_seats=5,
+            available_seats=0,
         )
         result = PublicService.get_tour_detail(tour.id)
         assert result is not None

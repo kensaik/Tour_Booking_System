@@ -1,4 +1,5 @@
 """Tests for src.routes.upload."""
+
 import io
 from unittest.mock import patch
 
@@ -40,9 +41,11 @@ def test_upload_image_disallowed_type(client):
 
 def test_upload_image_success(client):
     # Mock makedirs/file.save to avoid hitting the disk.
-    with patch("src.routes.upload.os.path.exists", return_value=False), \
-         patch("src.routes.upload.os.makedirs") as mk, \
-         patch("werkzeug.datastructures.FileStorage.save") as save:
+    with (
+        patch("src.routes.upload.os.path.exists", return_value=False),
+        patch("src.routes.upload.os.makedirs") as mk,
+        patch("werkzeug.datastructures.FileStorage.save") as save,
+    ):
         data = {"image": (io.BytesIO(b"\x89PNG"), "pic.png")}
         resp = client.post(
             "/api/upload/image", data=data, content_type="multipart/form-data"

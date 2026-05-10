@@ -1,5 +1,5 @@
 import AdminLayout from '@/components/admin/AdminLayout'
-import { Users, Building2, Globe, DollarSign, Calendar, TrendingUp, CreditCard } from 'lucide-react'
+import { Users, Building2, Globe, DollarSign, TrendingUp } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { AdminService } from '@/services/admin.service'
 import StatsCard from '@/components/ui/StatsCard'

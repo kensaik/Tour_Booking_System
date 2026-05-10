@@ -101,8 +101,7 @@ def toggle_company_status(id):
 
     status_str = "activated" if result["is_active"] else "deactivated"
     return jsonify(
-        message=f"Company {status_str} successfully",
-        is_active=result["is_active"]
+        message=f"Company {status_str} successfully", is_active=result["is_active"]
     ), 200
 
 

@@ -71,7 +71,7 @@ export default function CompanyBookingsPage() {
         type: 'success' 
       })
       refetch()
-    } catch (err: any) {
+    } catch {
       setToast({ message: 'Lỗi khi cập nhật trạng thái', type: 'error' })
     } finally {
       setConfirmCancelId(null)

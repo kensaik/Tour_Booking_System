@@ -48,12 +48,14 @@ class GuestService:
         # Gửi email xác nhận cho khách và thông báo cho công ty
         try:
             from src.services.notification_service import NotificationService
+
             if booking.contact_email:
-                NotificationService.send_booking_confirmation(booking, booking.contact_email)
+                NotificationService.send_booking_confirmation(
+                    booking, booking.contact_email
+                )
             if departure.tour.company and departure.tour.company.user:
                 NotificationService.send_booking_to_company(
-                    booking,
-                    departure.tour.company.user.email
+                    booking, departure.tour.company.user.email
                 )
         except Exception as e:
             print(f"Notification error: {e}")
@@ -108,8 +110,11 @@ class GuestService:
         # Gửi email xác nhận thanh toán
         try:
             from src.services.notification_service import NotificationService
+
             if booking.contact_email:
-                NotificationService.send_payment_confirmation(booking, booking.contact_email)
+                NotificationService.send_payment_confirmation(
+                    booking, booking.contact_email
+                )
         except Exception as e:
             print(f"Payment notification error: {e}")
 

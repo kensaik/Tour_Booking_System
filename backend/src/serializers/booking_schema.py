@@ -44,5 +44,8 @@ class BookingSchema(Schema):
 
     def get_departure_info(self, obj):
         if obj.departure:
-            return {"id": obj.departure.id, "start_date": obj.departure.start_date.isoformat()}
+            return {
+                "id": obj.departure.id,
+                "start_date": obj.departure.start_date.isoformat(),
+            }
         return None

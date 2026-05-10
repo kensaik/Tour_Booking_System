@@ -22,7 +22,7 @@ describe('formatDate', () => {
   it('formats a valid ISO date string', () => {
     const result = formatDate('2026-05-10')
     // vi-VN locale yields dd/MM/yyyy with possible whitespace variations
-    expect(result).toMatch(/10[\/\.\s]+0?5[\/\.\s]+2026/)
+    expect(result).toMatch(/10[/.\s]+0?5[/.\s]+2026/)
   })
 
   it('returns N/A for empty string', () => {
@@ -35,7 +35,7 @@ describe('formatDate', () => {
 
   it('accepts Date instances', () => {
     const result = formatDate(new Date('2026-01-15'))
-    expect(result).toMatch(/15[\/\.\s]+0?1[\/\.\s]+2026/)
+    expect(result).toMatch(/15[/.\s]+0?1[/.\s]+2026/)
   })
 })
 

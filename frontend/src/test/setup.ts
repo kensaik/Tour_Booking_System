@@ -2,9 +2,6 @@ import '@testing-library/jest-dom/vitest'
 import { afterEach } from 'vitest'
 import { cleanup } from '@testing-library/react'
 
-// Node 25 ships an experimental localStorage that lacks Storage methods
-// in some configurations and can shadow jsdom's. Install a deterministic
-// in-memory polyfill to keep tests independent of host runtime quirks.
 class MemoryStorage implements Storage {
   private data = new Map<string, string>()
   get length() {

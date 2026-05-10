@@ -1,7 +1,7 @@
 import CompanyLayout from '@/components/company/CompanyLayout'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Save, Image as ImageIcon, Plus, X, AlertTriangle, CheckCircle } from 'lucide-react'
+import { ArrowLeft, Save, Image as ImageIcon, Plus, X, CheckCircle } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CompanyService } from '@/services/company.service'
 import { PublicService } from '@/services/public.service'

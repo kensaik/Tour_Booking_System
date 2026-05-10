@@ -38,7 +38,7 @@ class CompanyService:
             image_url=data.get("image_url"),
         )
         db.session.add(new_tour)
-        db.session.flush() # Get ID without committing
+        db.session.flush()  # Get ID without committing
 
         # Save itineraries
         itineraries = data.get("itineraries", [])
@@ -47,7 +47,7 @@ class CompanyService:
                 tour_id=new_tour.id,
                 day_number=iti_data.get("day_number"),
                 title=iti_data.get("title"),
-                description=iti_data.get("content") or iti_data.get("description", "")
+                description=iti_data.get("content") or iti_data.get("description", ""),
             )
             db.session.add(iti)
 
@@ -91,7 +91,7 @@ class CompanyService:
                     tour_id=tour.id,
                     day_number=iti_data.get("day_number"),
                     title=iti_data.get("title"),
-                    description=iti_data.get("description", "")
+                    description=iti_data.get("description", ""),
                 )
                 db.session.add(iti)
 
@@ -334,11 +334,10 @@ class CompanyService:
         # Gửi email thông báo cho khách khi trạng thái thay đổi
         try:
             from src.services.notification_service import NotificationService
+
             if booking.contact_email:
                 NotificationService.send_booking_status_update(
-                    booking,
-                    booking.contact_email,
-                    new_status
+                    booking, booking.contact_email, new_status
                 )
         except Exception as e:
             print(f"Status update notification error: {e}")

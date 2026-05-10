@@ -6,7 +6,9 @@ class UserSchema(Schema):
     email = fields.Email(required=True)
     role = fields.Str(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
-    company_profile = fields.Nested("CompanyProfileSchema", exclude=("email", "is_active", "created_at"))
+    company_profile = fields.Nested(
+        "CompanyProfileSchema", exclude=("email", "is_active", "created_at")
+    )
     guest_profile = fields.Nested("GuestProfileSchema", exclude=("email",))
 
 

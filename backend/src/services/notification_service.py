@@ -15,8 +15,15 @@ class NotificationService:
     }
 
     @classmethod
-    def configure(cls, smtp_host=None, smtp_port=None, smtp_user=None,
-                 smtp_password=None, from_name=None, enabled=None):
+    def configure(
+        cls,
+        smtp_host=None,
+        smtp_port=None,
+        smtp_user=None,
+        smtp_password=None,
+        from_name=None,
+        enabled=None,
+    ):
         """Cấu hình SMTP - gọi trong app setup"""
         if smtp_host:
             cls._config["smtp_host"] = smtp_host
@@ -32,7 +39,9 @@ class NotificationService:
             cls._config["enabled"] = enabled
 
     @classmethod
-    def _send_email(cls, to_email: str, subject: str, html_body: str, text_body: str = None):
+    def _send_email(
+        cls, to_email: str, subject: str, html_body: str, text_body: str = None
+    ):
         """Gửi email thực sự"""
         if not cls._config["enabled"]:
             print(f"[Email Mock] To: {to_email}")
@@ -41,16 +50,18 @@ class NotificationService:
             return True
 
         try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = subject
-            msg['From'] = f"{cls._config['from_name']} <{cls._config['smtp_user']}>"
-            msg['To'] = to_email
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = f"{cls._config['from_name']} <{cls._config['smtp_user']}>"
+            msg["To"] = to_email
 
             if text_body:
-                msg.attach(MIMEText(text_body, 'plain'))
-            msg.attach(MIMEText(html_body, 'html'))
+                msg.attach(MIMEText(text_body, "plain"))
+            msg.attach(MIMEText(html_body, "html"))
 
-            with smtplib.SMTP(cls._config["smtp_host"], cls._config["smtp_port"]) as server:
+            with smtplib.SMTP(
+                cls._config["smtp_host"], cls._config["smtp_port"]
+            ) as server:
                 server.starttls()
                 server.login(cls._config["smtp_user"], cls._config["smtp_password"])
                 server.send_message(msg)
@@ -292,7 +303,7 @@ class NotificationService:
         status_text = {
             "confirmed": "đã được xác nhận",
             "cancelled": "đã bị hủy",
-            "completed": "đã hoàn thành"
+            "completed": "đã hoàn thành",
         }.get(new_status, f"đã được cập nhật thành {new_status}")
 
         subject = f"Cập nhật trạng thái đặt tour #{booking.id} - TourGo"

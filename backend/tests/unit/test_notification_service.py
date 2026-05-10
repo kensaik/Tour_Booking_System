@@ -1,4 +1,5 @@
 """Tests for src.services.notification_service.NotificationService."""
+
 from datetime import datetime
 from unittest.mock import MagicMock, patch
 
@@ -32,8 +33,12 @@ def _make_booking(payment_status="unpaid"):
 
 def test_configure_updates_config():
     NotificationService.configure(
-        smtp_host="smtp.test", smtp_port=2525, smtp_user="u",
-        smtp_password="p", from_name="Brand", enabled=True,
+        smtp_host="smtp.test",
+        smtp_port=2525,
+        smtp_user="u",
+        smtp_password="p",
+        from_name="Brand",
+        enabled=True,
     )
     cfg = NotificationService._config
     assert cfg["smtp_host"] == "smtp.test"
@@ -54,8 +59,11 @@ def test_send_email_when_disabled_returns_true_without_smtp():
 
 def test_send_email_when_enabled_calls_smtp():
     NotificationService.configure(
-        smtp_host="smtp.test", smtp_port=587, smtp_user="u",
-        smtp_password="p", enabled=True,
+        smtp_host="smtp.test",
+        smtp_port=587,
+        smtp_user="u",
+        smtp_password="p",
+        enabled=True,
     )
     fake = MagicMock()
     fake.__enter__.return_value = fake
@@ -81,9 +89,7 @@ def test_send_email_swallows_exception_returns_false():
 def test_send_booking_confirmation_invokes_send_email():
     NotificationService._config["enabled"] = False
     booking = _make_booking(payment_status="fully_paid")
-    with patch.object(
-        NotificationService, "_send_email", return_value=True
-    ) as send:
+    with patch.object(NotificationService, "_send_email", return_value=True) as send:
         result = NotificationService.send_booking_confirmation(booking, "g@x.y")
     assert result is True
     args, _ = send.call_args
@@ -94,18 +100,14 @@ def test_send_booking_confirmation_invokes_send_email():
 
 def test_send_payment_confirmation_invokes_send_email():
     booking = _make_booking()
-    with patch.object(
-        NotificationService, "_send_email", return_value=True
-    ) as send:
+    with patch.object(NotificationService, "_send_email", return_value=True) as send:
         NotificationService.send_payment_confirmation(booking, "g@x.y")
     assert send.called
 
 
 def test_send_booking_to_company_invokes_send_email():
     booking = _make_booking()
-    with patch.object(
-        NotificationService, "_send_email", return_value=True
-    ) as send:
+    with patch.object(NotificationService, "_send_email", return_value=True) as send:
         NotificationService.send_booking_to_company(booking, "co@x.y")
     args, _ = send.call_args
     assert args[0] == "co@x.y"
@@ -114,9 +116,7 @@ def test_send_booking_to_company_invokes_send_email():
 
 def test_send_booking_status_update_known_status():
     booking = _make_booking()
-    with patch.object(
-        NotificationService, "_send_email", return_value=True
-    ) as send:
+    with patch.object(NotificationService, "_send_email", return_value=True) as send:
         NotificationService.send_booking_status_update(booking, "g@x.y", "confirmed")
     args, _ = send.call_args
     assert "đã được xác nhận" in args[2]
@@ -124,9 +124,7 @@ def test_send_booking_status_update_known_status():
 
 def test_send_booking_status_update_unknown_status_falls_back():
     booking = _make_booking()
-    with patch.object(
-        NotificationService, "_send_email", return_value=True
-    ) as send:
+    with patch.object(NotificationService, "_send_email", return_value=True) as send:
         NotificationService.send_booking_status_update(booking, "g@x.y", "weird")
     args, _ = send.call_args
     assert "weird" in args[2]

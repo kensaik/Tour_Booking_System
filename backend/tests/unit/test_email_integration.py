@@ -1,4 +1,5 @@
 """Tests for src.integrations.email."""
+
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -30,8 +31,10 @@ def test_send_email_returns_false_when_unconfigured(app):
 def test_send_email_success(configured_app):
     fake_server = MagicMock()
     fake_server.__enter__.return_value = fake_server
-    with configured_app.app_context(), \
-         patch("src.integrations.email.smtplib.SMTP", return_value=fake_server) as smtp:
+    with (
+        configured_app.app_context(),
+        patch("src.integrations.email.smtplib.SMTP", return_value=fake_server) as smtp,
+    ):
         ok = _real_send_email("to@x.y", "Hi", "body", html_body="<p>body</p>")
     assert ok is True
     smtp.assert_called_once()
@@ -44,16 +47,20 @@ def test_send_email_no_tls(configured_app):
     configured_app.config["EMAIL_USE_TLS"] = False
     fake_server = MagicMock()
     fake_server.__enter__.return_value = fake_server
-    with configured_app.app_context(), \
-         patch("src.integrations.email.smtplib.SMTP", return_value=fake_server):
+    with (
+        configured_app.app_context(),
+        patch("src.integrations.email.smtplib.SMTP", return_value=fake_server),
+    ):
         ok = _real_send_email("to@x.y", "Hi", "body")
     assert ok is True
     fake_server.starttls.assert_not_called()
 
 
 def test_send_email_smtp_error_returns_false(configured_app):
-    with configured_app.app_context(), \
-         patch("src.integrations.email.smtplib.SMTP", side_effect=RuntimeError("boom")):
+    with (
+        configured_app.app_context(),
+        patch("src.integrations.email.smtplib.SMTP", side_effect=RuntimeError("boom")),
+    ):
         assert _real_send_email("to@x.y", "s", "b") is False
 
 

@@ -13,14 +13,15 @@ class AdminService:
     @staticmethod
     def _upload_image(image_data: str) -> str:
         """Upload ảnh lên Cloudinary, trả về URL. Nếu lỗi hoặc chưa config thì trả về data gốc."""
-        if not image_data or not image_data.startswith('data:image'):
+        if not image_data or not image_data.startswith("data:image"):
             return image_data
 
-        if not current_app.config.get('CLOUDINARY_ENABLED'):
+        if not current_app.config.get("CLOUDINARY_ENABLED"):
             return image_data  # Fallback: lưu Base64 nếu chưa config Cloudinary
 
         try:
             from src.services.cloudinary_service import upload_image
+
             result = upload_image(image_data, folder="tour_booking/destinations")
             if result and "url" in result:
                 return result["url"]
@@ -141,24 +142,25 @@ class AdminService:
         approved_companies = CompanyProfile.query.filter_by(is_approved=True).count()
 
         # Count tours (active)
-        total_tours = Tour.query.filter_by(status='active').count()
+        total_tours = Tour.query.filter_by(status="active").count()
 
         # Count guests
         total_guests = GuestProfile.query.count()
 
         # Calculate revenue: Only CONFIRMED bookings with SUCCESS payments
-        total_revenue = db.session.query(db.func.sum(Payment.amount))\
-            .join(Booking, Payment.booking_id == Booking.id)\
-            .join(Departure, Booking.departure_id == Departure.id)\
-            .join(Tour, Departure.tour_id == Tour.id)\
-            .filter(
-                Booking.booking_status == 'confirmed',
-                Payment.status == 'SUCCESS'
-            ).scalar() or 0
+        total_revenue = (
+            db.session.query(db.func.sum(Payment.amount))
+            .join(Booking, Payment.booking_id == Booking.id)
+            .join(Departure, Booking.departure_id == Departure.id)
+            .join(Tour, Departure.tour_id == Tour.id)
+            .filter(Booking.booking_status == "confirmed", Payment.status == "SUCCESS")
+            .scalar()
+            or 0
+        )
 
         # Count bookings
         total_bookings = Booking.query.count()
-        pending_bookings = Booking.query.filter_by(booking_status='pending').count()
+        pending_bookings = Booking.query.filter_by(booking_status="pending").count()
 
         return {
             "total_companies": total_companies,

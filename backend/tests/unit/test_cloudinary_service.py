@@ -1,4 +1,5 @@
 """Tests for src.services.cloudinary_service."""
+
 from unittest.mock import patch
 
 from src.services import cloudinary_service as cs
@@ -8,7 +9,10 @@ def test_configure_cloudinary_uses_app_config(app):
     app.config["CLOUDINARY_CLOUD_NAME"] = "test-cloud"
     app.config["CLOUDINARY_API_KEY"] = "key"
     app.config["CLOUDINARY_API_SECRET"] = "secret"
-    with patch("src.services.cloudinary_service.cloudinary.config") as cfg, app.app_context():
+    with (
+        patch("src.services.cloudinary_service.cloudinary.config") as cfg,
+        app.app_context(),
+    ):
         cs.configure_cloudinary()
     cfg.assert_called_once()
     kwargs = cfg.call_args.kwargs

@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { CompanyService } from '@/services/company.service'
 import PageHeader from '@/components/ui/PageHeader'
-import LoadingState from '@/components/ui/LoadingState'
 import Toast, { ToastType } from '@/components/ui/Toast'
 
 export default function CompanyAddDeparturePage() {

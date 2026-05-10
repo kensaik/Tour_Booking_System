@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.append(os.path.join(os.getcwd(), 'backend'))
+sys.path.append(os.path.join(os.getcwd(), "backend"))
 
 from src import create_app
 from src.models.tour import Tour

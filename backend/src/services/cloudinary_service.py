@@ -9,10 +9,10 @@ def configure_cloudinary():
         return
 
     cloudinary.config(
-        cloud_name=current_app.config.get('CLOUDINARY_CLOUD_NAME'),
-        api_key=current_app.config.get('CLOUDINARY_API_KEY'),
-        api_secret=current_app.config.get('CLOUDINARY_API_SECRET'),
-        secure=True
+        cloud_name=current_app.config.get("CLOUDINARY_CLOUD_NAME"),
+        api_key=current_app.config.get("CLOUDINARY_API_KEY"),
+        api_secret=current_app.config.get("CLOUDINARY_API_SECRET"),
+        secure=True,
     )
 
 
@@ -29,23 +29,29 @@ def upload_image(file_data: str, folder: str = "tour_booking") -> dict:
     """
     try:
         # Nếu là Base64 data URI, tách phần sau comma
-        if ',' in file_data:
-            file_data = file_data.split(',')[1]
+        if "," in file_data:
+            file_data = file_data.split(",")[1]
 
         result = cloudinary.uploader.upload(
             file_data,
             folder=folder,
             resource_type="image",
             transformation=[
-                {"width": 1200, "height": 800, "crop": "limit", "quality": "auto", "fetch_format": "auto"}
-            ]
+                {
+                    "width": 1200,
+                    "height": 800,
+                    "crop": "limit",
+                    "quality": "auto",
+                    "fetch_format": "auto",
+                }
+            ],
         )
 
         return {
             "url": result.get("secure_url"),
             "public_id": result.get("public_id"),
             "width": result.get("width"),
-            "height": result.get("height")
+            "height": result.get("height"),
         }
     except Exception as e:
         print(f"Cloudinary upload error: {e}")
@@ -68,5 +74,5 @@ def get_optimized_url(public_id: str, width: int = 800) -> str:
         public_id,
         transformation=[
             {"width": width, "crop": "limit", "quality": "auto", "fetch_format": "auto"}
-        ]
+        ],
     )

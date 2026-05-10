@@ -1,4 +1,5 @@
 """Tests for src.integrations.payment."""
+
 from src.integrations import payment as payment_mod
 
 # Capture original before conftest autouse fixture patches it.
