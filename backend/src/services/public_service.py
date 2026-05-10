@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import or_
 
@@ -37,7 +37,7 @@ class PublicService:
             return None
 
         # Filter valid departures dynamically
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
         valid_departures = [
             dep
             for dep in tour.departures.all()

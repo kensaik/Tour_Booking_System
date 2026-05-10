@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from tests.conftest import (
     make_booking,
@@ -66,7 +66,7 @@ def test_book_departure_past_returns_400(client, auth_client):
     guest = make_guest()
     company = make_company(approved=True)
     tour = make_tour(company)
-    past = datetime.utcnow() - timedelta(days=1)
+    past = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=1)
     departure = make_departure(
         tour, start_date=past, end_date=past + timedelta(days=1), total_seats=5
     )
