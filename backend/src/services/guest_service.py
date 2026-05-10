@@ -52,7 +52,7 @@ class GuestService:
                 NotificationService.send_booking_confirmation(booking, booking.contact_email)
             if departure.tour.company and departure.tour.company.user:
                 NotificationService.send_booking_to_company(
-                    booking, 
+                    booking,
                     departure.tour.company.user.email
                 )
         except Exception as e:

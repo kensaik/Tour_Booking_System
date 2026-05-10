@@ -1,3 +1,4 @@
+import contextlib
 from datetime import datetime
 
 from sqlalchemy import or_
@@ -14,9 +15,9 @@ class PublicService:
 
     @staticmethod
     def search_active_tours(destination_id=None, keyword=None, start_date=None, min_guests=None):
-        from src.models.tour import Departure
         from src.constants import DepartureStatus
-        
+        from src.models.tour import Departure
+
         # Note: Using .ilike or just checking for case-insensitivity depending on DB
         # TourStatus.ACTIVE is "ACTIVE"
         query = Tour.query.filter(Tour.status.ilike(TourStatus.ACTIVE))
@@ -36,20 +37,18 @@ class PublicService:
         if start_date or min_guests:
             query = query.join(Departure)
             query = query.filter(Departure.status == DepartureStatus.PLANNED)
-            
+
             if start_date:
                 try:
                     dt = datetime.strptime(start_date, '%Y-%m-%d')
                     query = query.filter(Departure.start_date >= dt)
                 except (ValueError, TypeError):
                     pass
-                    
+
             if min_guests:
-                try:
+                with contextlib.suppress(ValueError, TypeError):
                     query = query.filter(Departure.available_seats >= int(min_guests))
-                except (ValueError, TypeError):
-                    pass
-            
+
             query = query.distinct()
 
         return query.all()

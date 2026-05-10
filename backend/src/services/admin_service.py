@@ -1,4 +1,5 @@
 from flask import current_app
+
 from src.extensions import db
 from src.models.tour import Destination
 from src.models.user import CompanyProfile
@@ -108,7 +109,7 @@ class AdminService:
         if not company:
             return {"error": "Company not found", "status": 404}
 
-        if new_rate is None or not isinstance(new_rate, (int, float)):
+        if new_rate is None or not isinstance(new_rate, int | float):
             return {"error": "Valid commission_rate is required", "status": 400}
 
         if new_rate < 0 or new_rate > 100:
@@ -123,7 +124,7 @@ class AdminService:
         company = db.session.get(CompanyProfile, company_id)
         if not company:
             return {"error": "Company not found", "status": 404}
-        
+
         user = company.user
         user.is_active = not user.is_active
         db.session.commit()
@@ -131,21 +132,20 @@ class AdminService:
 
     @staticmethod
     def get_stats():
-        from src.models.tour import Tour
         from src.models.booking import Booking, Payment
+        from src.models.tour import Departure, Tour
         from src.models.user import GuestProfile
-        from src.models.tour import Departure
-        
+
         # Count companies
         total_companies = CompanyProfile.query.count()
         approved_companies = CompanyProfile.query.filter_by(is_approved=True).count()
-        
+
         # Count tours (active)
         total_tours = Tour.query.filter_by(status='active').count()
-        
+
         # Count guests
         total_guests = GuestProfile.query.count()
-        
+
         # Calculate revenue: Only CONFIRMED bookings with SUCCESS payments
         total_revenue = db.session.query(db.func.sum(Payment.amount))\
             .join(Booking, Payment.booking_id == Booking.id)\
@@ -155,11 +155,11 @@ class AdminService:
                 Booking.booking_status == 'confirmed',
                 Payment.status == 'SUCCESS'
             ).scalar() or 0
-        
+
         # Count bookings
         total_bookings = Booking.query.count()
         pending_bookings = Booking.query.filter_by(booking_status='pending').count()
-        
+
         return {
             "total_companies": total_companies,
             "approved_companies": approved_companies,

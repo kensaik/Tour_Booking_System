@@ -17,7 +17,7 @@ class BookingSchema(Schema):
     payment_status = fields.Str(dump_only=True)
     booking_status = fields.Str()
     created_at = fields.DateTime(dump_only=True)
-    
+
     # Contact info
     contact_name = fields.Str()
     contact_email = fields.Str()

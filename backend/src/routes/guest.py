@@ -25,7 +25,7 @@ def book_departure(id):
 
     data = request.get_json()
     num_people = data.get("num_people")
-    
+
     contact_info = {
         "contact_name": data.get("contact_name"),
         "contact_email": data.get("contact_email"),

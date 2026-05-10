@@ -24,7 +24,7 @@ def get_my_tours():
     company_id = get_current_company_id()
     if not company_id:
         return jsonify(error="Unauthorized", message="Company profile not found"), 401
-        
+
     tours = CompanyService.get_my_tours(company_id)
     tour_schema = TourSchema(many=True, exclude=("itineraries", "departures"))
     return jsonify(tours=tour_schema.dump(tours)), 200
@@ -49,7 +49,7 @@ def get_tour_detail(id):
     company_id = get_current_company_id()
     if not company_id:
         return jsonify(error="Unauthorized", message="Company profile not found"), 401
-        
+
     tour = CompanyService.get_tour_detail(company_id, id)
 
     if not tour:

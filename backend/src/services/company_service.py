@@ -336,8 +336,8 @@ class CompanyService:
             from src.services.notification_service import NotificationService
             if booking.contact_email:
                 NotificationService.send_booking_status_update(
-                    booking, 
-                    booking.contact_email, 
+                    booking,
+                    booking.contact_email,
                     new_status
                 )
         except Exception as e:

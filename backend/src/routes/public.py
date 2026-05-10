@@ -20,9 +20,9 @@ def get_tours():
     min_guests = request.args.get("guests")
 
     tours = PublicService.search_active_tours(
-        destination_id=destination_id, 
-        keyword=keyword, 
-        start_date=start_date, 
+        destination_id=destination_id,
+        keyword=keyword,
+        start_date=start_date,
         min_guests=min_guests
     )
     # Exclude itineraries and departures for the list view

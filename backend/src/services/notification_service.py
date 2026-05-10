@@ -1,7 +1,7 @@
 import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 class NotificationService:
@@ -15,15 +15,21 @@ class NotificationService:
     }
 
     @classmethod
-    def configure(cls, smtp_host=None, smtp_port=None, smtp_user=None, 
+    def configure(cls, smtp_host=None, smtp_port=None, smtp_user=None,
                  smtp_password=None, from_name=None, enabled=None):
         """Cấu hình SMTP - gọi trong app setup"""
-        if smtp_host: cls._config["smtp_host"] = smtp_host
-        if smtp_port: cls._config["smtp_port"] = smtp_port
-        if smtp_user: cls._config["smtp_user"] = smtp_user
-        if smtp_password: cls._config["smtp_password"] = smtp_password
-        if from_name: cls._config["from_name"] = from_name
-        if enabled is not None: cls._config["enabled"] = enabled
+        if smtp_host:
+            cls._config["smtp_host"] = smtp_host
+        if smtp_port:
+            cls._config["smtp_port"] = smtp_port
+        if smtp_user:
+            cls._config["smtp_user"] = smtp_user
+        if smtp_password:
+            cls._config["smtp_password"] = smtp_password
+        if from_name:
+            cls._config["from_name"] = from_name
+        if enabled is not None:
+            cls._config["enabled"] = enabled
 
     @classmethod
     def _send_email(cls, to_email: str, subject: str, html_body: str, text_body: str = None):
@@ -48,7 +54,7 @@ class NotificationService:
                 server.starttls()
                 server.login(cls._config["smtp_user"], cls._config["smtp_password"])
                 server.send_message(msg)
-            
+
             return True
         except Exception as e:
             print(f"Email error: {e}")
@@ -59,9 +65,9 @@ class NotificationService:
         """Gửi email xác nhận đặt tour cho khách"""
         departure = booking.departure
         tour = departure.tour
-        
+
         subject = f"Xác nhận đặt tour #{booking.id} - TourGo"
-        
+
         html = f"""
         <!DOCTYPE html>
         <html>
@@ -88,37 +94,37 @@ class NotificationService:
                 <div class="content">
                     <p>Xin chào <strong>{booking.contact_name}</strong>,</p>
                     <p>Cảm ơn bạn đã đặt tour! Dưới đây là thông tin đặt tour của bạn:</p>
-                    
+
                     <div class="info-box">
                         <p class="label">Mã đặt tour</p>
                         <p class="value">#{booking.id}</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Tên tour</p>
                         <p class="value">{tour.name}</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Ngày khởi hành</p>
                         <p class="value">{departure.start_date.strftime('%d/%m/%Y')}</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Số khách</p>
                         <p class="value">{booking.num_people} người</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Tổng thanh toán</p>
                         <p class="value price">{booking.total_price:,.0f} VND</p>
                     </div>
-                    
+
                     <p style="margin-top: 20px;">
-                        <strong>Trạng thái thanh toán:</strong> 
+                        <strong>Trạng thái thanh toán:</strong>
                         {"Đã thanh toán" if booking.payment_status == "fully_paid" else "Chờ thanh toán"}
                     </p>
-                    
+
                     <p>Chúng tôi sẽ liên hệ với bạn sớm nhất để xác nhận thông tin chi tiết.</p>
                     <p> Hotline: 1900 xxxx | Email: support@tourgo.com</p>
                 </div>
@@ -130,7 +136,7 @@ class NotificationService:
         </body>
         </html>
         """
-        
+
         return cls._send_email(guest_email, subject, html)
 
     @classmethod
@@ -138,9 +144,9 @@ class NotificationService:
         """Gửi email xác nhận thanh toán"""
         departure = booking.departure
         tour = departure.tour
-        
+
         subject = f"Thanh toán thành công - Tour #{booking.id} - TourGo"
-        
+
         html = f"""
         <!DOCTYPE html>
         <html>
@@ -167,17 +173,17 @@ class NotificationService:
                     <div class="success-icon">✓</div>
                     <p>Xin chào <strong>{booking.contact_name}</strong>,</p>
                     <p>Chúng tôi đã nhận được thanh toán của bạn cho tour <strong>{tour.name}</strong>.</p>
-                    
+
                     <div class="info-box">
                         <p class="label">Mã đặt tour</p>
                         <p class="value">#{booking.id}</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Số tiền đã thanh toán</p>
                         <p class="price">{booking.total_price:,.0f} VND</p>
                     </div>
-                    
+
                     <p>Vé và lịch trình chi tiết sẽ được gửi đến email của bạn trước ngày khởi hành.</p>
                     <p> Hotline: 1900 xxxx | Email: support@tourgo.com</p>
                 </div>
@@ -188,7 +194,7 @@ class NotificationService:
         </body>
         </html>
         """
-        
+
         return cls._send_email(guest_email, subject, html)
 
     @classmethod
@@ -196,9 +202,9 @@ class NotificationService:
         """Gửi email thông báo có booking mới cho công ty"""
         departure = booking.departure
         tour = departure.tour
-        
+
         subject = f"[TourGo] Có đơn đặt tour mới - #{booking.id}"
-        
+
         html = f"""
         <!DOCTYPE html>
         <html>
@@ -226,43 +232,43 @@ class NotificationService:
                     <div class="urgent">
                         <strong>⚠️ Có đơn đặt tour mới cần xác nhận!</strong>
                     </div>
-                    
+
                     <p style="margin-top: 20px;">
                         Công ty <strong>{tour.company.company_name}</strong> có đơn đặt tour mới:
                     </p>
-                    
+
                     <div class="info-box">
                         <p class="label">Mã đặt tour</p>
                         <p class="value">#{booking.id}</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Tour</p>
                         <p class="value">{tour.name}</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Ngày khởi hành</p>
                         <p class="value">{departure.start_date.strftime('%d/%m/%Y')}</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Số khách</p>
                         <p class="value">{booking.num_people} người</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Tổng giá trị</p>
                         <p class="value" style="color: #f5576c; font-size: 20px;">{booking.total_price:,.0f} VND</p>
                     </div>
-                    
+
                     <div class="info-box">
                         <p class="label">Thông tin khách hàng</p>
                         <p><strong>Tên:</strong> {booking.contact_name}</p>
                         <p><strong>Email:</strong> {booking.contact_email}</p>
                         <p><strong>Điện thoại:</strong> {booking.contact_phone}</p>
                     </div>
-                    
+
                     <p style="margin-top: 20px;">
                         Vui lòng đăng nhập vào hệ thống TourGo để xác nhận đơn đặt tour này.
                     </p>
@@ -274,7 +280,7 @@ class NotificationService:
         </body>
         </html>
         """
-        
+
         return cls._send_email(company_email, subject, html)
 
     @classmethod
@@ -282,15 +288,15 @@ class NotificationService:
         """Gửi email cập nhật trạng thái booking cho khách"""
         departure = booking.departure
         tour = departure.tour
-        
+
         status_text = {
             "confirmed": "đã được xác nhận",
             "cancelled": "đã bị hủy",
             "completed": "đã hoàn thành"
         }.get(new_status, f"đã được cập nhật thành {new_status}")
-        
+
         subject = f"Cập nhật trạng thái đặt tour #{booking.id} - TourGo"
-        
+
         html = f"""
         <!DOCTYPE html>
         <html>
@@ -315,18 +321,18 @@ class NotificationService:
                 <div class="content">
                     <p>Xin chào <strong>{booking.contact_name}</strong>,</p>
                     <p>Trạng thái đặt tour <strong>#{booking.id}</strong> của bạn {status_text}.</p>
-                    
+
                     <div class="status-box">
                         <p class="label">Trạng thái mới</p>
                         <p class="status">{status_text.upper()}</p>
                     </div>
-                    
+
                     <div class="info-box" style="background: white; padding: 20px; border-radius: 8px;">
                         <p><strong>Tour:</strong> {tour.name}</p>
                         <p><strong>Ngày khởi hành:</strong> {departure.start_date.strftime('%d/%m/%Y')}</p>
                         <p><strong>Số khách:</strong> {booking.num_people} người</p>
                     </div>
-                    
+
                     <p>Nếu có thắc mắc, vui lòng liên hệ với chúng tôi:</p>
                     <p>Hotline: 1900 xxxx | Email: support@tourgo.com</p>
                 </div>
@@ -337,5 +343,5 @@ class NotificationService:
         </body>
         </html>
         """
-        
+
         return cls._send_email(guest_email, subject, html)

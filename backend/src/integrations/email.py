@@ -9,21 +9,22 @@ Requires the following environment variables:
 """
 
 import smtplib
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from flask import current_app, has_app_context
 
 
 def send_email(to: str, subject: str, body: str, html_body: str = None) -> bool:
     """
     Send an email via Gmail SMTP.
-    
+
     Args:
         to: Recipient email address
         subject: Email subject
         body: Plain text body
         html_body: Optional HTML body
-        
+
     Returns:
         True if sent successfully, False otherwise
     """
@@ -77,7 +78,7 @@ def send_email(to: str, subject: str, body: str, html_body: str = None) -> bool:
 def send_booking_confirmation(to: str, booking_data: dict) -> bool:
     """Send booking confirmation email."""
     subject = f"Xác nhận đặt tour #{booking_data.get('booking_id', 'N/A')}"
-    
+
     body = f"""
 Xin chào {booking_data.get('guest_name', 'Quý khách')},
 
@@ -124,7 +125,7 @@ Tour Booking System
 def send_booking_cancellation(to: str, booking_data: dict) -> bool:
     """Send booking cancellation email."""
     subject = f"Thông báo hủy đặt tour #{booking_data.get('booking_id', 'N/A')}"
-    
+
     body = f"""
 Xin chào {booking_data.get('guest_name', 'Quý khách')},
 

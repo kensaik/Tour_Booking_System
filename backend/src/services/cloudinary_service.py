@@ -7,7 +7,7 @@ def configure_cloudinary():
     """Khởi tạo Cloudinary với config từ environment"""
     if not current_app:
         return
-    
+
     cloudinary.config(
         cloud_name=current_app.config.get('CLOUDINARY_CLOUD_NAME'),
         api_key=current_app.config.get('CLOUDINARY_API_KEY'),
@@ -19,11 +19,11 @@ def configure_cloudinary():
 def upload_image(file_data: str, folder: str = "tour_booking") -> dict:
     """
     Upload ảnh Base64 lên Cloudinary
-    
+
     Args:
         file_data: Base64 string của ảnh (data:image/...;base64,...)
         folder: Thư mục lưu trên Cloudinary
-        
+
     Returns:
         dict với url, public_id của ảnh
     """
@@ -31,7 +31,7 @@ def upload_image(file_data: str, folder: str = "tour_booking") -> dict:
         # Nếu là Base64 data URI, tách phần sau comma
         if ',' in file_data:
             file_data = file_data.split(',')[1]
-        
+
         result = cloudinary.uploader.upload(
             file_data,
             folder=folder,
@@ -40,7 +40,7 @@ def upload_image(file_data: str, folder: str = "tour_booking") -> dict:
                 {"width": 1200, "height": 800, "crop": "limit", "quality": "auto", "fetch_format": "auto"}
             ]
         )
-        
+
         return {
             "url": result.get("secure_url"),
             "public_id": result.get("public_id"),
