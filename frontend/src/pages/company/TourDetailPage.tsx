@@ -1,0 +1,370 @@
+import CompanyLayout from '@/components/company/CompanyLayout'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { ArrowLeft, Save, Image as ImageIcon, Plus, X, AlertTriangle } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { CompanyService } from '@/services/company.service'
+import { PublicService } from '@/services/public.service'
+import { UploadService } from '@/services/upload.service'
+import LoadingState from '@/components/ui/LoadingState'
+import ErrorState from '@/components/ui/ErrorState'
+
+export default function CompanyTourDetailPage() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [formData, setFormData] = useState<any>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [destSearch, setDestSearch] = useState('')
+  const [showDestDropdown, setShowDestDropdown] = useState(false)
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    try {
+      const result = await UploadService.uploadImage(file)
+      setFormData({ ...formData, image_url: result.url })
+    } catch (error) {
+      console.error('Upload failed:', error)
+      alert('Tải ảnh lên thất bại!')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const { data: tour, isLoading, error } = useQuery({
+    queryKey: ['company-tour', id],
+    queryFn: () => CompanyService.getTourDetail(id as string),
+    enabled: !!id
+  })
+
+  const { data: destResponse } = useQuery({
+    queryKey: ['destinations'],
+    queryFn: () => PublicService.getDestinations()
+  })
+  const destinations = destResponse?.destinations || []
+
+  useEffect(() => {
+    if (tour?.tour) {
+      const t = tour.tour
+      setFormData({
+        name: t.name,
+        description: t.description,
+        price: t.price,
+        destination_id: t.destination_id,
+        image_url: t.image_url,
+        itineraries: t.itineraries || []
+      })
+      const dest = destinations.find((d: any) => d.id === t.destination_id)
+      if (dest) setDestSearch(dest.name)
+    }
+  }, [tour, destinations])
+
+  const updateMutation = useMutation({
+    mutationFn: (data: any) => CompanyService.updateTour(id as string, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['company-tour', id] })
+      queryClient.invalidateQueries({ queryKey: ['company-tours'] })
+      alert('Cập nhật tour thành công!')
+    }
+  })
+
+  const publishMutation = useMutation({
+    mutationFn: () => CompanyService.updateTour(id as string, { status: 'active' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['company-tour', id] })
+      queryClient.invalidateQueries({ queryKey: ['company-tours'] })
+      alert('Tour đã được duyệt và chính thức hoạt động!')
+    }
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // Auto calculate total days from itineraries length
+    const total_days = formData.itineraries.length
+
+    updateMutation.mutate({
+      ...formData,
+      price: parseFloat(formData.price),
+      destination_id: parseInt(formData.destination_id),
+      total_days: total_days
+    })
+  }
+
+  const addDay = () => {
+    setFormData({
+      ...formData,
+      itineraries: [
+        ...formData.itineraries,
+        { day_number: formData.itineraries.length + 1, title: '', description: '' }
+      ]
+    })
+  }
+
+  const updateItinerary = (index: number, field: string, value: string) => {
+    const newItineraries = [...formData.itineraries]
+    newItineraries[index] = { ...newItineraries[index], [field]: value }
+    setFormData({ ...formData, itineraries: newItineraries })
+  }
+
+  const removeDay = (index: number) => {
+    const newItineraries = formData.itineraries.filter((_: any, i: number) => i !== index)
+    const reindexed = newItineraries.map((day: any, i: number) => ({ ...day, day_number: i + 1 }))
+    setFormData({ ...formData, itineraries: reindexed })
+  }
+
+  if (isLoading) return <CompanyLayout><LoadingState message="Đang tải thông tin tour..." /></CompanyLayout>
+  if (error || !tour) return <CompanyLayout><ErrorState message="Không tìm thấy thông tin tour hoặc có lỗi xảy ra." /></CompanyLayout>
+  if (!formData) return null
+
+  return (
+    <CompanyLayout>
+      <div className="max-w-4xl mx-auto">
+        <button
+          onClick={() => navigate('/company/tours')}
+          className="flex items-center gap-2 text-on-surface-variant hover:text-primary mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Quay lại danh sách
+        </button>
+
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-on-surface">Chi tiết Tour</h1>
+            <p className="text-on-surface-variant">ID: #{id} • Trạng thái: {tour.tour.status?.toLowerCase() === 'active' ? 'Đang hoạt động' : 'Nháp'}</p>
+          </div>
+          <button
+            form="edit-tour-form"
+            type="submit"
+            disabled={updateMutation.isPending}
+            className="flex items-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-2 rounded-lg font-medium shadow-md transition-all disabled:opacity-50"
+          >
+            <Save className="w-4 h-4" />
+            {updateMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
+          </button>
+        </div>
+
+        {tour.tour.status?.toLowerCase() === 'draft' && (
+          <div className="mb-6 p-6 bg-primary/5 text-on-surface rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 border border-primary/20 shadow-sm">
+            <div className="flex items-center gap-5 flex-1">
+              <div className="p-3 bg-primary/10 rounded-xl text-primary shrink-0">
+                <AlertTriangle className="w-8 h-8" />
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-xl mb-1">Tour này đang chờ duyệt</p>
+                <p className="text-on-surface-variant leading-relaxed">
+                  Vui lòng kiểm tra lại toàn bộ thông tin, ảnh và lịch trình chi tiết. 
+                  Sau khi chắc chắn, hãy nhấn nút <strong>Duyệt Tour</strong> để khách hàng có thể tìm thấy và đặt chỗ.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                if(confirm('Bạn có chắc chắn muốn duyệt tour này không?')) {
+                  publishMutation.mutate()
+                }
+              }}
+              disabled={publishMutation.isPending}
+              className="whitespace-nowrap bg-primary hover:bg-primary-container text-white px-10 py-4 rounded-2xl font-bold shadow-lg hover:shadow-primary/20 transition-all transform hover:-translate-y-1 active:translate-y-0 disabled:opacity-50"
+            >
+              {publishMutation.isPending ? 'Đang xử lý...' : 'DUYỆT TOUR NGAY'}
+            </button>
+          </div>
+        )}
+
+        <form id="edit-tour-form" onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Info Card */}
+          <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <span className="w-1.5 h-6 bg-primary rounded-full"></span>
+              Thông tin cơ bản
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-1.5">Tên Tour *</label>
+                <input
+                  required
+                  type="text"
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
+                  value={formData.name || ''}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1.5">Điểm đến *</label>
+                <div className="relative">
+                  <input
+                    required
+                    type="text"
+                    placeholder="Gõ để tìm điểm đến..."
+                    className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
+                    value={destSearch}
+                    onFocus={() => setShowDestDropdown(true)}
+                    onBlur={() => {
+                      // Small delay to allow clicking the dropdown items
+                      setTimeout(() => setShowDestDropdown(false), 200)
+                    }}
+                    onChange={e => {
+                      setDestSearch(e.target.value)
+                      setShowDestDropdown(true)
+                      const match = destinations.find((d: any) => d.name.toLowerCase() === e.target.value.toLowerCase())
+                      if (match) {
+                        setFormData({ ...formData, destination_id: match.id })
+                      }
+                    }}
+                  />
+                  {showDestDropdown && (
+                    <div className="absolute z-10 w-full mt-1 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xl max-h-60 overflow-auto py-2">
+                      {destinations
+                        .filter((d: any) => d.name.toLowerCase().includes(destSearch.toLowerCase()))
+                        .map((d: any) => (
+                          <div
+                            key={d.id}
+                            className="px-4 py-2.5 hover:bg-primary/10 cursor-pointer transition-colors flex items-center justify-between group"
+                            onClick={() => {
+                              setDestSearch(d.name)
+                              setFormData({ ...formData, destination_id: d.id })
+                              setShowDestDropdown(false)
+                            }}
+                          >
+                            <span className="text-on-surface group-hover:text-primary font-medium">{d.name}</span>
+                            {formData.destination_id === d.id && (
+                              <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                            )}
+                          </div>
+                        ))}
+                      {destinations.filter((d: any) => d.name.toLowerCase().includes(destSearch.toLowerCase())).length === 0 && (
+                        <div className="px-4 py-3 text-sm text-on-surface-variant italic">
+                          Không tìm thấy điểm đến nào...
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1.5">Giá tour (VNĐ) *</label>
+                <input
+                  required
+                  type="number"
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
+                  value={formData.price || ''}
+                  onChange={e => setFormData({ ...formData, price: e.target.value })}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-1.5">Mô tả tổng quát *</label>
+                <textarea
+                  required
+                  rows={4}
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none resize-none"
+                  value={formData.description || ''}
+                  onChange={e => setFormData({ ...formData, description: e.target.value })}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-1.5">Ảnh đại diện Tour *</label>
+                <div className="flex flex-col sm:flex-row gap-4 items-start">
+                  <div className="relative group w-full sm:w-48 h-32 bg-surface-container rounded-xl border-2 border-dashed border-outline-variant hover:border-primary transition-all overflow-hidden flex flex-col items-center justify-center cursor-pointer">
+                    {formData.image_url ? (
+                      <>
+                        <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <p className="text-white text-xs font-bold">Thay đổi ảnh</p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <ImageIcon className="w-8 h-8 text-on-surface-variant mb-2" />
+                        <p className="text-xs text-on-surface-variant px-4 text-center">
+                          {isUploading ? 'Đang tải lên...' : 'Bấm để tải ảnh lên'}
+                        </p>
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={handleFileChange}
+                      disabled={isUploading}
+                    />
+                  </div>
+                  <div className="flex-1 text-sm text-on-surface-variant">
+                    <p className="font-medium text-on-surface mb-1">Yêu cầu:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Định dạng: JPG, PNG, GIF</li>
+                      <li>Kích thước tối ưu: 800 x 600 px</li>
+                      <li>Dung lượng tối đa: 2MB</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Itinerary Section */}
+          <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-bold flex items-center gap-2">
+                <span className="w-1.5 h-6 bg-secondary rounded-full"></span>
+                Lịch trình chi tiết
+              </h2>
+              <button
+                type="button"
+                onClick={addDay}
+                className="text-primary hover:text-primary-container font-medium flex items-center gap-1"
+              >
+                <Plus className="w-4 h-4" />
+                Thêm ngày
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {formData.itineraries.map((day: any, index: number) => (
+                <div key={index} className="relative p-4 rounded-xl border border-outline-variant bg-surface-container-low group">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-bold text-primary uppercase tracking-wider">Ngày {day.day_number}</span>
+                    {formData.itineraries.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeDay(index)}
+                        className="text-error hover:bg-error-container p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                  <div className="space-y-4">
+                    <input
+                      required
+                      type="text"
+                      placeholder="Tiêu đề ngày"
+                      className="w-full px-3 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
+                      value={day.title || ''}
+                      onChange={e => updateItinerary(index, 'title', e.target.value)}
+                    />
+                    <textarea
+                      required
+                      rows={3}
+                      placeholder="Những hoạt động chính trong ngày..."
+                      className="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none"
+                      value={day.description || ''}
+                      onChange={e => {
+                        const newItineraries = [...formData.itineraries]
+                        newItineraries[index].description = e.target.value
+                        setFormData({ ...formData, itineraries: newItineraries })
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </form>
+      </div>
+    </CompanyLayout>
+  )
+}
