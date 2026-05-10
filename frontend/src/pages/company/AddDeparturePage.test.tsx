@@ -96,7 +96,7 @@ describe("CompanyAddDeparturePage", () => {
     await user.click(saveBtn);
 
     expect(
-      await screen.findByText(/Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc/i)
+      await screen.findByText(/Vui lòng điền đầy đủ ngày bắt đầu và ngày kết thúc/i),
     ).toBeInTheDocument();
     expect(CompanyService.addDeparture).not.toHaveBeenCalled();
   });
@@ -189,7 +189,7 @@ describe("CompanyAddDeparturePage", () => {
         start_date: "2025-06-01T08:00",
         end_date: "2025-06-03T17:00",
         total_seats: 25,
-      })
+      }),
     );
   });
 

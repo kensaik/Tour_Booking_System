@@ -67,7 +67,7 @@ describe("CompanySettingsPage", () => {
   it("disables email field from editing", async () => {
     renderWithProviders(<SettingsPage />);
 
-    const emailInput = await screen.findByDisplayValue(/company@example.com/) as HTMLInputElement;
+    const emailInput = (await screen.findByDisplayValue(/company@example.com/)) as HTMLInputElement;
     expect(emailInput.disabled).toBe(true);
   });
 
@@ -75,7 +75,7 @@ describe("CompanySettingsPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<SettingsPage />);
 
-    const nameInput = await screen.findByDisplayValue(/Tour Company ABC/) as HTMLInputElement;
+    const nameInput = (await screen.findByDisplayValue(/Tour Company ABC/)) as HTMLInputElement;
     await user.clear(nameInput);
     await user.type(nameInput, "New Company Name");
 
@@ -86,7 +86,7 @@ describe("CompanySettingsPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<SettingsPage />);
 
-    const phoneInput = await screen.findByDisplayValue(/0912345678/) as HTMLInputElement;
+    const phoneInput = (await screen.findByDisplayValue(/0912345678/)) as HTMLInputElement;
     await user.clear(phoneInput);
     await user.type(phoneInput, "0987654321");
 
@@ -97,7 +97,9 @@ describe("CompanySettingsPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<SettingsPage />);
 
-    const addressInput = await screen.findByDisplayValue(/123 Nguyễn Huệ, HCMC/) as HTMLInputElement;
+    const addressInput = (await screen.findByDisplayValue(
+      /123 Nguyễn Huệ, HCMC/,
+    )) as HTMLInputElement;
     await user.clear(addressInput);
     await user.type(addressInput, "456 Le Loi Street");
 
@@ -108,7 +110,9 @@ describe("CompanySettingsPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<SettingsPage />);
 
-    const descInput = await screen.findByDisplayValue(/Leading tour operator/) as HTMLTextAreaElement;
+    const descInput = (await screen.findByDisplayValue(
+      /Leading tour operator/,
+    )) as HTMLTextAreaElement;
     await user.clear(descInput);
     await user.type(descInput, "Premium tour operator with 10 years experience");
 
@@ -138,7 +142,9 @@ describe("CompanySettingsPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<SettingsPage />);
 
-    const submitBtn = await screen.findByRole("button", { name: /Lưu thay đổi/i }) as HTMLButtonElement;
+    const submitBtn = (await screen.findByRole("button", {
+      name: /Lưu thay đổi/i,
+    })) as HTMLButtonElement;
 
     // Click submit
     await user.click(submitBtn);
@@ -166,14 +172,16 @@ describe("CompanySettingsPage", () => {
     renderWithProviders(<SettingsPage />);
 
     expect(await screen.findByText(/Lưu ý/i)).toBeInTheDocument();
-    expect(screen.getByText(/Thông tin công ty của bạn sẽ được hiển thị công khai/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Thông tin công ty của bạn sẽ được hiển thị công khai/i),
+    ).toBeInTheDocument();
   });
 
   it("allows making multiple field changes before submit", async () => {
     const user = userEvent.setup();
     renderWithProviders(<SettingsPage />);
 
-    const nameInput = await screen.findByDisplayValue(/Tour Company ABC/) as HTMLInputElement;
+    const nameInput = (await screen.findByDisplayValue(/Tour Company ABC/)) as HTMLInputElement;
     const phoneInput = screen.getByDisplayValue(/0912345678/) as HTMLInputElement;
     const addressInput = screen.getByDisplayValue(/123 Nguyễn Huệ, HCMC/) as HTMLInputElement;
 
@@ -204,7 +212,7 @@ describe("CompanySettingsPage", () => {
     useAuthStore.setState({ user: minimalUser, isAuthenticated: true });
     renderWithProviders(<SettingsPage />);
 
-    const phoneInput = await screen.findByPlaceholderText(/09xx xxx xxx/) as HTMLInputElement;
+    const phoneInput = (await screen.findByPlaceholderText(/09xx xxx xxx/)) as HTMLInputElement;
     expect(phoneInput.value).toBe("");
   });
 

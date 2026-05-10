@@ -36,9 +36,7 @@ describe("HomePage", () => {
       destinations: [],
     });
     // Never resolves to keep loading state
-    vi.mocked(PublicService.getTours).mockImplementation(
-      () => new Promise(() => {}),
-    );
+    vi.mocked(PublicService.getTours).mockImplementation(() => new Promise(() => {}));
 
     renderWithProviders(<HomePage />);
 
@@ -62,9 +60,7 @@ describe("HomePage", () => {
     vi.mocked(PublicService.getDestinations).mockResolvedValue({
       destinations: [],
     });
-    vi.mocked(PublicService.getTours).mockRejectedValue(
-      new Error("API error"),
-    );
+    vi.mocked(PublicService.getTours).mockRejectedValue(new Error("API error"));
 
     renderWithProviders(<HomePage />);
 

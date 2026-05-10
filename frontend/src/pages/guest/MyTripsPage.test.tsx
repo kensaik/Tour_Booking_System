@@ -68,9 +68,7 @@ describe("MyTripsPage", () => {
   });
 
   it("shows loading state while bookings are pending", () => {
-    vi.mocked(GuestService.getMyBookings).mockImplementation(
-      () => new Promise(() => {}),
-    );
+    vi.mocked(GuestService.getMyBookings).mockImplementation(() => new Promise(() => {}));
 
     renderWithProviders(<MyTripsPage />);
 

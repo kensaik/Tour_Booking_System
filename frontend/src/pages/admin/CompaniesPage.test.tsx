@@ -274,7 +274,7 @@ describe("AdminCompaniesPage", () => {
       () =>
         new Promise((resolve) => {
           setTimeout(() => resolve(mockCompaniesData), 100);
-        })
+        }),
     );
 
     renderWithProviders(<AdminCompaniesPage />, {

@@ -92,7 +92,9 @@ describe("CompanyBookingsPage", () => {
   it("displays search input and filter dropdowns", async () => {
     renderWithProviders(<BookingsPage />);
 
-    expect(await screen.findByPlaceholderText(/Tìm theo tên, SĐT, mã đặt tour/i)).toBeInTheDocument();
+    expect(
+      await screen.findByPlaceholderText(/Tìm theo tên, SĐT, mã đặt tour/i),
+    ).toBeInTheDocument();
     expect(screen.getByDisplayValue(/Tất cả trạng thái/i)).toBeInTheDocument();
     expect(screen.getByDisplayValue(/Tất cả thanh toán/i)).toBeInTheDocument();
   });
@@ -189,7 +191,9 @@ describe("CompanyBookingsPage", () => {
 
     // Modal should appear
     expect(await screen.findByText(/Xác nhận hủy đơn/i)).toBeInTheDocument();
-    expect(screen.getByText(/Bạn có chắc chắn muốn hủy đơn đặt tour này không/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Bạn có chắc chắn muốn hủy đơn đặt tour này không/i),
+    ).toBeInTheDocument();
   });
 
   it("renders export button", async () => {

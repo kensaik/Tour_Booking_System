@@ -99,24 +99,18 @@ describe("TourDetailPage", () => {
     await user.click(bookBtn);
 
     // Warning modal appears
-    expect(
-      await screen.findByText(/vui lòng chọn ngày khởi hành/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/vui lòng chọn ngày khởi hành/i)).toBeInTheDocument();
 
     // Close modal
     const closeBtn = screen.getByRole("button", { name: /đã hiểu/i });
     await user.click(closeBtn);
 
     // Modal should be closed
-    expect(
-      screen.queryByText(/vui lòng chọn ngày khởi hành/i),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/vui lòng chọn ngày khởi hành/i)).not.toBeInTheDocument();
   });
 
   it("shows loading and error states appropriately", async () => {
-    vi.mocked(PublicService.getTourDetail).mockImplementation(
-      () => new Promise(() => {}),
-    );
+    vi.mocked(PublicService.getTourDetail).mockImplementation(() => new Promise(() => {}));
 
     renderWithProviders(
       <Routes>

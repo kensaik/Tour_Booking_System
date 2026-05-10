@@ -207,7 +207,9 @@ describe("CompanyAddTourPage", () => {
 
     // Remove first day
     const removeButtons = screen.getAllByRole("button");
-    const deleteBtn = removeButtons.find((btn) => btn.getAttribute("aria-label")?.includes("Xóa") || btn.querySelector("svg"));
+    const deleteBtn = removeButtons.find(
+      (btn) => btn.getAttribute("aria-label")?.includes("Xóa") || btn.querySelector("svg"),
+    );
     if (deleteBtn) {
       await user.click(deleteBtn);
     }

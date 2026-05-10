@@ -80,7 +80,9 @@ describe("CompanyToursPage", () => {
   it("displays search input and status filter dropdown", async () => {
     renderWithProviders(<ToursPage />);
 
-    expect(await screen.findByPlaceholderText(/Tìm kiếm tour theo tên hoặc địa điểm/i)).toBeInTheDocument();
+    expect(
+      await screen.findByPlaceholderText(/Tìm kiếm tour theo tên hoặc địa điểm/i),
+    ).toBeInTheDocument();
     expect(screen.getByDisplayValue(/Tất cả trạng thái/i)).toBeInTheDocument();
   });
 
@@ -124,7 +126,9 @@ describe("CompanyToursPage", () => {
     await user.click(deleteButtons[0]);
 
     // Confirm modal should appear with confirmation message
-    expect(await screen.findByText(/Bạn có chắc chắn muốn xóa tour này không/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Bạn có chắc chắn muốn xóa tour này không/i),
+    ).toBeInTheDocument();
 
     // Click confirm button
     const confirmBtn = screen.getByRole("button", { name: /Xóa ngay/i });

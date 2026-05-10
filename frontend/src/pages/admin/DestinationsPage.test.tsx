@@ -208,7 +208,7 @@ describe("DestinationsPage", () => {
       expect.objectContaining({
         name: "Sapa",
         description: "Vùng đất cao",
-      })
+      }),
     );
   });
 
@@ -237,9 +237,7 @@ describe("DestinationsPage", () => {
     const deleteButtons = await screen.findAllByTitle(/Xóa/i);
     await user.click(deleteButtons[0]);
 
-    expect(
-      await screen.findByText(/Bạn có chắc chắn muốn xóa điểm đến này/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Bạn có chắc chắn muốn xóa điểm đến này/i)).toBeInTheDocument();
   });
 
   it("calls deleteDestination when confirm delete is clicked", async () => {
@@ -318,7 +316,7 @@ describe("DestinationsPage", () => {
       1,
       expect.objectContaining({
         name: "Đà Lạt Updated",
-      })
+      }),
     );
   });
 
@@ -344,12 +342,8 @@ describe("DestinationsPage", () => {
       authState: { user: mockAdminUser, isAuthenticated: true },
     });
 
-    expect(
-      await screen.findByText(/Chưa có điểm đến nào/i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Hãy bắt đầu bằng việc thêm điểm đến đầu tiên/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Chưa có điểm đến nào/i)).toBeInTheDocument();
+    expect(screen.getByText(/Hãy bắt đầu bằng việc thêm điểm đến đầu tiên/i)).toBeInTheDocument();
   });
 
   it("renders empty state with action button for no destinations", async () => {
@@ -361,9 +355,12 @@ describe("DestinationsPage", () => {
     });
 
     await screen.findByText(/Chưa có điểm đến nào/i);
-    const actionBtn = await screen.findByRole("button", { name: /Thêm điểm đến/i });
-    expect(actionBtn).toBeInTheDocument();
+    const emptyStateText = screen.getByText(/Hãy bắt đầu bằng việc thêm điểm đến đầu tiên/i);
+    expect(emptyStateText).toBeInTheDocument();
 
+    // Click the action button - get all buttons with that name and click the last one (empty state action)
+    const addButtons = screen.getAllByRole("button", { name: /Thêm điểm đến|Thêm Điểm đến/i });
+    const actionBtn = addButtons[addButtons.length - 1];
     await user.click(actionBtn);
     expect(await screen.findByText(/Thêm điểm đến mới/i)).toBeInTheDocument();
   });
@@ -380,9 +377,7 @@ describe("DestinationsPage", () => {
     const searchInput = screen.getByPlaceholderText(/Tìm kiếm điểm đến/i);
     await user.type(searchInput, "NonExistent");
 
-    expect(
-      await screen.findByText(/Không tìm thấy điểm đến/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Không tìm thấy điểm đến/i)).toBeInTheDocument();
   });
 
   it("shows loading state initially", () => {
@@ -390,7 +385,7 @@ describe("DestinationsPage", () => {
       () =>
         new Promise((resolve) => {
           setTimeout(() => resolve(mockDestinationsData), 100);
-        })
+        }),
     );
 
     renderWithProviders(<DestinationsPage />, {
