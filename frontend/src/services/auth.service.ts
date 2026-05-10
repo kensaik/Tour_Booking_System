@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const AuthService = {
-  async register(data: any) {
+  async register(data: Record<string, unknown>) {
     const response = await api.post("/auth/register", data);
     return response.data;
   },

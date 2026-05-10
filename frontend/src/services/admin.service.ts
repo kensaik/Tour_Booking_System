@@ -7,12 +7,12 @@ export const AdminService = {
     return response.data;
   },
 
-  createDestination: async (data: any) => {
+  createDestination: async (data: Record<string, unknown>) => {
     const response = await api.post("/admin/destinations", data);
     return response.data;
   },
 
-  updateDestination: async (id: number | string, data: any) => {
+  updateDestination: async (id: number | string, data: Record<string, unknown>) => {
     const response = await api.put(`/admin/destinations/${id}`, data);
     return response.data;
   },
@@ -44,7 +44,7 @@ export const AdminService = {
     return response.data;
   },
 
-  createCompany: async (data: any) => {
+  createCompany: async (data: Record<string, unknown>) => {
     // We reuse auth register but with company role
     const response = await api.post("/auth/register", { ...data, role: "company" });
     return response.data;
