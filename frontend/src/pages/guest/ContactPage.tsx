@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-background pt-24 pb-16">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <h1 className="text-4xl font-bold text-on-surface mb-8 text-center">
           Liên hệ với chúng tôi
         </h1>

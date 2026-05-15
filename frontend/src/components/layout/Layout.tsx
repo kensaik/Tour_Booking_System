@@ -25,7 +25,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-background">
       <header className="fixed top-0 w-full z-50 bg-surface shadow-sm">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-semibold text-primary">TourGo</span>
           </Link>
@@ -166,7 +166,7 @@ export default function Layout() {
       </main>
 
       <footer className="bg-surface-container-low border-t border-outline-variant">
-        <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 py-12 flex flex-col md:flex-row justify-between gap-12">
+        <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 py-12 flex flex-col md:flex-row justify-between gap-12">
           <div className="w-full md:w-1/3">
             <span className="text-2xl font-bold text-primary mb-4 block">TourGo</span>
             <p className="text-base text-on-surface-variant mb-6">

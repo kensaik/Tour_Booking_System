@@ -76,12 +76,12 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative z-10 w-full max-w-[1200px] px-4 md:px-8 text-center">
+        <div className="relative z-10 w-full max-w-[1440px] px-4 md:px-8 text-center">
           <h1 className="text-5xl font-bold text-white mb-10 drop-shadow-lg leading-tight">
             Khám phá vẻ đẹp Việt Nam
           </h1>
 
-          <div className="bg-surface/95 backdrop-blur-md p-6 rounded-xl shadow-xl max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-end">
+          <div className="bg-surface/95 backdrop-blur-md p-6 rounded-xl shadow-xl max-w-5xl mx-auto flex flex-col md:flex-row gap-4 items-end">
             <div className="w-full text-left">
               <label
                 htmlFor="destination"
@@ -159,7 +159,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-20 bg-white border-b-2 border-blue-200">
+      <section className="max-w-[1440px] mx-auto px-4 md:px-8 py-20 bg-white border-b-2 border-blue-200">
         <div className="flex justify-between items-end mb-10">
           <div>
             <h2 className="text-3xl font-bold text-on-surface">Tour Nổi Bật</h2>
@@ -247,7 +247,7 @@ export default function HomePage() {
       </section>
 
       <section className="bg-surface-container py-20 border-b-2 border-green-200">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div>
               <h2 className="text-3xl font-bold text-on-surface mb-4">Tại sao nên chọn TourGo?</h2>
@@ -278,9 +278,9 @@ export default function HomePage() {
       </section>
 
       <section className="bg-primary py-16">
-        <div className="max-w-[1200px] mx-auto px-4 text-center">
+        <div className="max-w-[1440px] mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Sẵn sàng cho chuyến đi của bạn?</h2>
-          <p className="text-white/80 mb-8 max-w-2xl mx-auto">
+          <p className="text-white/80 mb-8 max-w-3xl mx-auto">
             Đăng ký ngay hôm nay và nhận ưu đãi 10% cho lần đặt tour đầu tiên
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

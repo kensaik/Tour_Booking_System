@@ -125,7 +125,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen pt-20 pb-16 bg-surface-container-low">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-8">
         <Link
           to="/tours"
           className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary mb-6 transition-colors"

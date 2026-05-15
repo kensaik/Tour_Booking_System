@@ -66,7 +66,7 @@ export default function GuestToursPage() {
 
   return (
     <div className="min-h-screen pt-20 pb-16">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-on-surface mb-2">Danh sách Tour</h1>
           <p className="text-on-surface-variant">Tìm thấy {tours.length} tour phù hợp</p>

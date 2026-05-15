@@ -112,7 +112,7 @@ export default function TourDetailPage() {
 
   return (
     <div className="min-h-screen pt-20 pb-16">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <nav className="text-sm text-on-surface-variant mb-4">
           <Link to="/" className="hover:text-primary">
             Trang chủ

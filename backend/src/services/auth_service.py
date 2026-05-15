@@ -9,7 +9,7 @@ class AuthService:
     def register_user(data):
         email = data.get("email")
         password = data.get("password")
-        role = data.get("role", UserRole.GUEST)
+        role = data.get("role", UserRole.GUEST).upper()
 
         if not email or not password:
             return {"error": "Email and password are required", "status": 400}
@@ -64,5 +64,11 @@ class AuthService:
 
         if not user.is_active:
             return {"error": "Account is deactivated", "status": 403}
+
+        if user.role == UserRole.COMPANY and not user.company_profile.is_approved:
+            return {
+                "error": "Account pending approval. Please wait for administrator to approve your company.",
+                "status": 403,
+            }
 
         return {"user": user, "status": 200}

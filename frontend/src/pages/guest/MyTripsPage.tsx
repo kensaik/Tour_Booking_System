@@ -50,7 +50,7 @@ export default function MyTripsPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen pt-20 pb-16">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8">
           <EmptyState
             title="Vui lòng đăng nhập"
             description="Bạn cần đăng nhập để xem chuyến đi của mình."
@@ -67,7 +67,7 @@ export default function MyTripsPage() {
 
   return (
     <div className="min-h-screen pt-20 pb-16">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <h1 className="text-3xl font-bold text-on-surface mb-8">Chuyến đi của tôi</h1>
 
         <section className="mb-12">

@@ -64,7 +64,7 @@
   --spacing-xl: 40px;
   --spacing-xxl: 64px;
   --spacing-gutter: 20px;
-  --spacing-max-width: 1200px;
+  --spacing-max-width: 1440px;
 
   --font-body-md: "Be Vietnam Pro", sans-serif;
   --font-body-lg: "Be Vietnam Pro", sans-serif;
@@ -75,6 +75,16 @@
   --font-headline-lg: "Be Vietnam Pro", sans-serif;
   --font-label-md: "Be Vietnam Pro", sans-serif;
   --font-label-sm: "Be Vietnam Pro", sans-serif;
+}
+
+html {
+  font-size: 17px;
+}
+
+body {
+  font-family: var(--font-body-md);
+  color: var(--color-on-surface);
+  background-color: var(--color-background);
 }
 
 .tour-card-shadow {
